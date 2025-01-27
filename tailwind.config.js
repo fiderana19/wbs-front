@@ -7,14 +7,17 @@ module.exports = {
     extend: {
       fontFamily: {
         lato: ['Lato', 'sans'],
+        latobold: ['LatoBold', 'sans'],
+        geist: ['Geist','sans'],
+        hostgrotesk: ['HostGrotesk','sans'],
       },
       colors: {
-        'primary': '#39A78D',
-        'second': '#F2F3F4',
-        'third': '#E9FFDB',
-        'four':'#00563B',
-        'five':'rgba(0,0,0,.25)',
-        'six':'#B2BEB5',
+        'primary': '#29ADB2',
+        'second': '#508C9B',
+        'third': '#8ed1fc',
+        'four':'#EEEEEE',
+        'five':'#468585',
+        'six':'#7FC8A9',
         'seven':'#E5E4E2',
       },
       keyframes: {
@@ -27,7 +30,8 @@ module.exports = {
         wrapper: 'wrapper 5s ease-in-out infinite alternate',
       },
       gridTemplateColumns: {
-        customized: 'repeat(auto-fill , minmax(190px,200px))',
+        customized: 'repeat(auto-fill , minmax(280px,295px))',
+        customizedAudience: 'repeat(auto-fill , minmax(310px,320px))',
       },
     },
     clipPath: {

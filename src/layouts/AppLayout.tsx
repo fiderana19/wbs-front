@@ -1,8 +1,8 @@
-import { Dropdown, MenuProps, Modal, Space } from "antd";
+import { Dropdown, MenuProps, Space } from "antd";
 import { FunctionComponent, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import { LogoutOutlined , ShoppingCartOutlined , HomeOutlined, BarChartOutlined , MoneyCollectOutlined, MenuOutlined , UserOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined , HomeOutlined, BarChartOutlined , MoneyCollectOutlined, MenuOutlined , UserOutlined } from '@ant-design/icons';
 
 const AppLayout: FunctionComponent = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,7 +12,7 @@ const AppLayout: FunctionComponent = () => {
         {
             label: <Link to=''>
                         <div  className={location.pathname === '' ? 'text-primary' : ''}>
-                            <HomeOutlined /> ACCEUIL
+                            <HomeOutlined /> ACCUEIL
                         </div>
                     </Link>,
             key: '01'
@@ -61,7 +61,7 @@ const AppLayout: FunctionComponent = () => {
                 <div className="md:flex items-center hidden md:visible">
                     <Link to='' className="mx-1 p-1 hover:scale-105 hover:text-opacity-100  transition duration-300">
                         <div  className={location.pathname === '/' ? 'text-four' : ''}>
-                            <HomeOutlined /> Acceuil
+                            <HomeOutlined /> Accueil
                         </div>
                     </Link>
                     <Link to='dashboard' className="mx-1 p-1 hover:scale-105 hover:text-second hover:text-opacity-100  transition duration-300">

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Product from './pages/Product';
 import Transaction from './pages/Transaction';
@@ -10,7 +10,6 @@ import AddForms from './pages/AddStep';
 
 function App() {
   return (
-    <BrowserRouter>
        <Routes>
           <Route path='addforms' element={<AddForms/>}/>
           <Route path="/" element={<AppLayout/>}>
@@ -22,7 +21,6 @@ function App() {
             <Route path='*' element={<NotFound />} />
           </Route>
        </Routes>
-    </BrowserRouter>
   );
 }
 
