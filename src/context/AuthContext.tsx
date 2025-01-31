@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     setToken(data);
                     localStorage.setItem("token", data);
                 }
+                navigate("/admin/page/")
                 return { status: 201 }
             }
             if(response?.status === 401 || response?.status === 403) {

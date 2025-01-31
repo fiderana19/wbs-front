@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { LoginInterface } from "../types/Auth.interface";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage: React.FC = () => {
     const [loginCredentials, setLoginCredentials] = useState<LoginInterface>({ usrid: "", password: "" });
+    const { login } = useAuth();
 
-
-    const loginSubmit = () => {
+    const loginSubmit = async () => {
         console.log(loginCredentials)
+        await login(loginCredentials.usrid,loginCredentials.password);
     }
 
     const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
