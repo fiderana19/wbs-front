@@ -2,10 +2,10 @@ import React, { FunctionComponent, useState , useEffect } from 'react'
 import axios from 'axios';
 import { Card, Space, Statistic } from 'antd';
 import { ShoppingCartOutlined, DollarCircleOutlined, UserOutlined } from '@ant-design/icons';
-import DashboardChart from './DashboardChart';
+import DashboardChart from '../../../components/dashboard/DashboardChart';
 
 
-const Dashboard: FunctionComponent = () => {
+const DashboardPage: FunctionComponent = () => {
   let [totalClient, setTotalClient] = useState()
   let [totalProduct, setTotalProduct] = useState()
   let [totalTransaction, setTotalTransaction] = useState()
@@ -92,4 +92,4 @@ const Dashboard: FunctionComponent = () => {
   )
 }
 
-export default Dashboard;
+export default DashboardPage;

@@ -14,7 +14,7 @@ interface StepsPropsType {
   handleNext: ()=>void;
 }
 
-const AddClient: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
+const AddClientPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
   const [formData, setFormData] = useState<FormData>({ nom_client: "", adresse_client: "", mail_client: "" , telephone_client: "",});
   //handling the form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -75,4 +75,4 @@ const AddClient: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext})
   )
 }
 
-export default AddClient
+export default AddClientPage;

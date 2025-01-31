@@ -2,7 +2,7 @@ import { FunctionComponent, useState, useEffect } from 'react'
 import { Button, Card, message, Modal, Input } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, ShoppingCartOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
-import AddProduct from './AddProduct';
+import AddProduct from './AddProductPage';
 
 interface Data {
   _id: string;
@@ -12,7 +12,7 @@ interface Data {
   stock: number;
 }
 
-const Product: FunctionComponent = () => {
+const ProductPage: FunctionComponent = () => {
   let [product, setProduct] = useState<Data[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
@@ -232,4 +232,4 @@ const Product: FunctionComponent = () => {
   )
 }
 
-export default Product;
+export default ProductPage;

@@ -36,7 +36,7 @@ interface FormData {
 }
 
 
-const TransactionSearch: FunctionComponent = () => {
+const TransactionSearchPage: FunctionComponent = () => {
     let [transaction, setTransaction] = useState<Trans[]>([]);
     let [selectTransaction, setSelectTransaction] = useState<Trans[] | null>();
     let [searchTransaction, setSearchTransaction] = useState<Trans[] | null>();
@@ -384,4 +384,4 @@ const TransactionSearch: FunctionComponent = () => {
   )
 }
 
-export default TransactionSearch
+export default TransactionSearchPage

@@ -227,7 +227,7 @@ const generatePDF = async ( selectedTransId: string ) => {
 
 const { Option } = Select;
 
-const AddFacture: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
+const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   let [trans, setTrans] = useState<Trans[]>([]);
   const [selectedTransId, setSelectedTransId] = useState('');
   const [pdfData, setPdfData] =  useState<null | JSX.Element>(null);
@@ -323,4 +323,4 @@ const AddFacture: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   )
 }
 
-export default AddFacture
+export default AddFacturePage

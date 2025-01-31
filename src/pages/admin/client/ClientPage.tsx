@@ -12,7 +12,7 @@ interface Data {
     telephone_client: string;
 }
 
-const Client: FunctionComponent = () => {
+const ClientPage: FunctionComponent = () => {
   let [client, setClient] = useState<Data[]>([]);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Data | null>(null);
@@ -141,7 +141,7 @@ const Client: FunctionComponent = () => {
       <div className='md:px-32 sm:px-10 px-4'>
         <div className='flex justify-between'>
           <div className='text-xl font-bold font-lato'>LISTE DES CLIENTS</div>
-          <Link to='/addforms'>
+          <Link to='/admin/addforms'>
           <Button ><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden'> AJOUTER </div></Button>
           </Link>
         </div>
@@ -220,4 +220,4 @@ const Client: FunctionComponent = () => {
   )
 }
 
-export default Client;
+export default ClientPage;

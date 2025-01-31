@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { EditOutlined, WarningOutlined, DeleteOutlined, EyeOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import TransactionSearch from './TransactionSearch';
+import TransactionSearch from './TransactionSearchPage';
 
 interface Detail {
     _id: string;
@@ -34,7 +34,7 @@ interface FormData {
 }
 
 
-const Transaction: FunctionComponent = () => {
+const TransactionPage: FunctionComponent = () => {
     let [transaction, setTransaction] = useState<Trans[]>([]);
     let [selectTransaction, setSelectTransaction] = useState<Trans[]>();
     let [detail, setDetail] = useState<Detail[]>([]);
@@ -220,7 +220,7 @@ const Transaction: FunctionComponent = () => {
           TRANSACTIONS
         </div>
         <div  className='flex justify-between my-4'>
-          <Link to='/addforms'>
+          <Link to='/admin/addforms'>
             <Button className='mt-1'><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden' > AJOUTER</div></Button>
           </Link>
           <Input className='my-1 ml-1 w-52' placeholder='Saisir la ref...' value={searchRef} onChange={(e) => setSearchRef(e.target.value)} onKeyPress={handleKeyPress} />
@@ -377,4 +377,4 @@ const Transaction: FunctionComponent = () => {
   )
 }
 
-export default Transaction
+export default TransactionPage

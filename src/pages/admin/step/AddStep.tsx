@@ -1,12 +1,12 @@
 import { Steps ,Button  } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
 import { HomeOutlined ,ArrowRightOutlined } from '@ant-design/icons'
-import AddClient from './AddClient';
-import AddDetail from './AddDetail';
-import Addtransaction from './AddTransanction';
+import AddClient from '../client/AddClientPage';
+import AddDetail from './AddDetailPage';
+import Addtransaction from '../transaction/AddTransanctionPage';
 import { Link } from 'react-router-dom';
-import AddFacture from './AddFacture';
-import AddMail from './AddMail';
+import AddFacture from './AddFacturePage';
+import AddMail from './AddMailPage';
 
 const {Step} = Steps
 
@@ -28,7 +28,7 @@ const AddForms: FunctionComponent = () => {
   return (
     <div>
         <div className='w-full fixed bottom-7'>
-          <Link to='/'>
+          <Link to='/admin/page'>
           <button
             >
               <HomeOutlined className='fixed top-4 right-10 p-2 rounded-full text-white text-xl  hover:scale-105 hover:text-opacity-100  transition duration-300' style={{ backgroundColor: 'rgba(0,0,0,.25)' }} />

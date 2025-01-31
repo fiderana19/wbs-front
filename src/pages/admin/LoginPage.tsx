@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { LoginInterface } from "../types/Auth.interface";
-import { useAuth } from "../context/AuthContext";
+import { LoginInterface } from "../../types/Auth.interface";
+import { useAuth } from "../../context/AuthContext";
 
 const LoginPage: React.FC = () => {
     const [loginCredentials, setLoginCredentials] = useState<LoginInterface>({ usrid: "", password: "" });

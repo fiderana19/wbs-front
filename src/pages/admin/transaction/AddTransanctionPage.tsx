@@ -21,7 +21,7 @@ interface StepsPropsType {
 
 const { Option } = Select;
 
-const AddTransanction: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
+const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
   let [client, setClient] = useState<Client[]>([]);
   const [selectedClientId, setSelectedClientId] = useState('');
   const [formData, setFormData] = useState<FormData>({ client: '', date_transaction: '' })
@@ -137,4 +137,4 @@ const AddTransanction: FunctionComponent<StepsPropsType> = ({handlePrev , handle
   )
 }
 
-export default AddTransanction
+export default AddTransanctionPage

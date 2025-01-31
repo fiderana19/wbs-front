@@ -10,7 +10,7 @@ const AppLayout: FunctionComponent = () => {
 
     const items: MenuProps['items'] = [
         {
-            label: <Link to=''>
+            label: <Link to='admin/page'>
                         <div  className={location.pathname === '' ? 'text-primary' : ''}>
                             <HomeOutlined /> ACCUEIL
                         </div>
@@ -18,7 +18,7 @@ const AppLayout: FunctionComponent = () => {
             key: '01'
         },
         {
-            label: <Link to='dashboard'>
+            label: <Link to='admin/page/dashboard'>
                     <div className={location.pathname === '/dashboard' ? 'text-primary' : ''}>
                         <BarChartOutlined /> DASHOARD
                     </div>
@@ -26,7 +26,7 @@ const AppLayout: FunctionComponent = () => {
             key: '1'
         },
         {
-            label: <Link to='transaction'>
+            label: <Link to='admin/page/transaction'>
                 <div className={location.pathname === '/transaction' ? 'text-primary' : ''}>
                     <MoneyCollectOutlined /> TRANSACTION
                 </div>
@@ -34,7 +34,7 @@ const AppLayout: FunctionComponent = () => {
             key: '3'
         },
         {
-            label: <Link to='product'>
+            label: <Link to='admin/page/product'>
                 <div className={location.pathname === '/product' ? 'text-primary' : ''}>
                     <ShoppingCartOutlined /> PRODUIT
                 </div>
@@ -42,7 +42,7 @@ const AppLayout: FunctionComponent = () => {
             key: '4'
         },
         {
-            label: <Link  to='client'>
+            label: <Link  to='admin/page/client'>
                 <div className={location.pathname === '/client' ? 'text-primary' : ''}>
                     <UserOutlined /> CLIENT
                 </div>
@@ -59,28 +59,28 @@ const AppLayout: FunctionComponent = () => {
                     <p className="text-2xl font-bold hover:animate-pulse">WBS</p>
                 </Link>
                 <div className="md:flex items-center hidden md:visible">
-                    <Link to='' className="mx-1 p-1 hover:scale-105 hover:text-opacity-100  transition duration-300">
-                        <div  className={location.pathname === '/' ? 'text-four' : ''}>
+                    <Link to='/admin/page' className="mx-1 p-1 hover:scale-105 hover:text-opacity-100  transition duration-300">
+                        <div  className={location.pathname === 'admin/page/' ? 'text-four' : ''}>
                             <HomeOutlined /> Accueil
                         </div>
                     </Link>
-                    <Link to='dashboard' className="mx-1 p-1 hover:scale-105 hover:text-second hover:text-opacity-100  transition duration-300">
-                        <div className={location.pathname === '/dashboard' ? 'text-four' : ''}>
+                    <Link to='/admin/page/dashboard' className="mx-1 p-1 hover:scale-105 hover:text-second hover:text-opacity-100  transition duration-300">
+                        <div className={location.pathname === 'admin/page/dashboard' ? 'text-four' : ''}>
                             <BarChartOutlined /> Dashboard
                         </div>
                     </Link>
-                    <Link to='transaction' className="mx-1 p-1 hover:scale-105 hover:text-second hover:text-opacity-100  transition duration-300">
-                        <div className={location.pathname === '/transaction' ? 'text-four' : ''}>
+                    <Link to='/admin/page/transaction' className="mx-1 p-1 hover:scale-105 hover:text-second hover:text-opacity-100  transition duration-300">
+                        <div className={location.pathname === 'admin/page/transaction' ? 'text-four' : ''}>
                             <MoneyCollectOutlined /> Transaction
                         </div>
                     </Link>
-                    <Link to='product' className="mx-1 p-1 hover:scale-105 hover:text-second hover:text-opacity-100  transition duration-300">
-                        <div className={location.pathname === '/product' ? 'text-four' : ''}>
+                    <Link to='/admin/page/product' className="mx-1 p-1 hover:scale-105 hover:text-second hover:text-opacity-100  transition duration-300">
+                        <div className={location.pathname === 'admin/page/product' ? 'text-four' : ''}>
                             <ShoppingCartOutlined /> Produit
                         </div>
                     </Link>
-                    <Link to='client' className="mx-1 p-1 hover:scale-105 hover:text-second hover:text-opacity-100  transition duration-300">
-                        <div className={location.pathname === '/client' ? 'text-four' : ''}>
+                    <Link to='/admin/page/client' className="mx-1 p-1 hover:scale-105 hover:text-second hover:text-opacity-100  transition duration-300">
+                        <div className={location.pathname === 'admin/page/client' ? 'text-four' : ''}>
                             <UserOutlined /> Client
                         </div>
                     </Link>

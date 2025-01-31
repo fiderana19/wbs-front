@@ -29,7 +29,7 @@ interface StepsPropsType {
 
 const { Option } = Select;
 
-const AddDetail: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
+const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
   let [trans, setTrans] = useState<Trans[]>([]);
   const [selectedTransId, setSelectedTransId] = useState('');
   let [product, setProduct] = useState<Product[]>([]);
@@ -215,4 +215,4 @@ const AddDetail: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext})
   )
 }
 
-export default AddDetail
+export default AddDetailPage

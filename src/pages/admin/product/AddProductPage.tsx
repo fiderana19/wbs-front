@@ -9,7 +9,7 @@ interface FormData {
   stock: number;
 }
 
-const AddProduct: FunctionComponent = () => {
+const AddProductPage: FunctionComponent = () => {
   const [formData, setFormData] = useState<FormData>({ libelle: "", description: "", pu: 0, stock: 0});
   //handling the form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -56,4 +56,4 @@ const AddProduct: FunctionComponent = () => {
   );
 }
 
-export default AddProduct
+export default AddProductPage

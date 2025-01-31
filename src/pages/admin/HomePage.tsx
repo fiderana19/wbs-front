@@ -3,7 +3,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { FunctionComponent, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Typewriter from '../components/Typewritter';
+import Typewriter from '../../components/Typewritter';
 import { CloseOutlined , LoadingOutlined } from '@ant-design/icons';
 
 interface Trans {
@@ -12,7 +12,7 @@ interface Trans {
     montant_transaction: string;
 }
 
-const Home: FunctionComponent= () => {
+const HomePage: FunctionComponent= () => {
     let [transaction, setTransaction] = useState<Trans[]>([]);
     const [loading , setLoading] = useState(true);
    
@@ -84,4 +84,4 @@ const Home: FunctionComponent= () => {
   )
 }
 
-export default Home
+export default HomePage

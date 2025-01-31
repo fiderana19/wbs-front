@@ -17,7 +17,7 @@ interface StepsPropsType {
 
 const { Option } = Select;
 
-const AddMail: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
+const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   let [trans, setTrans] = useState<Trans[]>([]);
   const [selectedTransId, setSelectedTransId] = useState('');
   const [mailResponse , setMailResponse] = useState('');
@@ -136,4 +136,4 @@ const AddMail: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   )
 }
 
-export default AddMail
+export default AddMailPage
