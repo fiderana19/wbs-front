@@ -3,10 +3,13 @@ import { FunctionComponent, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { ShoppingCartOutlined , HomeOutlined, BarChartOutlined , MoneyCollectOutlined, MenuOutlined , UserOutlined } from '@ant-design/icons';
+import { useAuth } from "../context/AuthContext";
+import WbsLogo from '../assets/image/wbs-logo.png';
 
 const AppLayout: FunctionComponent = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const location = useLocation()
+    const location = useLocation();
+    const {logout} = useAuth();
 
     const items: MenuProps['items'] = [
         {
@@ -20,7 +23,7 @@ const AppLayout: FunctionComponent = () => {
         {
             label: <Link to='admin/page/dashboard'>
                     <div className={location.pathname === '/dashboard' ? 'text-primary' : ''}>
-                        <BarChartOutlined /> DASHOARD
+                        <BarChartOutlined /> DASHBOARD
                     </div>
                 </Link>,
             key: '1'
@@ -55,8 +58,8 @@ const AppLayout: FunctionComponent = () => {
     return(
         <div className="w-full">
             <div className="w-full fixed px-5 h-14 bg-primary z-50 text-white flex justify-between items-center  font-lato">
-                <Link to='home'>
-                    <p className="text-2xl font-bold hover:animate-pulse">WBS</p>
+                <Link to='/admin/page'>
+                    <img src={WbsLogo} alt="WBS Logo" className="w-14" />
                 </Link>
                 <div className="md:flex items-center hidden md:visible">
                     <Link to='/admin/page' className="mx-1 p-1 hover:scale-105 hover:text-opacity-100  transition duration-300">
@@ -84,6 +87,7 @@ const AppLayout: FunctionComponent = () => {
                             <UserOutlined /> Client
                         </div>
                     </Link>
+                    <button onClick={logout} className="bg-blue-500 hover:bg-blue-700 text-white mx-auto font-latobold py-2 px-4 my-1 rounded">Deconnexion</button>
                 </div>
                 <Dropdown className="visible md:hidden" menu={{items}} trigger={['click']}>
                     <a className="cursor-pointer" onClick={(e) => e.preventDefault()}>
