@@ -59,7 +59,7 @@ const AppLayout: FunctionComponent = () => {
         <div className="w-full">
             <div className="w-full fixed px-5 h-14 bg-primary z-50 text-white flex justify-between items-center  font-lato">
                 <Link to='/admin/page'>
-                    <img src={WbsLogo} alt="WBS Logo" className="w-14" />
+                    <img src={WbsLogo} alt="WBS Logo" className="w-14 object-cover" />
                 </Link>
                 <div className="md:flex items-center hidden md:visible">
                     <Link to='/admin/page' className="mx-1 p-1 hover:scale-105 hover:text-opacity-100  transition duration-300">

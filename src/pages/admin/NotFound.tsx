@@ -1,18 +1,23 @@
-import { Button } from 'antd';
-import React, { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
+import WbsLogo from '../../assets/image/wbs-logo.png'
 
-const NotFound: FunctionComponent= () => {
-  return (
-    <div style={{height: "100vh"}} className='md:px-32 px-10 pb-5 pt-24 bg-slate-400 h-full'>
-        <div className='flex flex-col justify-center text-center h-full'>
-            <div className='text-bold text-2xl text-white'>Not Found</div>
-            <Link to='/admin/page' className='my-3'>
-                <Button>Acceuil</Button>
-            </Link>
+function NotFound() {
+    return(
+        <>
+            <div className=' h-screen flex flex-col justify-center'>
+                <div className='w-80 mx-auto'>
+                    <div className='text-center'>
+                        <img src={WbsLogo} className='h-36 w-36 object-cover mx-auto' alt="Logo du ministere" />
+                        <div className='text-lg font-latobold'>WBS: Gestion de caisse</div>
+                    </div>
+                    <div className='text-xl font-latobold my-4 text-center'>Erreur 404 : Page introuvable !</div>
+                    <Link to="/admin/page">
+                        <div className='text-center text-blue-500 underline'>Accueil</div>
+                    </Link>
+                </div>
         </div>
-    </div>
-  )
+        </>
+    )
 }
 
-export default NotFound
+export default NotFound;
