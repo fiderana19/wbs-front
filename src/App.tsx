@@ -7,11 +7,13 @@ import AppLayout from './layouts/AppLayout';
 import NotFound from './pages/NotFound';
 import Client from './pages/Client';
 import AddForms from './pages/AddStep';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
        <Routes>
           <Route path='addforms' element={<AddForms/>}/>
+          <Route path='login' element={<LoginPage/>}/>
           <Route path="/" element={<AppLayout/>}>
             <Route index element={<Home/>}/>
             <Route path='product' element={<Product/>}/>
