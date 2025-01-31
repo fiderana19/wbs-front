@@ -1,14 +1,13 @@
 import axios from "axios";
-import { LoginInterface } from "../types/Auth.interface";
 
 const AuthAPIURL = "http://localhost:3002/auth";
 
-export const loginAuth = async (loginData: LoginInterface) => {
+export const loginAuth = async (usrid: string, password: string) => {
     try {
         const response = await axios({
             method: 'post',
             url: `${AuthAPIURL}/login`,
-            data: loginData
+            data: {usrid, password}
         })
 
         return response;
