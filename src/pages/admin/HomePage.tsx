@@ -9,7 +9,7 @@ import { HttpStatus } from '../../constants/Http_status';
 import { Transaction } from '../../interfaces/Transaction.interface';
 
 const HomePage: FunctionComponent= () => {
-    let [transaction, setTransaction] = useState<Transaction[]>([]);
+    let [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading , setLoading] = useState(true);
     const [token, setToken] = useState<string |null>(
         localStorage.getItem("token")
@@ -22,7 +22,7 @@ const HomePage: FunctionComponent= () => {
      async function fetchLatestTransaction() {
         const response = await getLatestTransaction(token);
         if(response?.status === HttpStatus.OK) {
-          setTransaction(response.data);
+          setTransactions(response.data);
           setLoading(false);
         } else {
           console.log("Error")
@@ -56,7 +56,7 @@ const HomePage: FunctionComponent= () => {
                                 <div>Chargement...</div>
                             </div>
                         ) : (
-                        transaction.map((transaction: any, index) => {
+                        transactions.map((transaction: any, index) => {
                             return(
                                 <div key={index} className='bg-gray-100 my-1 px-2 py-1'>
                                     <div className='text-black text-xs'>{ dayjs(transaction.date_transaction).format('DD-MM-YYYY HH:mm') }</div>

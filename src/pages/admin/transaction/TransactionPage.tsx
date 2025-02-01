@@ -11,15 +11,15 @@ import { DetailInTransaction } from '../../../interfaces/Detail.interface';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem } from '../../../interfaces/Transaction.interface';
 
 const TransactionPage: FunctionComponent = () => {
-    let [transaction, setTransaction] = useState<TransactionForDisplay[]>([]);
+    let [transactions, setTransactions] = useState<TransactionForDisplay[]>([]);
     let [selectTransaction, setSelectTransaction] = useState<TransactionForDisplay[]>();
-    let [detail, setDetail] = useState<DetailInTransaction[]>([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    let [details, setDetails] = useState<DetailInTransaction[]>([]);
+    const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<TransactionForDisplay | null>(null);
     const [searchRef, setSearchRef] = useState('');
-    const [formData, setFormData] = useState<TransactionForEdit>({ date_transaction: '' })
+    const [editTransactionCredentials, SetEditTransactionCredentials] = useState<TransactionForEdit>({ date_transaction: '' })
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);  
     const [selectedItemEdit, setSelectedItemEdit] = useState<TransactionItem | null>(null);
     const [loading , setLoading] = useState(true);
@@ -41,46 +41,35 @@ const TransactionPage: FunctionComponent = () => {
     async function fetchAllTransaction() {
       const response = await getAllTransaction(token);
       if(response?.status === HttpStatus.OK) {
-        setTransaction(response.data);
+        setTransactions(response.data);
         setLoading(false);
       } else {
         console.log("Error");
       }
     }
-  //handle delete transaction confirmation
+
   async function handleDeleteTransaction(itemId: string) {
     const response = await deleteTransaction(token, itemId);
     if(response?.status === HttpStatus.OK) {
-      setTransaction(transaction.filter((item: any) => item._id !== itemId));
+      setTransactions(transactions.filter((item: any) => item._id !== itemId));
       deleteMessage()
     } else {
       console.log("Error");
     }
   }
-  //show delete transaction
+
   const showDeleteConfirmation = (item: TransactionForDisplay) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
   };
 
-  //show modal of detail
-  const showDetail = () => {
-    setIsModalDetailOpen(true);
-  };
-
-  //handle delete confirm
   const handleDeleteConfirm = () => {
     if (itemToDelete) {
       handleDeleteTransaction(itemToDelete._id);
       setIsDeleteModalVisible(false);
     }
   };
-  //handle delete cancel
-  const handleDeleteCancel = () => {
-    setIsDeleteModalVisible(false);
-  };
 
-  //message
   const errorMessage = () => {
     message.error('Veuillez selectionner des dates !');
   };
@@ -88,18 +77,6 @@ const TransactionPage: FunctionComponent = () => {
     message.success('Suppression de la transaction réussie !');
   };
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleCloseModalDetail = () => {
-    setIsModalDetailOpen(false);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  //get detail function
   const getDetail = async (itemId: string) => {
     const response  = await getTransactionById(token, itemId);
     if(response?.status === HttpStatus.OK) {
@@ -109,16 +86,16 @@ const TransactionPage: FunctionComponent = () => {
     }
     const res = await getDetailById(token, itemId);
     if(res?.status === HttpStatus.OK) {
-      setDetail(res.data)
-      showDetail()
+      setDetails(res.data)
+      setIsModalDetailOpen(true)
     } else {
       console.log("Error");
     }
   }
-  //edit trasanction item
+
   function EditTransaction(item: TransactionItem) {
     setSelectedItemEdit(item);
-    showModal()
+    setIsEditTransactionModalOpen(true);
 
     setEditedItem({
       _id: item._id,
@@ -128,12 +105,12 @@ const TransactionPage: FunctionComponent = () => {
       montant_transaction: item.montant_transaction,
      }); 
   }
-  //handling edit submit
+
   const handleSubmit = async (e: React.FormEvent) => {
     // e.preventDefault();
     if (editedItem) {
       if (selectedDate) {
-        const response = await patchTransaction(token, editedItem._id, formData);
+        const response = await patchTransaction(token, editedItem._id, editTransactionCredentials);
         if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
           setEditedItem({ _id: '', date_transaction: '' , nom_client: '', ref: '', montant_transaction: 0,});
           fetchAllTransaction();
@@ -145,18 +122,18 @@ const TransactionPage: FunctionComponent = () => {
       }
     }
   }
-  //handling the edit date change
+
   const handleDateChange = (date: any) => {
     setSelectedDate(date);
     if (date) {
       const isoDate = date.toISOString();
-      setFormData({
-        ...formData,
+      SetEditTransactionCredentials({
+        ...editTransactionCredentials,
         date_transaction: isoDate,
       });
     }
   };
-  //handling the keypress
+
   const handleKeyPress =async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const charCode = e.which || e.keyCode;
 
@@ -187,7 +164,7 @@ const TransactionPage: FunctionComponent = () => {
               </div>
              ) : (
             // handling the ref 
-            transaction.map((transaction: any, index) =>{
+            transactions.map((transaction: any, index) =>{
               if (searchRef && !transaction.ref.includes(searchRef)) {
                  return null;
               }
@@ -225,7 +202,7 @@ const TransactionPage: FunctionComponent = () => {
             })
              )
           }
-          <Modal title="MODIFIER TRANSACTION" open={isModalOpen} onCancel={handleCloseModal} footer={null} >
+          <Modal title="MODIFIER TRANSACTION" open={isEditTransactionModalOpen} onCancel={() => setIsEditTransactionModalOpen(false)} footer={null} >
             {selectedItemEdit && <div>
               <form className='w-2/3 my-7 mx-auto' onSubmit={handleSubmit}>
                 <label htmlFor='nom_client' >Nom du client : </label> <br />
@@ -246,7 +223,7 @@ const TransactionPage: FunctionComponent = () => {
             title="Confirmation de suppression"
             open={isDeleteModalVisible}
             onOk={handleDeleteConfirm}
-            onCancel={handleDeleteCancel}
+            onCancel={() => setIsDeleteModalVisible(false)}
             okText="Confirmer"
             cancelText="Annuler"
             okButtonProps={{style: { background: 'red' }}}
@@ -259,7 +236,7 @@ const TransactionPage: FunctionComponent = () => {
           {/* //Modal du detail transaction */}
           <Modal
             title="Detail de la transaction"
-            open={isModalDetailOpen} onCancel={handleCloseModalDetail} footer={null} 
+            open={isModalDetailOpen} onCancel={() => setIsModalDetailOpen(false)} footer={null} 
           >
             {selectTransaction &&
               <div> 
@@ -293,7 +270,7 @@ const TransactionPage: FunctionComponent = () => {
             }
             <div className='w-full bg-seven mb-1'>
               {
-                detail.map((detail: any , index) => {
+                details.map((detail: any , index) => {
                   return(
                     <div key={index}>
                       <div className='px-5 py-1 border-b-2 border-gray-200'>

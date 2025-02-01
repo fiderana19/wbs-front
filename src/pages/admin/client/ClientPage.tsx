@@ -5,10 +5,11 @@ import { Link } from 'react-router-dom';
 import { deleteClientById, getAllClient, patchClientById } from '../../../api/Client';
 import { HttpStatus } from '../../../constants/Http_status';
 import { Client } from '../../../interfaces/Client.interface';
+import { okDeleteStyle } from '../../../constants/ModalStyle';
 
 const ClientPage: FunctionComponent = () => {
-  let [client, setClient] = useState<Client[]>([]);
-  const [isModalOpen1, setIsModalOpen1] = useState(false);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [isEditClientModalOpen, setIsEditClientModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Client | null>(null);
   const [itemToDelete, setItemToDelete] = useState<Client | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -28,60 +29,45 @@ const ClientPage: FunctionComponent = () => {
     fetchAllClient()
   }, [])
 
-  //fetching all client item
   async function fetchAllClient() {
     const response  = await getAllClient(token);
     if(response?.status === HttpStatus.OK) {
-      setClient(response.data);
+      setClients(response.data);
       setLoading(false)
     } else {
       console.log("Error")
     }
   }
 
-  //show the delete confimation modal
   const showDeleteConfirmation = async (item: Client) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
   }
-  //handlign delete confirmation
+
   const handleDeleteConfirm = async () => {
     if (itemToDelete) {
       handleDelete(itemToDelete._id);
       setIsDeleteModalVisible(false);
     }
   }
-  //handling delete cancel
-  const handleDeleteCancel = async () => {
-    setIsDeleteModalVisible(false)
-  }
-  //handlign delete confirmation
+
   async function handleDelete(itemId: string) {
-    //deleting the client
     const response  = await deleteClientById(token, itemId);
     if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
-      setClient(client.filter((item: any) => item._id !== itemId));
+      setClients(clients.filter((item: any) => item._id !== itemId));
       deleteMessage()
     } else {
       console.log("Error");
     }
   }
-  //show the modal edit
-  const showModal1 = () => {
-    setIsModalOpen1(true);
-  };
-  //closing the modal edit
-  const handleCloseModal1 = () => {
-    setIsModalOpen1(false);
-  };
-  //message 
+
   const deleteMessage = () => {
     message.success('Suppression du client réussie !');
   };
-  //editing client item
+
   function EditClient(item: Client) {
     setSelectedItem(item);
-    showModal1();
+    setIsEditClientModalOpen(true);
  
     setEditedItem({
       _id: item._id,
@@ -91,28 +77,25 @@ const ClientPage: FunctionComponent = () => {
       telephone_client: item.telephone_client,
     }); 
   }
-  //handling the edit submit
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const response = await patchClientById(token, editedItem._id, editedItem);
     if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
       setEditedItem({ _id: '', nom_client: '' , adresse_client: '', mail_client: '', telephone_client: ''});
       fetchAllClient();
-      setIsModalOpen1(false);
+      setIsEditClientModalOpen(false);
     } else {
       console.log("Error");
     }
   }
-  //handling the edit form input
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditedItem({ ...editedItem, [name]: value });
   };
-  //style of modal
-  const okDeleteStyle = {
-    background: 'red', color: 'white'
-  }
-  //handling the keypress
+
+
   const handleKeyPress =async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const charCode = e.which || e.keyCode;
   
@@ -138,28 +121,28 @@ const ClientPage: FunctionComponent = () => {
                 <div>Chargement...</div>
               </div>
             ) : (
-              client.map((clients: any, index) =>{
+              clients.map((client: any, index) =>{
                 return(
                   <Card  key={index} className='hover:scale-105 duration-300'>
                     <div className='w-40 text-center'>
                       <UserOutlined className='text-5xl' />
                       <div className='py-3'>
                         <div className='text-base text-primary font-bold'>
-                          { clients.nom_client }
+                          { client.nom_client }
                         </div>
                         <div className='text-xs'>
-                          { clients.adresse_client }
+                          { client.adresse_client }
                         </div>
                         <div className='text-sm'>
-                          { clients.mail_client }
+                          { client.mail_client }
                         </div>
                         <div className='text-sm'>
-                          { clients.telephone_client }
+                          { client.telephone_client }
                         </div>
                       </div>
                       <div className='flex justify-center'>
-                        <Button className='mx-1 bg-blue-400'  onClick={() => EditClient(clients)} > <EditOutlined/> </Button>
-                        <Button className='mx-1 bg-red-700'  onClick={() => showDeleteConfirmation(clients)}> <DeleteOutlined/> </Button>
+                        <Button className='mx-1 bg-blue-400'  onClick={() => EditClient(client)} > <EditOutlined/> </Button>
+                        <Button className='mx-1 bg-red-700'  onClick={() => showDeleteConfirmation(client)}> <DeleteOutlined/> </Button>
                       </div>
                     </div>
                   </Card>
@@ -167,7 +150,7 @@ const ClientPage: FunctionComponent = () => {
               })
             )
           }
-          <Modal title="MODIFIER CLIENT" open={isModalOpen1} onCancel={handleCloseModal1} footer={null} >
+          <Modal title="MODIFIER CLIENT" open={isEditClientModalOpen} onCancel={() => setIsEditClientModalOpen(false)} footer={null} >
             {selectedItem &&     
               <div>
                 <form className='w-2/3 my-7 mx-auto' onSubmit={handleSubmit}>
@@ -189,7 +172,7 @@ const ClientPage: FunctionComponent = () => {
           <Modal title="Suppression" 
             open={isDeleteModalVisible}
             onOk={handleDeleteConfirm}
-            onCancel={handleDeleteCancel}
+            onCancel={() => setIsDeleteModalVisible(false)}
             okText="Supprimer"
             okButtonProps={{style: okDeleteStyle}}
             cancelText="Annuler"

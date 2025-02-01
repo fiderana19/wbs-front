@@ -16,14 +16,14 @@ interface StepsPropsType {
 const { Option } = Select;
 
 const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
-  let [client, setClient] = useState<ClientForTransaction[]>([]);
+  let [clients, setClients] = useState<ClientForTransaction[]>([]);
   const [selectedClientId, setSelectedClientId] = useState('');
-  const [formData, setFormData] = useState<CreateTransactionInterface>({ client: '', date_transaction: '' })
+  const [transactionCredentials, setTransactionCredentials] = useState<CreateTransactionInterface>({ client: '', date_transaction: '' })
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
-  //fethcing all client item
+
   useEffect(() => {
     fetchAllClient();
   }, []);
@@ -31,27 +31,27 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
   async function fetchAllClient() {
     const response = await getAllClient(token);
     if(response?.status === HttpStatus.OK) {
-      setClient(response.data);
+      setClients(response.data);
     } else {
       console.log("Error")
     }
   }
-  //handling the date change
+
   const handleDateChange = (date: any) => {
     setSelectedDate(date);
     if (date) {
       const isoDate = date.toISOString();
-      setFormData({
-        ...formData,
+      setTransactionCredentials({
+        ...transactionCredentials,
         date_transaction: isoDate,
       });
     }
   };
-  //handle form submit
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (selectedClientId && selectedDate) {
-      const response = await postTransaction(token, formData);
+      const response = await postTransaction(token, transactionCredentials);
       if(response?.status === HttpStatus.CREATED) {
         successMessage()
         handleNext()
@@ -62,7 +62,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
       errorMessage()
     }
   }
-  //message
+
   const errorMessage = () => {
     message.error('Veuillez remplir les champs !');
   };
@@ -70,11 +70,11 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
   const successMessage = () => {
     message.success('Transaction ajoutée avec succés !');
   };
-  //handle select change
+
   const handleSelectChange = (value: any) => {
     setSelectedClientId(value);
-    setFormData({
-      ...formData,
+    setTransactionCredentials({
+      ...transactionCredentials,
       client: value,
     });
   };
@@ -102,7 +102,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
                     >
                         <Option value="">Sélectionnez un client</Option>
                         {
-                          client.map((cl: any, index) => {
+                          clients.map((cl: any, index) => {
                             return(
                             <Option key={index} value={cl._id}>
                               { `${cl.nom_client} ${cl.telephone_client}` }

@@ -1,5 +1,5 @@
 import { Steps ,Button  } from 'antd'
-import { FunctionComponent, useEffect, useState } from 'react'
+import { FunctionComponent, useState } from 'react'
 import { HomeOutlined ,ArrowRightOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom';
 import AddClientPage from '../client/AddClientPage';
@@ -12,7 +12,7 @@ const {Step} = Steps
 
 const AddForms: FunctionComponent = () => {
     const [currentStep, setCurrentStep] = useState(0);
-    //handling next or prev page
+
     const handleNextPage = () => {
       setCurrentStep(currentStep + 1);
     };
@@ -21,10 +21,6 @@ const AddForms: FunctionComponent = () => {
       setCurrentStep(currentStep - 1);
     };
     
-    useEffect(() => {  
-     
-    }, [])
- 
   return (
     <div>
         <div className='w-full fixed bottom-7'>

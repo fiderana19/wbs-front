@@ -1,5 +1,5 @@
 import { Dropdown, MenuProps, Space } from "antd";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { ShoppingCartOutlined , HomeOutlined, BarChartOutlined , MoneyCollectOutlined, MenuOutlined , UserOutlined } from '@ant-design/icons';
@@ -7,7 +7,6 @@ import { useAuth } from "../context/AuthContext";
 import WbsLogo from '../assets/image/wbs-logo.png';
 
 const AppLayout: FunctionComponent = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const location = useLocation();
     const {logout} = useAuth();
 

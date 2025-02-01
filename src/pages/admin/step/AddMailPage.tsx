@@ -15,33 +15,30 @@ interface StepsPropsType {
 const { Option } = Select;
 
 const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
-  let [trans, setTrans] = useState<Transaction[]>([]);
-  const [selectedTransId, setSelectedTransId] = useState('');
+  let [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [selectedTransactionId, setSelectedTransactionId] = useState('');
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
 
-  //fetching all transaction item
   useEffect(() => {
-
     fetchAllTransaction();
   })
 
   async function fetchAllTransaction() {
     const response = await getAllTransaction(token);
     if(response?.status === HttpStatus.OK) {
-      setTrans(response.data);
+      setTransactions(response.data);
     } else {
       console.log("Error")
     }
   }
 
-  //form submit handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (selectedTransId) { 
-      const response = await getMailer(token, selectedTransId);
+    if (selectedTransactionId) { 
+      const response = await getMailer(token, selectedTransactionId);
       if(response?.status === HttpStatus.OK) {
         successMessage(response.data.message);
       }
@@ -55,7 +52,6 @@ const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
     }
   }
   
-  //message 
   const errorMessage = () => {
     message.error('Veuillez remplir les champs !');
   };
@@ -67,9 +63,9 @@ const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   const successMessage = (mess: string) => {
     message.success(mess);
   };
-  //handling the select transaction change
+
   const handleSelectTransChange = (value: any) => {
-    setSelectedTransId(value);
+    setSelectedTransactionId(value);
   };
 
   return (
@@ -85,7 +81,7 @@ const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
           <form onSubmit={handleSubmit} className='my-7 w-60 text-left mx-auto'>
             <label htmlFor='idproduit'>Transaction : </label><br />
             <Select
-              value={selectedTransId}
+              value={selectedTransactionId}
               onChange={handleSelectTransChange}
               className='w-full my-1'
               showSearch
@@ -96,7 +92,7 @@ const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
             >
               <Option value="">Sélectionnez une transaction</Option>
               {
-                trans.map((tr: any, index) => {
+                transactions.map((tr: any, index) => {
                   return(
                     <Option key={index} value={tr._id}>
                       { `${tr.nom_client} ${dayjs(tr.date_transaction).format('DD-MM-YYYY HH:mm')}` }
@@ -105,7 +101,7 @@ const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
                 })
               }
             </Select>
-            {selectedTransId && <p>Transaction sélectionné : {selectedTransId}</p>}  
+            {selectedTransactionId && <p>Transaction sélectionné : {selectedTransactionId}</p>}  
 
             <div className='flex justify-center my-3'>
               <button type='submit'  className='bg-green-500 hover:bg-green-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-green-500'><MailOutlined /> Envoyer mail</button>

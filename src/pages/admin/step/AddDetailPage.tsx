@@ -18,11 +18,11 @@ interface StepsPropsType {
 const { Option } = Select;
 
 const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
-  let [trans, setTrans] = useState<Transaction[]>([]);
-  const [selectedTransId, setSelectedTransId] = useState('');
+  let [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [selectedTransactionId, setSelectedTransactionId] = useState('');
   let [product, setProduct] = useState<ProductForDetail[]>([]);
   const [selectedProductId, setSelectedProductId] = useState('');
-  const [formData, setFormData] = useState<CreateDetailInterface>({ quantite: 0, remise : 0, product: "", transaction: "" })
+  const [detailCredentials, setDetailCredentials] = useState<CreateDetailInterface>({ quantite: 0, remise : 0, product: "", transaction: "" })
   const [quantiteError, setQuantiteError] = useState('');
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
@@ -41,30 +41,31 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
       console.log("Error");
     }
   }
+
   async function fetchAllTransaction() {
     const response = await getAllTransaction(token);
     if(response?.status === HttpStatus.OK) {
-      setTrans(response.data);
+      setTransactions(response.data);
     } else {
       console.log("Error")
     }
   }
 
-  //handle form submit
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setQuantiteError('')
 
-    if (formData.quantite < 1) {
+    if (detailCredentials.quantite < 1) {
       setQuantiteError('La quantité ne doit pas être nulle');
-  }
+    }
 
-    if (selectedProductId && selectedTransId ) {
-      if (formData.quantite >= 1) {
+    if (selectedProductId && selectedTransactionId ) {
+      if (detailCredentials.quantite >= 1) {
 
-        const response = await postDetail(token, formData);
+        const response = await postDetail(token, detailCredentials);
         if(response?.status === HttpStatus.CREATED) {
-          setFormData({ quantite: 0, remise : 0, product: "", transaction: "" })
+          setDetailCredentials({ quantite: 0, remise : 0, product: "", transaction: "" })
           successMessage();
         } 
         else if(response?.status === HttpStatus.BAD_REQUEST) {
@@ -78,7 +79,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
       errorMessage()
     }
   }
-  //handle the key press
+
   const handleKeyPress =async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const charCode = e.which || e.keyCode;
 
@@ -86,7 +87,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
       e.preventDefault();
     }
   }
-  //message
+
   const alertStock = () => {
     message.error("Le niveau du stock n'est suffisant !");
   };
@@ -98,24 +99,24 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
   const successMessage = () => {
     message.success('Detail du transaction ajouté avec succés !');
   };
-  //handle input change
+
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
-    setFormData((prevFormData) => ({...prevFormData, [name]: value}));
+    setDetailCredentials((prevFormData) => ({...prevFormData, [name]: value}));
   }
-  //handling the select product change
+
   const handleSelectProductChange = (value: any) => {
     setSelectedProductId(value);
-    setFormData({
-      ...formData,
+    setDetailCredentials({
+      ...detailCredentials,
       product: value,
     });
   };
-  //handling the select transaction chnage
+
   const handleSelectTransChange = (value: any) => {
-    setSelectedTransId(value);
-    setFormData({
-      ...formData,
+    setSelectedTransactionId(value);
+    setDetailCredentials({
+      ...detailCredentials,
       transaction: value,
     });
   };
@@ -132,7 +133,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
           <form className='w-60 mx-auto my-7 text-left' onSubmit={handleSubmit}>
             <label htmlFor='idproduit'>Transaction : </label><br />
             <Select
-              value={selectedTransId}
+              value={selectedTransactionId}
               onChange={handleSelectTransChange}
               className='w-full my-1'
               showSearch
@@ -143,7 +144,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
             >
               <Option value="">Sélectionnez une transaction</Option>
                 {
-                  trans.map((tr: any, index) => {
+                  transactions.map((tr: any, index) => {
                     return(
                       <Option key={index} value={tr._id}>
                         { `${tr.nom_client} ${dayjs(tr.date_transaction).format('DD-MM-YYYY HH:mm').toString()}` }
@@ -152,7 +153,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
                   })
                 }
             </Select>
-            {selectedTransId && <p>Transaction sélectionné : {selectedTransId}</p>}  
+            {selectedTransactionId && <p>Transaction sélectionné : {selectedTransactionId}</p>}  
             <label htmlFor='idproduit'>Produit : </label><br />
             <Select
               value={selectedProductId}
@@ -177,10 +178,10 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
             </Select>
             {selectedProductId && <p>Produit sélectionné : {selectedProductId}</p>}
             <label htmlFor='quantite'>Quantité : </label><br />
-            <Input name='quantite' onKeyPress={handleKeyPress} className={quantiteError ? 'border border-red-500 my-1' : 'my-1'} onChange={handleChange} value={formData.quantite} required /><br />
+            <Input name='quantite' onKeyPress={handleKeyPress} className={quantiteError ? 'border border-red-500 my-1' : 'my-1'} onChange={handleChange} value={detailCredentials.quantite} required /><br />
             {quantiteError && <div className="text-red-500 text-xs">{quantiteError}</div>}
             <label htmlFor='remise'>Remise : </label><br />
-            <Input name='remise' onKeyPress={handleKeyPress} className='my-1'  onChange={handleChange} value={formData.remise} required /><br />
+            <Input name='remise' onKeyPress={handleKeyPress} className='my-1'  onChange={handleChange} value={detailCredentials.remise} required /><br />
             <div className='flex justify-center my-3'>
               <button className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500' type='submit'>AJOUTER</button>
             </div>

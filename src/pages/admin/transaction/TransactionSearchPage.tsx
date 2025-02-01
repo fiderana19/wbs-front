@@ -9,17 +9,17 @@ import { DetailInTransaction } from '../../../interfaces/Detail.interface';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem, TransactionSearch } from '../../../interfaces/Transaction.interface';
 
 const TransactionSearchPage: FunctionComponent = () => {
-    let [transaction, setTransaction] = useState<TransactionForDisplay[]>([]);
+    let [transactions, setTransactions] = useState<TransactionForDisplay[]>([]);
     let [selectTransaction, setSelectTransaction] = useState<TransactionForDisplay[] | null>();
     let [searchTransaction, setSearchTransaction] = useState<TransactionForDisplay[] | null>();
-    let [detail, setDetail] = useState<DetailInTransaction[]>([]);
+    let [details, setDetails] = useState<DetailInTransaction[]>([]);
     const [selectedDateDebut, setSelectedDateDebut] = useState<dayjs.Dayjs | null>(null);
     const [selectedDateEnd, setSelectedDateEnd] = useState<dayjs.Dayjs | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<TransactionForDisplay | null>(null);
-    const [formData, setFormData] = useState<TransactionForEdit>({ date_transaction: '' })
+    const [editTransactionCredentials, setEditTransactionCredentials] = useState<TransactionForEdit>({ date_transaction: '' })
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);  
     const [selectedItemEdit, setSelectedItemEdit] = useState<TransactionItem | null>(null);
     const [token, setToken] = useState<string | null>(
@@ -33,10 +33,6 @@ const TransactionSearchPage: FunctionComponent = () => {
       montant_transaction: 0,
     });
 
-    useEffect( () => {         
-            
-    } ,[])
-  //handle date debut change
   const handleDateDebutChange = (date: any) => {
     setSelectedDateDebut(date);
   };
@@ -48,7 +44,7 @@ const TransactionSearchPage: FunctionComponent = () => {
   async function handleDeleteTransaction(itemId: string) {
     const response = await deleteTransaction(token, itemId);
     if(response?.status === HttpStatus.OK) {
-      setTransaction(transaction.filter((item: any) => item._id !== itemId));
+      setTransactions(transactions.filter((item: any) => item._id !== itemId));
       deleteMessage()
     } else {
       console.log("Error");
@@ -101,15 +97,8 @@ const TransactionSearchPage: FunctionComponent = () => {
     message.success('Suppression de la transaction réussie !');
   };
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
   const handleCloseModalDetail = () => {
     setIsModalDetailOpen(false);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
   };
 
   //get detail function
@@ -122,7 +111,7 @@ const TransactionSearchPage: FunctionComponent = () => {
     }
     const res = await getDetailById(token, itemId);
     if(res?.status === HttpStatus.OK) {
-      setDetail(res.data)
+      setDetails(res.data)
       showDetail()
     } else {
       console.log("Error");
@@ -132,7 +121,7 @@ const TransactionSearchPage: FunctionComponent = () => {
   //edit trasanction item
   function EditTransaction(item: TransactionItem) {
     setSelectedItemEdit(item);
-    showModal()
+    setIsEditTransactionModalOpen(true)
 
     setEditedItem({
       _id: item._id,
@@ -147,7 +136,7 @@ const TransactionSearchPage: FunctionComponent = () => {
     e.preventDefault();
     if (editedItem) {
       if (selectedDate) {
-        const response = await patchTransaction(token, editedItem._id, formData);
+        const response = await patchTransaction(token, editedItem._id, editTransactionCredentials);
         if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
           setEditedItem({ _id: '', date_transaction: '' , nom_client: '', ref: '', montant_transaction: 0,});
         } else {
@@ -163,8 +152,8 @@ const TransactionSearchPage: FunctionComponent = () => {
     setSelectedDate(date);
     if (date) {
       const isoDate = date.toISOString();
-      setFormData({
-        ...formData,
+      setEditTransactionCredentials({
+        ...editTransactionCredentials,
         date_transaction: isoDate,
       });
     }
@@ -230,7 +219,7 @@ const TransactionSearchPage: FunctionComponent = () => {
             <div className='text-xs text-center my-2'>-------- Fin du recherche  ---------</div>
           </div>
         )} 
-        <Modal title="MODIFIER TRANSACTION" open={isModalOpen} onCancel={handleCloseModal} footer={null} >
+        <Modal title="MODIFIER TRANSACTION" open={isEditTransactionModalOpen} onCancel={() => setIsEditTransactionModalOpen(false)} footer={null} >
           {selectedItemEdit && <div>
             <form className='w-2/3 my-7 mx-auto' onSubmit={handleSubmit}>
               <label htmlFor='nom_client' >Nom du client : </label> <br />
@@ -298,7 +287,7 @@ const TransactionSearchPage: FunctionComponent = () => {
           }
            <div className='w-full bg-seven mb-1'>
             {
-              detail.map((detail: any , index) => {
+              details.map((detail: any , index) => {
                 return(
                   <div key={index}>
                     <div className='sm:px-5 px-2 py-1 border-b-2 border-gray-200'>

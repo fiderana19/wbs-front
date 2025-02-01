@@ -5,11 +5,12 @@ import AddProduct from './AddProductPage';
 import { deleteProductById, getAllProduct, patchProduct } from '../../../api/Product';
 import { HttpStatus } from '../../../constants/Http_status';
 import { Product } from '../../../interfaces/Product.interface';
+import { okDeleteStyle } from '../../../constants/ModalStyle';
 
 const ProductPage: FunctionComponent = () => {
-  const [product, setProduct] = useState<Product[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpen1, setIsModalOpen1] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
+  const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<Product | null>(null);
@@ -32,31 +33,31 @@ const ProductPage: FunctionComponent = () => {
   async function fetchAllProduct() {
     const response = await getAllProduct(token);
     if(response?.status === HttpStatus.OK) {
-      setProduct(response.data);
+      setProducts(response.data);
       setLoading(false);
     } else {
       console.log("Error");
     }
   }
-  //show delete confirmation
+
   const showDeleteConfirmation = (item: Product) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
   };
-  //handling product delete
+
   async function handleDelete(itemId: string) {
     const response = await deleteProductById(token, itemId);
     if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
-      setProduct(product.filter((item: any) => item._id !== itemId));
+      setProducts(products.filter((item: any) => item._id !== itemId));
       deleteMessage();
     } else {
       console.log("Error");
     }
   }
-  //edit product item
+
   function EditProduct(item: Product) {
     setSelectedItem(item);
-    showModal1();
+    setIsEditProductModalOpen(true);
   
     setEditedItem({
       _id: item._id,
@@ -66,60 +67,37 @@ const ProductPage: FunctionComponent = () => {
       stock: item.stock,
     });    
   }
-  //handlign the form submit
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const response = await patchProduct(token, editedItem._id, editedItem);
     if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
       setEditedItem({ _id: '', libelle: '' , description: '', pu: 0, stock: 0, });
       fetchAllProduct();
-      setIsModalOpen1(false);
+      setIsEditProductModalOpen(false);
     } else {
       console.log("Error");
     }
   }
-  //handle edit input change
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (editedItem) {
       const { name, value } = e.target;
       setEditedItem({ ...editedItem, [name]: value });
     }
   };
-  //handling delete confirmation
+
   const handleDeleteConfirm = () => {
     if (itemToDelete) {
       handleDelete(itemToDelete._id);
       setIsDeleteModalVisible(false);
     }
   };
-  //handlign delete cancel
-  const handleDeleteCancel = () => {
-    setIsDeleteModalVisible(false);
-  };
-  ///message
+
   const deleteMessage = () => {
     message.success('Suppression du produit réussie !');
   };
-  //show add modal
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  //closing add modal
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-  //show edit modal
-  const showModal1 = () => {
-    setIsModalOpen1(true);
-  };
-  //close edit modal
-  const handleCloseModal1 = () => {
-    setIsModalOpen1(false);
-  };
-  const okDeleteStyle = {
-    background: 'red'
-  }
-  //handling the keypress
+
   const handleKeyPress =async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const charCode = e.which || e.keyCode;
 
@@ -133,9 +111,9 @@ const ProductPage: FunctionComponent = () => {
       <div className='md:px-32 sm:px-10 px-4'>
         <div className='flex justify-between'>
           <div className='text-xl font-bold font-lato'>LISTE DES PRODUITS</div>
-          <Button onClick={showModal} ><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden'> AJOUTER </div></Button>
+          <Button onClick={() => setIsAddProductModalOpen(true)} ><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden'> AJOUTER </div></Button>
         </div>
-        <Modal title="AJOUTER UN PRODUIT" open={isModalOpen} onCancel={handleCloseModal} footer={null} >
+        <Modal title="AJOUTER UN PRODUIT" open={isAddProductModalOpen} onCancel={() => setIsAddProductModalOpen(false)} footer={null} >
           <AddProduct />
         </Modal>
         <div className='my-7 grid gap-2 justify-center grid-cols-customized'>
@@ -146,7 +124,7 @@ const ProductPage: FunctionComponent = () => {
                 <div>Chargement...</div>
               </div>
             ) : (
-              product && product.map((product: any, index) =>{
+              products && products.map((product: any, index) =>{
                 return(
                   <Card key={index} className='hover:scale-105 duration-300'>
                     <div className='w-40 text-center'>
@@ -173,10 +151,10 @@ const ProductPage: FunctionComponent = () => {
                   </Card>
                 )
               })
-            )
+            ) 
           }
         </div>
-        <Modal title="MODIFIER PRODUIT" open={isModalOpen1} onCancel={handleCloseModal1} footer={null} >
+        <Modal title="MODIFIER PRODUIT" open={isEditProductModalOpen} onCancel={() => setIsEditProductModalOpen(false)} footer={null} >
           {/* {selectedItem && <EditProduct item={selectedItem} />} */}
           {selectedItem && 
             <div>
@@ -200,7 +178,7 @@ const ProductPage: FunctionComponent = () => {
           title="Suppression"
           open={isDeleteModalVisible}
           onOk={handleDeleteConfirm}
-          onCancel={handleDeleteCancel}
+          onCancel={() => setIsDeleteModalVisible(false)}
           okText="Supprimer"
           cancelText="Annuler"
           okButtonProps={{style: okDeleteStyle}}
