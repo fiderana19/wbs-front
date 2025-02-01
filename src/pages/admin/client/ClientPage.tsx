@@ -1,8 +1,9 @@
 import { FunctionComponent, useState, useEffect } from 'react'
 import { Input, Button, Card, message, Modal } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, UserOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { deleteClientById, getAllClient, patchClientById } from '../../../api/Client';
+import { HttpStatus } from '../../../constants/Http_status';
 
 interface Data {
     _id: string;
@@ -19,6 +20,9 @@ const ClientPage: FunctionComponent = () => {
   const [itemToDelete, setItemToDelete] = useState<Data | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [loading , setLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  )
   const [editedItem, setEditedItem] = useState<Data>({   
     _id: '',
     nom_client: '',
@@ -28,25 +32,20 @@ const ClientPage: FunctionComponent = () => {
   });
 
   useEffect(() => {        
-    //fetching all client item
-    async function fetchAllClient() {
-      try {
-        axios({
-          method: 'get',
-          url: 'http://localhost:3001/client/',
-        })
-        .then((rep) => {
-          {
-            setClient(rep.data)
-            setLoading(false);
-          }
-        })
-      } catch (error) {
-        console.error("Client : Erreur de recupeartion des clients : " + error);
-      } 
-    }
     fetchAllClient()
   }, [])
+
+  //fetching all client item
+  async function fetchAllClient() {
+    const response  = await getAllClient(token);
+    if(response?.status === HttpStatus.OK) {
+      setClient(response.data);
+      setLoading(false)
+    } else {
+      console.log("Error")
+    }
+  }
+
   //show the delete confimation modal
   const showDeleteConfirmation = async (item: Data) => {
     setItemToDelete(item);
@@ -64,19 +63,15 @@ const ClientPage: FunctionComponent = () => {
     setIsDeleteModalVisible(false)
   }
   //handlign delete confirmation
-  function handleDelete(itemId: string) {
+  async function handleDelete(itemId: string) {
     //deleting the client
-    axios({
-      method: 'delete',
-      url: `http://localhost:3001/client/${itemId}`,
-    })
-    .then(() => {
+    const response  = await deleteClientById(token, itemId);
+    if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
       setClient(client.filter((item: any) => item._id !== itemId));
       deleteMessage()
-    })
-    .catch(error => {
-      console.error('Client : Erreur lors de la suppression de l\'élément :', error);
-    });
+    } else {
+      console.log("Error");
+    }
   }
   //show the modal edit
   const showModal1 = () => {
@@ -104,19 +99,13 @@ const ClientPage: FunctionComponent = () => {
     }); 
   }
   //handling the edit submit
-  const handleSubmit = (e: React.FormEvent) => {
-    // e.preventDefault();
-    axios({
-      method: 'patch',
-      url: `http://localhost:3001/client/${editedItem._id}`,
-      data: editedItem,
-    })
-    .then((response) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    const response = await patchClientById(token, editedItem._id, editedItem);
+    if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
       setEditedItem({ _id: '', nom_client: '' , adresse_client: '', mail_client: '', telephone_client: ''});
-    })
-    .catch((error) => {
-      console.error('EditClient : Erreur lors du modification:', error);
-    });
+    } else {
+      console.log("Error");
+    }
   }
   //handling the edit form input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
