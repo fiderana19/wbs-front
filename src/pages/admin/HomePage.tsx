@@ -6,15 +6,10 @@ import Typewriter from '../../components/Typewritter';
 import { LoadingOutlined } from '@ant-design/icons';
 import { getLatestTransaction } from '../../api/Transaction';
 import { HttpStatus } from '../../constants/Http_status';
-
-interface Trans {
-    date_transaction: string;
-    nom_client: string;
-    montant_transaction: string;
-}
+import { Transaction } from '../../interfaces/Transaction.interface';
 
 const HomePage: FunctionComponent= () => {
-    let [transaction, setTransaction] = useState<Trans[]>([]);
+    let [transaction, setTransaction] = useState<Transaction[]>([]);
     const [loading , setLoading] = useState(true);
     const [token, setToken] = useState<string |null>(
         localStorage.getItem("token")

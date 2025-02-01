@@ -6,24 +6,9 @@ import { getAllProduct } from '../../../api/Product';
 import { HttpStatus } from '../../../constants/Http_status';
 import { getAllTransaction } from '../../../api/Transaction';
 import { postDetail } from '../../../api/Detail';
-
-interface FormData {
-  quantite: number;
-  remise: number;
-  product: string;
-  transaction: string
-}
-
-interface Trans {
-  _id: string;
-  date_transaction: string;
-  nom_client: string;
-}
-
-interface Product {
-  _id: string;
-  libelle: string;
-}
+import { CreateDetailInterface } from '../../../interfaces/Detail.interface';
+import { Transaction } from '../../../interfaces/Transaction.interface';
+import { ProductForDetail } from '../../../interfaces/Product.interface';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -33,11 +18,11 @@ interface StepsPropsType {
 const { Option } = Select;
 
 const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
-  let [trans, setTrans] = useState<Trans[]>([]);
+  let [trans, setTrans] = useState<Transaction[]>([]);
   const [selectedTransId, setSelectedTransId] = useState('');
-  let [product, setProduct] = useState<Product[]>([]);
+  let [product, setProduct] = useState<ProductForDetail[]>([]);
   const [selectedProductId, setSelectedProductId] = useState('');
-  const [formData, setFormData] = useState<FormData>({ quantite: 0, remise : 0, product: "", transaction: "" })
+  const [formData, setFormData] = useState<CreateDetailInterface>({ quantite: 0, remise : 0, product: "", transaction: "" })
   const [quantiteError, setQuantiteError] = useState('');
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")

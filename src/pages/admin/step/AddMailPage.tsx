@@ -5,12 +5,7 @@ import { MailOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { getAllTransaction } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
 import { getMailer } from '../../../api/Mailer';
-
-interface Trans {
-  _id: string;
-  date_transaction: string;
-  nom_client: string;
-}
+import { Transaction } from '../../../interfaces/Transaction.interface';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -20,7 +15,7 @@ interface StepsPropsType {
 const { Option } = Select;
 
 const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
-  let [trans, setTrans] = useState<Trans[]>([]);
+  let [trans, setTrans] = useState<Transaction[]>([]);
   const [selectedTransId, setSelectedTransId] = useState('');
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")

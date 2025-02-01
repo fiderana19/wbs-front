@@ -4,27 +4,20 @@ import { EditOutlined, DeleteOutlined, WarningOutlined, ShoppingCartOutlined, Lo
 import AddProduct from './AddProductPage';
 import { deleteProductById, getAllProduct, patchProduct } from '../../../api/Product';
 import { HttpStatus } from '../../../constants/Http_status';
-
-interface Data {
-  _id: string;
-  libelle: string;
-  description: string;
-  pu: number;
-  stock: number;
-}
+import { Product } from '../../../interfaces/Product.interface';
 
 const ProductPage: FunctionComponent = () => {
-  const [product, setProduct] = useState<Data[]>([]);
+  const [product, setProduct] = useState<Product[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Data | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Product | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState<Data | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<Product | null>(null);
   const [loading , setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
-  const [editedItem, setEditedItem] = useState<Data>({   
+  const [editedItem, setEditedItem] = useState<Product>({   
     _id: '',
     libelle: '',
     description: '',
@@ -46,7 +39,7 @@ const ProductPage: FunctionComponent = () => {
     }
   }
   //show delete confirmation
-  const showDeleteConfirmation = (item: Data) => {
+  const showDeleteConfirmation = (item: Product) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
   };
@@ -61,7 +54,7 @@ const ProductPage: FunctionComponent = () => {
     }
   }
   //edit product item
-  function EditProduct(item: Data) {
+  function EditProduct(item: Product) {
     setSelectedItem(item);
     showModal1();
   

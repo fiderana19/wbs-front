@@ -7,52 +7,26 @@ import TransactionSearch from './TransactionSearchPage';
 import { deleteTransaction, getAllTransaction, getTransactionById, patchTransaction } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
 import { getDetailById } from '../../../api/Detail';
-
-interface Detail {
-    _id: string;
-    product: string;
-    quantite: number;
-    montant_brut: number;
-    remise: number;
-    montant_total: number;
-}
-interface Trans {
-    _id: string;
-    ref: string;
-    date_transaction: string;
-    nom_client: string;
-    montant_transaction: string;
-}
-
-interface Item {
-  _id: string;
-  date_transaction: string;
-  nom_client: string;
-  ref: string;
-  montant_transaction: number;
-}
-interface FormData {
-  date_transaction: string;
-}
-
+import { DetailInTransaction } from '../../../interfaces/Detail.interface';
+import { TransactionForDisplay, TransactionForEdit, TransactionItem } from '../../../interfaces/Transaction.interface';
 
 const TransactionPage: FunctionComponent = () => {
-    let [transaction, setTransaction] = useState<Trans[]>([]);
-    let [selectTransaction, setSelectTransaction] = useState<Trans[]>();
-    let [detail, setDetail] = useState<Detail[]>([]);
+    let [transaction, setTransaction] = useState<TransactionForDisplay[]>([]);
+    let [selectTransaction, setSelectTransaction] = useState<TransactionForDisplay[]>();
+    let [detail, setDetail] = useState<DetailInTransaction[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState<Trans | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<TransactionForDisplay | null>(null);
     const [searchRef, setSearchRef] = useState('');
-    const [formData, setFormData] = useState<FormData>({ date_transaction: '' })
+    const [formData, setFormData] = useState<TransactionForEdit>({ date_transaction: '' })
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);  
-    const [selectedItemEdit, setSelectedItemEdit] = useState<Item | null>(null);
+    const [selectedItemEdit, setSelectedItemEdit] = useState<TransactionItem | null>(null);
     const [loading , setLoading] = useState(true);
     const [token, setToken] = useState<string | null>(
       localStorage.getItem("token")
     )
-    const [editedItem, setEditedItem] = useState<Item>({
+    const [editedItem, setEditedItem] = useState<TransactionItem>({
       _id: '',
       date_transaction: '',
       nom_client: '',
@@ -84,7 +58,7 @@ const TransactionPage: FunctionComponent = () => {
     }
   }
   //show delete transaction
-  const showDeleteConfirmation = (item: Trans) => {
+  const showDeleteConfirmation = (item: TransactionForDisplay) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
   };
@@ -142,7 +116,7 @@ const TransactionPage: FunctionComponent = () => {
     }
   }
   //edit trasanction item
-  function EditTransaction(item: Item) {
+  function EditTransaction(item: TransactionItem) {
     setSelectedItemEdit(item);
     showModal()
 

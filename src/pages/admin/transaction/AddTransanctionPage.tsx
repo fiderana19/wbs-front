@@ -1,21 +1,12 @@
 import { Select, DatePicker, message  } from 'antd'
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import axios from 'axios';
 import dayjs from 'dayjs';
 import { getAllClient } from '../../../api/Client';
 import { HttpStatus } from '../../../constants/Http_status';
 import { postTransaction } from '../../../api/Transaction';
-
-interface FormData {
-  client: string;
-  date_transaction: string;
-}
-
-interface Client {
-  _id: string;
-  mail_client: string;
-}
+import { CreateTransactionInterface } from '../../../interfaces/Transaction.interface';
+import { ClientForTransaction } from '../../../interfaces/Client.interface';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -25,9 +16,9 @@ interface StepsPropsType {
 const { Option } = Select;
 
 const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
-  let [client, setClient] = useState<Client[]>([]);
+  let [client, setClient] = useState<ClientForTransaction[]>([]);
   const [selectedClientId, setSelectedClientId] = useState('');
-  const [formData, setFormData] = useState<FormData>({ client: '', date_transaction: '' })
+  const [formData, setFormData] = useState<CreateTransactionInterface>({ client: '', date_transaction: '' })
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")

@@ -1,62 +1,31 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { DatePicker, Modal , message, Input } from 'antd'
 import { SearchOutlined, EditOutlined, WarningOutlined, DeleteOutlined, EyeOutlined, CloseOutlined } from '@ant-design/icons';
-import axios from 'axios';
 import dayjs from 'dayjs';
 import { deleteTransaction, getTransactionById, patchTransaction, searchTransactionBetweenDates } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
 import { getDetailById } from '../../../api/Detail';
-
-interface Detail {
-    _id: string;
-    product: string;
-    quantite: number;
-    montant_brut: number;
-    remise: number;
-    montant_total: number;
-}
-interface Trans {
-    _id: string;
-    ref: string;
-    date_transaction: string;
-    nom_client: string;
-    montant_transaction: string;
-}
-
-interface Search {
-  start: string;
-  end: string;
-}
-interface Item {
-  _id: string;
-  date_transaction: string;
-  nom_client: string;
-  ref: string;
-  montant_transaction: number;
-}
-interface FormData {
-  date_transaction: string;
-}
-
+import { DetailInTransaction } from '../../../interfaces/Detail.interface';
+import { TransactionForDisplay, TransactionForEdit, TransactionItem, TransactionSearch } from '../../../interfaces/Transaction.interface';
 
 const TransactionSearchPage: FunctionComponent = () => {
-    let [transaction, setTransaction] = useState<Trans[]>([]);
-    let [selectTransaction, setSelectTransaction] = useState<Trans[] | null>();
-    let [searchTransaction, setSearchTransaction] = useState<Trans[] | null>();
-    let [detail, setDetail] = useState<Detail[]>([]);
+    let [transaction, setTransaction] = useState<TransactionForDisplay[]>([]);
+    let [selectTransaction, setSelectTransaction] = useState<TransactionForDisplay[] | null>();
+    let [searchTransaction, setSearchTransaction] = useState<TransactionForDisplay[] | null>();
+    let [detail, setDetail] = useState<DetailInTransaction[]>([]);
     const [selectedDateDebut, setSelectedDateDebut] = useState<dayjs.Dayjs | null>(null);
     const [selectedDateEnd, setSelectedDateEnd] = useState<dayjs.Dayjs | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState<Trans | null>(null);
-    const [formData, setFormData] = useState<FormData>({ date_transaction: '' })
+    const [itemToDelete, setItemToDelete] = useState<TransactionForDisplay | null>(null);
+    const [formData, setFormData] = useState<TransactionForEdit>({ date_transaction: '' })
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);  
-    const [selectedItemEdit, setSelectedItemEdit] = useState<Item | null>(null);
+    const [selectedItemEdit, setSelectedItemEdit] = useState<TransactionItem | null>(null);
     const [token, setToken] = useState<string | null>(
       localStorage.getItem("token")
     )
-    const [editedItem, setEditedItem] = useState<Item>({
+    const [editedItem, setEditedItem] = useState<TransactionItem>({
       _id: '',
       date_transaction: '',
       nom_client: '',
@@ -86,7 +55,7 @@ const TransactionSearchPage: FunctionComponent = () => {
     }
   }
   //show delete transaction
-  const showDeleteConfirmation = (item: Trans) => {
+  const showDeleteConfirmation = (item: TransactionForDisplay) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
   };
@@ -113,7 +82,7 @@ const TransactionSearchPage: FunctionComponent = () => {
     setSearchTransaction(null);
 
     if(selectedDateDebut && selectedDateEnd){
-      const data : Search = { start: selectedDateDebut.toISOString(), end: selectedDateEnd.toISOString() } 
+      const data : TransactionSearch = { start: selectedDateDebut.toISOString(), end: selectedDateEnd.toISOString() } 
       const response = await searchTransactionBetweenDates(token, data);
       if(response?.status === HttpStatus.OK) {
         setSearchTransaction(response.data);
@@ -161,7 +130,7 @@ const TransactionSearchPage: FunctionComponent = () => {
   }
 
   //edit trasanction item
-  function EditTransaction(item: Item) {
+  function EditTransaction(item: TransactionItem) {
     setSelectedItemEdit(item);
     showModal()
 

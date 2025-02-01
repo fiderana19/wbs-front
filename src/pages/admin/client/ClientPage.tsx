@@ -4,26 +4,19 @@ import { EditOutlined, DeleteOutlined, WarningOutlined, UserOutlined, LoadingOut
 import { Link } from 'react-router-dom';
 import { deleteClientById, getAllClient, patchClientById } from '../../../api/Client';
 import { HttpStatus } from '../../../constants/Http_status';
-
-interface Data {
-    _id: string;
-    nom_client: string;
-    adresse_client: string;
-    mail_client: string;
-    telephone_client: string;
-}
+import { Client } from '../../../interfaces/Client.interface';
 
 const ClientPage: FunctionComponent = () => {
-  let [client, setClient] = useState<Data[]>([]);
+  let [client, setClient] = useState<Client[]>([]);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Data | null>(null);
-  const [itemToDelete, setItemToDelete] = useState<Data | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Client | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<Client | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [loading , setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
-  const [editedItem, setEditedItem] = useState<Data>({   
+  const [editedItem, setEditedItem] = useState<Client>({   
     _id: '',
     nom_client: '',
     adresse_client: '',
@@ -47,7 +40,7 @@ const ClientPage: FunctionComponent = () => {
   }
 
   //show the delete confimation modal
-  const showDeleteConfirmation = async (item: Data) => {
+  const showDeleteConfirmation = async (item: Client) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
   }
@@ -86,7 +79,7 @@ const ClientPage: FunctionComponent = () => {
     message.success('Suppression du client réussie !');
   };
   //editing client item
-  function EditClient(item: Data) {
+  function EditClient(item: Client) {
     setSelectedItem(item);
     showModal1();
  

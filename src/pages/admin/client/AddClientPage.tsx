@@ -2,13 +2,7 @@ import { Input ,message  } from 'antd'
 import React, { FunctionComponent, useState } from 'react'
 import { postClient } from '../../../api/Client';
 import { HttpStatus } from '../../../constants/Http_status';
-
-interface FormData {
-  nom_client: string;
-  adresse_client: string;
-  mail_client: string;
-  telephone_client: string;
-}
+import { CreateClientInterface } from '../../../interfaces/Client.interface';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -16,7 +10,7 @@ interface StepsPropsType {
 }
 
 const AddClientPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
-  const [formData, setFormData] = useState<FormData>({ nom_client: "", adresse_client: "", mail_client: "" , telephone_client: "",});
+  const [formData, setFormData] = useState<CreateClientInterface>({ nom_client: "", adresse_client: "", mail_client: "" , telephone_client: "",});
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )

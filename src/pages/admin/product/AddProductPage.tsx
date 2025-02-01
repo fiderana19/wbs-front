@@ -2,16 +2,10 @@ import { Input  } from 'antd'
 import React, { FunctionComponent, useState } from 'react'
 import { postProduct } from '../../../api/Product';
 import { HttpStatus } from '../../../constants/Http_status';
-
-interface FormData {
-  libelle: string;
-  description: string;
-  pu: number;
-  stock: number;
-}
+import { CreateProductInterface } from '../../../interfaces/Product.interface';
 
 const AddProductPage: FunctionComponent = () => {
-  const [formData, setFormData] = useState<FormData>({ libelle: "", description: "", pu: 0, stock: 0});
+  const [formData, setFormData] = useState<CreateProductInterface>({ libelle: "", description: "", pu: 0, stock: 0});
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )

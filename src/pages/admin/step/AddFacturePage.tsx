@@ -6,12 +6,7 @@ import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/re
 import { getDetailById } from '../../../api/Detail';
 import { getAllTransaction, getTransactionForFacture } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
-
-interface Trans {
-  _id: string;
-  date_transaction: string;
-  nom_client: string;
-}
+import { Transaction } from '../../../interfaces/Transaction.interface';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -224,7 +219,7 @@ const generatePDF = async (token: string | null,  selectedTransId: string ) => {
 const { Option } = Select;
 
 const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
-  let [trans, setTrans] = useState<Trans[]>([]);
+  let [trans, setTrans] = useState<Transaction[]>([]);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
