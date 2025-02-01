@@ -3,6 +3,9 @@ import { DatePicker, Modal , message, Input } from 'antd'
 import { SearchOutlined, EditOutlined, WarningOutlined, DeleteOutlined, EyeOutlined, CloseOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { deleteTransaction, getTransactionById, patchTransaction, searchTransactionBetweenDates } from '../../../api/Transaction';
+import { HttpStatus } from '../../../constants/Http_status';
+import { getDetailById } from '../../../api/Detail';
 
 interface Detail {
     _id: string;
@@ -50,6 +53,9 @@ const TransactionSearchPage: FunctionComponent = () => {
     const [formData, setFormData] = useState<FormData>({ date_transaction: '' })
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);  
     const [selectedItemEdit, setSelectedItemEdit] = useState<Item | null>(null);
+    const [token, setToken] = useState<string | null>(
+      localStorage.getItem("token")
+    )
     const [editedItem, setEditedItem] = useState<Item>({
       _id: '',
       date_transaction: '',
@@ -62,26 +68,22 @@ const TransactionSearchPage: FunctionComponent = () => {
             
     } ,[])
   //handle date debut change
-  const handleDateDebutChange = (date: dayjs.Dayjs | null, dateString: string) => {
+  const handleDateDebutChange = (date: any) => {
     setSelectedDateDebut(date);
   };
   //handle date end change
-  const handleDateEndChange = (date: dayjs.Dayjs | null, dateString: string) => {
+  const handleDateEndChange = (date: any) => {
     setSelectedDateEnd(date);
   };
   //handle delete transaction confirmation
-  function handleDeleteTransaction(itemId: string) {
-    axios({
-      method: 'delete',
-      url: `http://localhost:3001/transaction/${itemId}`,
-    })
-    .then(() => {
+  async function handleDeleteTransaction(itemId: string) {
+    const response = await deleteTransaction(token, itemId);
+    if(response?.status === HttpStatus.OK) {
       setTransaction(transaction.filter((item: any) => item._id !== itemId));
       deleteMessage()
-    })
-    .catch(error => {
-      console.error('Erreur lors de la suppression de l\'élément :', error);
-    });
+    } else {
+      console.log("Error");
+    }
   }
   //show delete transaction
   const showDeleteConfirmation = (item: Trans) => {
@@ -112,15 +114,12 @@ const TransactionSearchPage: FunctionComponent = () => {
 
     if(selectedDateDebut && selectedDateEnd){
       const data : Search = { start: selectedDateDebut.toISOString(), end: selectedDateEnd.toISOString() } 
-      try {
-        const response  = await axios({
-          method: 'post',
-          url: 'http://localhost:3001/transaction/search',
-          data: data,
-        })        
-        setSearchTransaction(response.data)
-      } catch (error) {
-      }  
+      const response = await searchTransactionBetweenDates(token, data);
+      if(response?.status === HttpStatus.OK) {
+        setSearchTransaction(response.data);
+      } else {
+        console.log("Error")
+      }
     }else{
       errorMessage();
     }
@@ -146,33 +145,19 @@ const TransactionSearchPage: FunctionComponent = () => {
 
   //get detail function
   const getDetail = async (itemId: string) => {
-    //getting the transaction
-    try {
-      axios({
-        method: 'get',
-        url: `http://localhost:3001/transaction/find/${itemId}`,
-      })
-      .then((rep) => {
-        {setSelectTransaction(rep.data)
-        }
-      })
-    } catch (error) {
-      console.error(error);
-    }     
-    //getting all detail 
-    try {
-      axios({
-        method: 'get',
-        url: `http://localhost:3001/detailtransaction/trans/${itemId}`,
-      })
-        .then((rep) => {
-          {setDetail(rep.data)
-            showDetail()
-        }
-        })
-      } catch (error) {
-        console.error(error);
-      }   
+    const response  = await getTransactionById(token, itemId);
+    if(response?.status === HttpStatus.OK) {
+      setSelectTransaction(response.data);
+    } else {
+      console.log("Error");
+    }
+    const res = await getDetailById(token, itemId);
+    if(res?.status === HttpStatus.OK) {
+      setDetail(res.data)
+      showDetail()
+    } else {
+      console.log("Error");
+    }
   }
 
   //edit trasanction item
@@ -189,28 +174,23 @@ const TransactionSearchPage: FunctionComponent = () => {
      }); 
   }
   //handling edit submit
-  const handleSubmit = (e: React.FormEvent) => {
-    // e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (editedItem) {
       if (selectedDate) {
-        axios({
-          method: 'patch',
-          url: `http://localhost:3001/transaction/${editedItem._id}`,
-          data: formData,
-        })
-        .then((response) => {
+        const response = await patchTransaction(token, editedItem._id, formData);
+        if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
           setEditedItem({ _id: '', date_transaction: '' , nom_client: '', ref: '', montant_transaction: 0,});
-        })
-        .catch((error) => {
-          console.error('EditTransaction : Erreur lors du modification:', error);
-        });
+        } else {
+          console.log("Error");
+        }
       } else {
         errorMessage()
       }
     }
   }
   //handling the edit date change
-  const handleDateChange = (date: dayjs.Dayjs | null, dateString: string) => {
+  const handleDateChange = (date: any) => {
     setSelectedDate(date);
     if (date) {
       const isoDate = date.toISOString();

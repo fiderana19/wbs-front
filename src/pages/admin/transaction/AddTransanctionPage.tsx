@@ -46,7 +46,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
     };
   }, []);
   //handling the date change
-  const handleDateChange = (date: dayjs.Dayjs | null, dateString: string) => {
+  const handleDateChange = (date: any) => {
     setSelectedDate(date);
     if (date) {
       const isoDate = date.toISOString();

@@ -82,3 +82,20 @@ export const getTransactionById = async (token: string | null, id: string) => {
         return error;
     }
 }
+
+export const searchTransactionBetweenDates = async (token: string | null, data: any) => {
+    try {
+        const response = await axios({
+            method: 'get',
+            url: `${TransactionAPIURL}/search`,
+            data: data,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        return response;
+    } catch (error: any) {
+        return error;
+    }
+}
