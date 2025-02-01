@@ -1,5 +1,4 @@
-import React, { FunctionComponent, useState , useEffect } from 'react'
-import axios from 'axios';
+import { FunctionComponent, useState , useEffect } from 'react'
 import { Card, Space, Statistic } from 'antd';
 import { ShoppingCartOutlined, DollarCircleOutlined, UserOutlined } from '@ant-design/icons';
 import DashboardChart from '../../../components/dashboard/DashboardChart';

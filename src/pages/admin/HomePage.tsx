@@ -1,10 +1,11 @@
 import { Button } from 'antd';
-import axios from 'axios';
 import dayjs from 'dayjs';
 import { FunctionComponent, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Typewriter from '../../components/Typewritter';
-import { CloseOutlined , LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
+import { getLatestTransaction } from '../../api/Transaction';
+import { HttpStatus } from '../../constants/Http_status';
 
 interface Trans {
     date_transaction: string;
@@ -15,23 +16,23 @@ interface Trans {
 const HomePage: FunctionComponent= () => {
     let [transaction, setTransaction] = useState<Trans[]>([]);
     const [loading , setLoading] = useState(true);
+    const [token, setToken] = useState<string |null>(
+        localStorage.getItem("token")
+    )
    
     useEffect(() => {
-        //getting the latest transaction
-        try {
-            axios({
-                method : "get" , 
-                url  : "http://localhost:3001/transaction/latest",
-            })
-            .then((rep) => {
-                {setTransaction(rep.data)
-                setLoading(false);
-                }
-            })
-        } catch (error) {
-            console.error("Home : Erreur de recuperation des transaction : " + error);
-        }
+        fetchLatestTransaction();
     }, [])
+
+     async function fetchLatestTransaction() {
+        const response = await getLatestTransaction(token);
+        if(response?.status === HttpStatus.OK) {
+          setTransaction(response.data);
+          setLoading(false);
+        } else {
+          console.log("Error")
+        }
+    }
     
     const text = 'BIENVENUE SUR NOTRE PLATEFORME DE GESTION DE CAISSE';
 
