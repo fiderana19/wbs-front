@@ -3,51 +3,52 @@ import axios from 'axios';
 import { Card, Space, Statistic } from 'antd';
 import { ShoppingCartOutlined, DollarCircleOutlined, UserOutlined } from '@ant-design/icons';
 import DashboardChart from '../../../components/dashboard/DashboardChart';
+import { getClientTotal, getProductTotal, getTransactionTotal } from '../../../api/Dashboard';
+import { HttpStatus } from '../../../constants/Http_status';
 
 
 const DashboardPage: FunctionComponent = () => {
   let [totalClient, setTotalClient] = useState()
   let [totalProduct, setTotalProduct] = useState()
   let [totalTransaction, setTotalTransaction] = useState()
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  )
 
-  useEffect(() => {        
-    //getting the client total
-    try {
-      axios({
-        method: 'get',
-        url: 'http://localhost:3001/client/total',
-      })
-      .then((rep) => {
-        {setTotalClient(rep.data)}
-      })
-    } catch (error) {
-      console.error("Dashboard : Erreur de recuperation total client : " + error);
-    }
-    //getting the product total
-    try {
-      axios({
-        method: 'get',
-        url: 'http://localhost:3001/product/total',
-      })
-      .then((rep) => {
-        {setTotalProduct(rep.data)}
-      })
-    } catch (error) {
-      console.error("Dashboard : Erreur de recuperation total produit : " + error);
-    }
-    //getting the transaction total
-    try {
-      axios({
-        method: 'get',
-        url: 'http://localhost:3001/transaction/total',
-      })
-      .then((rep) => {
-        {setTotalTransaction(rep.data)}
-      })
-    } catch (error) {
-      console.error("Dashboard : Erreur de recuperation total transaction : " + error);
-    }
+  useEffect(() => { 
+    fetchClientTotal();   
+    fetchProductTotal();
+    fetchTransactionTotal();    
   },[])
+
+
+  async function fetchClientTotal() {
+    const response = await getClientTotal(token);
+    if(response?.status === HttpStatus.OK) {
+      setTotalClient(response.data);
+    } else {
+      console.log("Error")
+    }
+  }
+
+  async function fetchProductTotal() {
+    const response = await getProductTotal(token);
+    if(response?.status === HttpStatus.OK) {
+      setTotalProduct(response.data);
+    } else {
+      console.log("Error")
+    }
+  }
+
+  async function fetchTransactionTotal() {
+    const response = await getTransactionTotal(token);
+    if(response?.status === HttpStatus.OK) {
+      setTotalTransaction(response.data);
+    } else {
+      console.log("Error")
+    }
+  }
+
 
   return (
     <div className='md:px-32 lg: px sm:px-10 px-4 pb-5 pt-24'>

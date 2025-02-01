@@ -1,10 +1,12 @@
-import axios from 'axios';
 import { FunctionComponent, useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts';
-
+import { getProductForChart } from '../../api/Dashboard';
+import { HttpStatus } from '../../constants/Http_status';
 
 const DashboardChart: FunctionComponent = () => {
-  //initializing the chart value
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  );
   const [chartData, setChartData] = useState<{ options: any; series: any[] }>({
     options: {
       xaxis: {
@@ -13,34 +15,31 @@ const DashboardChart: FunctionComponent = () => {
     },
     series: []
   });
-  //fetching value for the chart
   useEffect(() => {
-    axios({
-      method: 'get',
-      url: 'http://localhost:3001/product/',
-    })
-    .then((response) => {
-        const data = response.data;
-
-        const newchartData = {
-          options: {
-            xaxis: {
-              categories: data.map((item: any) => item.libelle), 
-            },
-          },
-          series: [
-            {
-              name: 'Stock',
-              data: data.map((item: any) => item.stock),
-            }
-          ],
-        };
-        setChartData(newchartData);
-      })
-      .catch((error) => {
-        console.error('DashboardChart : Erreur lors de la récupération des données :', error);
-      });
+    fetchProductForChart();
   }, []);
+
+  async function fetchProductForChart() {
+    const response = await getProductForChart(token);
+    if(response?.status === HttpStatus.OK) {
+      const newchartData = {
+        options: {
+          xaxis: {
+            categories: response.data.map((item: any) => item.libelle), 
+          },
+        },
+        series: [
+          {
+            name: 'Stock',
+            data: response.data.map((item: any) => item.stock),
+          }
+        ],
+      };
+      setChartData(newchartData);
+    } else {
+      console.log("Error")
+    }
+  }
 
   return (
     <div>
