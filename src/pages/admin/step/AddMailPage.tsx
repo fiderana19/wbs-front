@@ -1,8 +1,10 @@
 import { message, Select  } from 'antd'
 import React, { FunctionComponent, useEffect, useState } from 'react'
-import axios from 'axios';
 import dayjs from 'dayjs';
 import { MailOutlined, ArrowLeftOutlined } from '@ant-design/icons'
+import { getAllTransaction } from '../../../api/Transaction';
+import { HttpStatus } from '../../../constants/Http_status';
+import { getMailer } from '../../../api/Mailer';
 
 interface Trans {
   _id: string;
@@ -20,54 +22,39 @@ const { Option } = Select;
 const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   let [trans, setTrans] = useState<Trans[]>([]);
   const [selectedTransId, setSelectedTransId] = useState('');
-  const [mailResponse , setMailResponse] = useState('');
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  )
 
   //fetching all transaction item
   useEffect(() => {
-    async function fetchTrans() {
-      try {
-        const response = await axios({
-          method: 'get',
-          url: 'http://localhost:3001/transaction/',
-        }); 
-        setTrans(response.data);
-      } catch (error) {
-        console.error('AddMail : Erreur lors de la récupération des transactions :', error);
-      }
-    }
-    fetchTrans();
 
-    return () => {
-
-    };
+    fetchAllTransaction();
   })
+
+  async function fetchAllTransaction() {
+    const response = await getAllTransaction(token);
+    if(response?.status === HttpStatus.OK) {
+      setTrans(response.data);
+    } else {
+      console.log("Error")
+    }
+  }
 
   //form submit handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    async function sendMail() {
-      try {
-        await axios({
-          method: 'get',
-          url: `http://localhost:3001/mailer/${selectedTransId}`,
-        })
-        .then((rep) => {
-          successMessage(rep.data.message);
-          console.log(rep.data.message)
-        }
-        );
-      } catch (error: any) {
-        if (error.response?.status === 400 ) {
-          errorMail("Erreur sur l'envoie du mail")
-        } else  {
-          console.error("AddMail : Erreur lors de l'envoie du mail :", error);
-        } 
-      }
-    } 
+    e.preventDefault();
 
     if (selectedTransId) { 
-      sendMail()
+      const response = await getMailer(token, selectedTransId);
+      if(response?.status === HttpStatus.OK) {
+        successMessage(response.data.message);
+      }
+      else if(response?.status === HttpStatus.BAD_REQUEST) {
+        errorMail("Erreur sur l'envoie du mail");
+      } else {
+        console.log("Error")
+      }
     } else {
       errorMessage()
     }

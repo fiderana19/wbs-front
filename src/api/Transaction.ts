@@ -34,6 +34,23 @@ export const getAllTransaction = async (token: string | null) => {
     }
 }
 
+export const postTransaction = async (token: string | null, data: any) => {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${TransactionAPIURL}`,
+            data: data,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        return response;
+    } catch (error: any) {
+        return error;
+    }
+}
+
 export const deleteTransaction = async (token: string | null, id: string) => {
     try {
         const response = await axios({
@@ -89,6 +106,22 @@ export const searchTransactionBetweenDates = async (token: string | null, data: 
             method: 'get',
             url: `${TransactionAPIURL}/search`,
             data: data,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        return response;
+    } catch (error: any) {
+        return error;
+    }
+}
+
+export const getTransactionForFacture = async (token: string | null, id: string) => {
+    try {
+        const response = await axios({
+            method: 'get',
+            url: `${TransactionAPIURL}/findfacture/${id}`,
             headers: {
                 Authorization: `Bearer ${token}`
             }

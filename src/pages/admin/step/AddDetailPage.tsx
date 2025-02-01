@@ -1,8 +1,11 @@
 import { Button, Input, Select, message } from 'antd'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import axios from 'axios';
 import dayjs from 'dayjs';
+import { getAllProduct } from '../../../api/Product';
+import { HttpStatus } from '../../../constants/Http_status';
+import { getAllTransaction } from '../../../api/Transaction';
+import { postDetail } from '../../../api/Detail';
 
 interface FormData {
   quantite: number;
@@ -36,41 +39,34 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
   const [selectedProductId, setSelectedProductId] = useState('');
   const [formData, setFormData] = useState<FormData>({ quantite: 0, remise : 0, product: "", transaction: "" })
   const [quantiteError, setQuantiteError] = useState('');
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  )
   
   useEffect(() => {
-    //fetching all product item
-    async function fetchProd() {
-      try {
-        const response = await axios({
-          method: 'get',
-          url: 'http://localhost:3001/product/',
-        })
-        setProduct(response.data);
-      } catch (error) {
-        console.error('AddDetail : Erreur lors de la récupération des produits :', error);
-      }
-    }
-    fetchProd();
-    //fetching all transaction item
-    async function fetchTrans() {
-      try {
-        const response = await axios({
-          method: 'get',
-          url: 'http://localhost:3001/transaction/',
-        }) ; 
-        setTrans(response.data);
-      } catch (error) {
-        console.error('AddDetail : Erreur lors de la récupération des produits :', error);
-      }
-    }
-    fetchTrans();
-
-    return () => {
-
-    };
+    fetchAllProduct();
+    fetchAllTransaction();
   }, []);
+
+  async function fetchAllProduct() {
+    const response = await getAllProduct(token);
+    if(response?.status === HttpStatus.OK) {
+      setProduct(response.data);
+    } else {
+      console.log("Error");
+    }
+  }
+  async function fetchAllTransaction() {
+    const response = await getAllTransaction(token);
+    if(response?.status === HttpStatus.OK) {
+      setTrans(response.data);
+    } else {
+      console.log("Error")
+    }
+  }
+
   //handle form submit
-  const handleSubmit =async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setQuantiteError('')
 
@@ -80,20 +76,17 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
 
     if (selectedProductId && selectedTransId ) {
       if (formData.quantite >= 1) {
-        try {
-          await axios({
-            method: 'post',
-            url: 'http://localhost:3001/detailtransaction/',
-            data: formData,
-          });
+
+        const response = await postDetail(token, formData);
+        if(response?.status === HttpStatus.CREATED) {
           setFormData({ quantite: 0, remise : 0, product: "", transaction: "" })
           successMessage();
-        } catch (error: any) {
-          if (error.response?.status === 400 ) {
-            alertStock()
-          } else {
-          console.error("AddDetail : Erreur sur l'ajout : " + error)
-          }
+        } 
+        else if(response?.status === HttpStatus.BAD_REQUEST) {
+          alertStock();
+        }
+        else {
+          console.log("Error");
         }
       }
     } else {

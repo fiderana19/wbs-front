@@ -1,9 +1,11 @@
 import { message, Select  } from 'antd'
 import React, { FunctionComponent, useEffect, useState } from 'react'
-import axios from 'axios';
 import dayjs from 'dayjs';
 import { FileZipOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer';
+import { getDetailById } from '../../../api/Detail';
+import { getAllTransaction, getTransactionForFacture } from '../../../api/Transaction';
+import { HttpStatus } from '../../../constants/Http_status';
 
 interface Trans {
   _id: string;
@@ -123,23 +125,17 @@ const footer = StyleSheet.create({
 });
 
 //generate pdf function
-const generatePDF = async ( selectedTransId: string ) => {
+const generatePDF = async (token: string | null,  selectedTransId: string ) => {
   //getting all detail of the transaction
-  const response = await axios({
-    method: 'get',
-    url: `http://localhost:3001/detailtransaction/trans/${selectedTransId}`,
-  }); 
+  const response = await getDetailById(token, selectedTransId);
   const data = response.data;
   //filling the table blank
   while (data.length < 13) {
     data.push({ quantite: '', product: '', montant_brut: '', remise: '', montant_total: '' });
   }
-  //getting the transaction owner
-  const trans = await axios({
-    method: 'get',
-    url: `http://localhost:3001/transaction/findfacture/${selectedTransId}`,
-  })
-  const transaction = trans.data[0];
+
+  const res = await getTransactionForFacture(token, selectedTransId);
+  const transaction = res.data[0];
   //the pdf content 
   const pdfDocument = (
     <Document>
@@ -229,6 +225,9 @@ const { Option } = Select;
 
 const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   let [trans, setTrans] = useState<Trans[]>([]);
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  )
   const [selectedTransId, setSelectedTransId] = useState('');
   const [pdfData, setPdfData] =  useState<null | JSX.Element>(null);
   //handling the form submit
@@ -236,7 +235,7 @@ const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
     e.preventDefault()
 
     if (selectedTransId) {
-      generatePDF(selectedTransId).then((pdf) => {
+      generatePDF(token,selectedTransId).then((pdf) => {
         setPdfData(pdf);
       })
     } else {
@@ -245,23 +244,16 @@ const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   }
   //fetching all transaction item
   useEffect(() => {
-    async function fetchTrans() {
-      try {
-        const response = await axios({
-          method: 'get',
-          url: `http://localhost:3001/transaction/`,
-        });
-        setTrans(response.data);
-      } catch (error) {
-        console.error('AddFacture : Erreur lors de la récupération des produits :', error);
-      }
-    }
-    fetchTrans();
-    
-    return () => {
-
-    };
+    fetchAllTransaction();
   })
+  async function fetchAllTransaction() {
+    const response = await getAllTransaction(token);
+    if(response?.status === HttpStatus.OK) {
+      setTrans(response.data);
+    } else {
+      console.log("Error")
+    }
+  }
   //error message
   const errorMessage = () => {
     message.error('Veuillez remplir les champs !');

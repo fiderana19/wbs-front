@@ -3,6 +3,9 @@ import React, { FunctionComponent, useState, useEffect } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { getAllClient } from '../../../api/Client';
+import { HttpStatus } from '../../../constants/Http_status';
+import { postTransaction } from '../../../api/Transaction';
 
 interface FormData {
   client: string;
@@ -26,25 +29,22 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
   const [selectedClientId, setSelectedClientId] = useState('');
   const [formData, setFormData] = useState<FormData>({ client: '', date_transaction: '' })
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  )
   //fethcing all client item
   useEffect(() => {
-    async function fetchClient() {
-      try {
-        const response = await axios({
-          method: 'get',
-          url: 'http://localhost:3001/client/',
-        }); 
-        setClient(response.data);
-      } catch (error) {
-        console.error('AddTransction : Erreur lors de la récupération des produits :', error);
-      }
-    }
-    fetchClient();
-
-    return () => {
-
-    };
+    fetchAllClient();
   }, []);
+
+  async function fetchAllClient() {
+    const response = await getAllClient(token);
+    if(response?.status === HttpStatus.OK) {
+      setClient(response.data);
+    } else {
+      console.log("Error")
+    }
+  }
   //handling the date change
   const handleDateChange = (date: any) => {
     setSelectedDate(date);
@@ -60,16 +60,12 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (selectedClientId && selectedDate) {
-      try {
-        const response  = await axios({
-            method: 'post',
-            url: 'http://localhost:3001/transaction/',
-            data: formData,
-          });
+      const response = await postTransaction(token, formData);
+      if(response?.status === HttpStatus.CREATED) {
         successMessage()
         handleNext()
-      } catch (error) {
-        console.error("AddTransaction : Erreur lors de l'ajout du transaction : " + error); 
+      } else {
+        console.log("Error")
       }
     } else {
       errorMessage()

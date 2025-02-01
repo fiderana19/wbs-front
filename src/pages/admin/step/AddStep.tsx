@@ -1,12 +1,12 @@
 import { Steps ,Button  } from 'antd'
 import { FunctionComponent, useEffect, useState } from 'react'
 import { HomeOutlined ,ArrowRightOutlined } from '@ant-design/icons'
-import AddClient from '../client/AddClientPage';
-import AddDetail from './AddDetailPage';
-import Addtransaction from '../transaction/AddTransanctionPage';
 import { Link } from 'react-router-dom';
-import AddFacture from './AddFacturePage';
-import AddMail from './AddMailPage';
+import AddClientPage from '../client/AddClientPage';
+import AddTransanctionPage from '../transaction/AddTransanctionPage';
+import AddDetailPage from './AddDetailPage';
+import AddFacturePage from './AddFacturePage';
+import AddMailPage from './AddMailPage';
 
 const {Step} = Steps
 
@@ -47,31 +47,31 @@ const AddForms: FunctionComponent = () => {
           {/* Contenu de la page actuelle */}
           {currentStep === 0 && (
             <div>
-              <AddClient  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
+              <AddClientPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
               <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
             </div>
           )}
           {currentStep === 1 && (
             <div>
-              <Addtransaction handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
+              <AddTransanctionPage handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
               <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
             </div>
           )}
           {currentStep === 2 && (
             <div>
-              <AddDetail  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
+              <AddDetailPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
               <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
             </div>
           )}
           {currentStep === 3 && (
             <div>
-              <AddFacture  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
+              <AddFacturePage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
               <Button className='mr-10 float-right  mb-32' onClick={handleNextPage}>Envoyer facture par mail <ArrowRightOutlined/> </Button>
             </div>
           )}
            {currentStep === 4 && (
             <div>
-              <AddMail  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
+              <AddMailPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
             </div>
           )}
         </div>

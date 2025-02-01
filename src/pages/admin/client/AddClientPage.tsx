@@ -1,6 +1,7 @@
 import { Input ,message  } from 'antd'
 import React, { FunctionComponent, useState } from 'react'
-import axios from 'axios';
+import { postClient } from '../../../api/Client';
+import { HttpStatus } from '../../../constants/Http_status';
 
 interface FormData {
   nom_client: string;
@@ -16,24 +17,20 @@ interface StepsPropsType {
 
 const AddClientPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
   const [formData, setFormData] = useState<FormData>({ nom_client: "", adresse_client: "", mail_client: "" , telephone_client: "",});
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  )
   //handling the form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    async function fetchClient() {
-      try {
-        axios({
-          method: 'post',
-          url: 'http://localhost:3001/client/',
-          data: formData,
-        })
-        successMessage();
-        handleNext()
-      } catch (error) {
-        console.log("AddClient : erreur sur l'ajout du client  : " + error);
-      }
-    } 
-    fetchClient()
+    const response = await postClient(token, formData);
+    if(response?.status === HttpStatus.CREATED) {
+      successMessage();
+      handleNext()
+    } else {
+      console.log("Error");
+    }
   }
   //success message 
   const successMessage = () => {

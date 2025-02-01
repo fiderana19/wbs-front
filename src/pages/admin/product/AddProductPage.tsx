@@ -1,6 +1,7 @@
 import { Input  } from 'antd'
 import React, { FunctionComponent, useState } from 'react'
-import axios from 'axios';
+import { postProduct } from '../../../api/Product';
+import { HttpStatus } from '../../../constants/Http_status';
 
 interface FormData {
   libelle: string;
@@ -11,16 +12,17 @@ interface FormData {
 
 const AddProductPage: FunctionComponent = () => {
   const [formData, setFormData] = useState<FormData>({ libelle: "", description: "", pu: 0, stock: 0});
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  )
   //handling the form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    try {
-      const response  = await  axios({
-        method: 'post',
-        url: 'http://localhost:3001/product/',
-        data: formData,
-      });
-    } catch (error) {
-      console.error("AddProduct : Erreur d'ajout de produit : " + error);
+    e.preventDefault();
+    const response = await postProduct(token, formData);
+    if(response?.status === HttpStatus.CREATED) {
+      console.log("Success");
+    } else {
+      console.log("Error")
     }
   }
   //handling the input change
