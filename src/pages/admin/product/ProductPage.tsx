@@ -1,8 +1,9 @@
 import { FunctionComponent, useState, useEffect } from 'react'
 import { Button, Card, message, Modal, Input } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, ShoppingCartOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import axios from 'axios';
 import AddProduct from './AddProductPage';
+import { deleteProductById, getAllProduct, patchProduct } from '../../../api/Product';
+import { HttpStatus } from '../../../constants/Http_status';
 
 interface Data {
   _id: string;
@@ -13,13 +14,16 @@ interface Data {
 }
 
 const ProductPage: FunctionComponent = () => {
-  let [product, setProduct] = useState<Data[]>([]);
+  const [product, setProduct] = useState<Data[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Data | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<Data | null>(null);
   const [loading , setLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  )
   const [editedItem, setEditedItem] = useState<Data>({   
     _id: '',
     libelle: '',
@@ -29,40 +33,32 @@ const ProductPage: FunctionComponent = () => {
   });
 
   useEffect(() => {      
-    //getting all product
-    try {
-      axios({
-        method: 'get',
-        url: 'http://localhost:3001/product',
-      })
-      .then((rep) => {
-        {
-          setProduct(rep.data)
-          setLoading(false);
-        }
-      })
-    } catch (error) {
-      console.error("Product : Erreur de recuperation des produits : " + error);
-    }  
+    fetchAllProduct();  
   }, [])
+
+  async function fetchAllProduct() {
+    const response = await getAllProduct(token);
+    if(response?.status === HttpStatus.OK) {
+      setProduct(response.data);
+      setLoading(false);
+    } else {
+      console.log("Error");
+    }
+  }
   //show delete confirmation
   const showDeleteConfirmation = (item: Data) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
   };
   //handling product delete
-  function handleDelete(itemId: string) {
-    axios({
-      method: 'delete',
-      url: `http://localhost:3001/product/${itemId}`,
-    })
-    .then(() => {
+  async function handleDelete(itemId: string) {
+    const response = await deleteProductById(token, itemId);
+    if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
       setProduct(product.filter((item: any) => item._id !== itemId));
-      deleteMessage()
-    })
-    .catch(error => {
-      console.error('Product : Erreur lors de la suppression de l\'élément :', error);
-    });
+      deleteMessage();
+    } else {
+      console.log("Error");
+    }
   }
   //edit product item
   function EditProduct(item: Data) {
@@ -78,20 +74,15 @@ const ProductPage: FunctionComponent = () => {
     });    
   }
   //handlign the form submit
-  const handleSubmit = (e: React.FormEvent) => {
-    // e.preventDefault();
-    if (editedItem) {
-      axios({
-        method: 'patch',
-        url: `http://localhost:3001/product/${editedItem._id}`,
-        data: editedItem,
-      })
-      .then(() => {
-        setEditedItem({ _id: '', libelle: '' , description: '', pu: 0, stock: 0, });
-      })
-      .catch((error) => {
-        console.error('EditProduct : Erreur lors du modification:', error);
-      });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const response = await patchProduct(token, editedItem._id, editedItem);
+    if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
+      setEditedItem({ _id: '', libelle: '' , description: '', pu: 0, stock: 0, });
+      fetchAllProduct();
+      setIsModalOpen1(false);
+    } else {
+      console.log("Error");
     }
   }
   //handle edit input change
@@ -162,7 +153,7 @@ const ProductPage: FunctionComponent = () => {
                 <div>Chargement...</div>
               </div>
             ) : (
-              product.map((product: any, index) =>{
+              product && product.map((product: any, index) =>{
                 return(
                   <Card key={index} className='hover:scale-105 duration-300'>
                     <div className='w-40 text-center'>

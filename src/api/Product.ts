@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const ClientAPIURL = "http://localhost:3002/client";
+const ProductAPIURL = "http://localhost:3002/product";
 
-export const getAllClient = async (token: string | null) => {
+export const getAllProduct = async (token: string | null) => {
     try {
         const response = await axios({
             method: 'get',
-            url: `${ClientAPIURL}`,
+            url: `${ProductAPIURL}`,
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -18,11 +18,28 @@ export const getAllClient = async (token: string | null) => {
     }
 }
 
-export const deleteClientById = async (token: string | null, id: string) => {
+export const postProduct = async (token: string | null, data: any) => {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${ProductAPIURL}`,
+            data: data,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        return response;
+    } catch (error: any) {
+        return error;
+    }
+}
+
+export const deleteProductById = async (token: string | null, id: string) => {
     try {
         const response = await axios({
             method: 'delete',
-            url: `${ClientAPIURL}/${id}`,
+            url: `${ProductAPIURL}/${id}`,
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -34,11 +51,11 @@ export const deleteClientById = async (token: string | null, id: string) => {
     }
 }
 
-export const patchClientById = async (token: string | null, id: string, data: any) => {
+export const patchProduct = async (token: string | null, id: string, data: any) => {
     try {
         const response = await axios({
             method: 'patch',
-            url: `${ClientAPIURL}/${id}`,
+            url: `${ProductAPIURL}/${id}`,
             data: data,
             headers: {
                 Authorization: `Bearer ${token}`

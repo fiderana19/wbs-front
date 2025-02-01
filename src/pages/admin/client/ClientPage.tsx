@@ -100,9 +100,12 @@ const ClientPage: FunctionComponent = () => {
   }
   //handling the edit submit
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     const response = await patchClientById(token, editedItem._id, editedItem);
     if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
       setEditedItem({ _id: '', nom_client: '' , adresse_client: '', mail_client: '', telephone_client: ''});
+      fetchAllClient();
+      setIsModalOpen1(false);
     } else {
       console.log("Error");
     }
