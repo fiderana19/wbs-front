@@ -1,8 +1,9 @@
-import { Input ,message  } from 'antd'
+import { Input  } from 'antd'
 import React, { FunctionComponent, useState } from 'react'
 import { postClient } from '../../../api/Client';
 import { HttpStatus } from '../../../constants/Http_status';
 import { CreateClientInterface } from '../../../interfaces/Client.interface';
+import { successMessage } from '../../../utils/AntdMessage';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -14,28 +15,24 @@ const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
-  //handling the form submit
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const response = await postClient(token, clientCredentials);
     if(response?.status === HttpStatus.CREATED) {
-      successMessage();
+      successMessage('Client ajouté avec succés !');
       handleNext()
     } else {
       console.log("Error");
     }
   }
-  //success message 
-  const successMessage = () => {
-    message.success('Client ajouté avec succés !');
-  };
-  //handling the input change
+
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
     setClientCredentials((prevFormData) => ({...prevFormData, [name]: value}));
   }
-  //handling the keypress
+
   const handleKeyPress =async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const charCode = e.which || e.keyCode;
 

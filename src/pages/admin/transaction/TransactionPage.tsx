@@ -9,6 +9,7 @@ import { HttpStatus } from '../../../constants/Http_status';
 import { getDetailById } from '../../../api/Detail';
 import { DetailInTransaction } from '../../../interfaces/Detail.interface';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem } from '../../../interfaces/Transaction.interface';
+import { errorMessage, successMessage } from '../../../utils/AntdMessage';
 
 const TransactionPage: FunctionComponent = () => {
     let [transactions, setTransactions] = useState<TransactionForDisplay[]>([]);
@@ -52,7 +53,7 @@ const TransactionPage: FunctionComponent = () => {
     const response = await deleteTransaction(token, itemId);
     if(response?.status === HttpStatus.OK) {
       setTransactions(transactions.filter((item: any) => item._id !== itemId));
-      deleteMessage()
+      successMessage('Suppression de la transaction réussie !')
     } else {
       console.log("Error");
     }
@@ -68,13 +69,6 @@ const TransactionPage: FunctionComponent = () => {
       handleDeleteTransaction(itemToDelete._id);
       setIsDeleteModalVisible(false);
     }
-  };
-
-  const errorMessage = () => {
-    message.error('Veuillez selectionner des dates !');
-  };
-  const deleteMessage = () => {
-    message.success('Suppression de la transaction réussie !');
   };
 
   const getDetail = async (itemId: string) => {
@@ -118,7 +112,7 @@ const TransactionPage: FunctionComponent = () => {
           console.log("Error");
         }
       } else {
-        errorMessage()
+        errorMessage('Veuillez selectionner des dates !')
       }
     }
   }

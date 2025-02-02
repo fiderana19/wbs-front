@@ -7,6 +7,7 @@ import { HttpStatus } from '../../../constants/Http_status';
 import { postTransaction } from '../../../api/Transaction';
 import { CreateTransactionInterface } from '../../../interfaces/Transaction.interface';
 import { ClientForTransaction } from '../../../interfaces/Client.interface';
+import { errorMessage, successMessage } from '../../../utils/AntdMessage';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -53,24 +54,16 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
     if (selectedClientId && selectedDate) {
       const response = await postTransaction(token, transactionCredentials);
       if(response?.status === HttpStatus.CREATED) {
-        successMessage()
+        successMessage('Transaction ajoutée avec succés !')
         handleNext()
       } else {
         console.log("Error")
       }
     } else {
-      errorMessage()
+      errorMessage('Veuillez remplir les champs !')
     }
   }
-
-  const errorMessage = () => {
-    message.error('Veuillez remplir les champs !');
-  };
   
-  const successMessage = () => {
-    message.success('Transaction ajoutée avec succés !');
-  };
-
   const handleSelectChange = (value: any) => {
     setSelectedClientId(value);
     setTransactionCredentials({

@@ -7,6 +7,7 @@ import { HttpStatus } from '../../../constants/Http_status';
 import { getDetailById } from '../../../api/Detail';
 import { DetailInTransaction } from '../../../interfaces/Detail.interface';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem, TransactionSearch } from '../../../interfaces/Transaction.interface';
+import { errorMessage, successMessage } from '../../../utils/AntdMessage';
 
 const TransactionSearchPage: FunctionComponent = () => {
     let [transactions, setTransactions] = useState<TransactionForDisplay[]>([]);
@@ -45,7 +46,7 @@ const TransactionSearchPage: FunctionComponent = () => {
     const response = await deleteTransaction(token, itemId);
     if(response?.status === HttpStatus.OK) {
       setTransactions(transactions.filter((item: any) => item._id !== itemId));
-      deleteMessage()
+      successMessage('Suppression de la transaction réussie !')
     } else {
       console.log("Error");
     }
@@ -86,16 +87,9 @@ const TransactionSearchPage: FunctionComponent = () => {
         console.log("Error")
       }
     }else{
-      errorMessage();
+      errorMessage('Veuillez selectionner des dates !');
     }
   }
-  //message
-  const errorMessage = () => {
-    message.error('Veuillez selectionner des dates !');
-  };
-  const deleteMessage = () => {
-    message.success('Suppression de la transaction réussie !');
-  };
 
   const handleCloseModalDetail = () => {
     setIsModalDetailOpen(false);
@@ -143,7 +137,7 @@ const TransactionSearchPage: FunctionComponent = () => {
           console.log("Error");
         }
       } else {
-        errorMessage()
+        errorMessage('Veuillez selectionner des dates !')
       }
     }
   }

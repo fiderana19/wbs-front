@@ -5,7 +5,6 @@ import DashboardChart from '../../../components/dashboard/DashboardChart';
 import { getClientTotal, getProductTotal, getTransactionTotal } from '../../../api/Dashboard';
 import { HttpStatus } from '../../../constants/Http_status';
 
-
 const DashboardPage: FunctionComponent = () => {
   let [totalClient, setTotalClient] = useState()
   let [totalProduct, setTotalProduct] = useState()
@@ -47,7 +46,6 @@ const DashboardPage: FunctionComponent = () => {
       console.log("Error")
     }
   }
-
 
   return (
     <div className='md:px-32 lg: px sm:px-10 px-4 pb-5 pt-24'>

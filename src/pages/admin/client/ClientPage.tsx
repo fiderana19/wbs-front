@@ -1,11 +1,12 @@
 import { FunctionComponent, useState, useEffect } from 'react'
-import { Input, Button, Card, message, Modal } from 'antd'
+import { Input, Button, Card, Modal } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, UserOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { deleteClientById, getAllClient, patchClientById } from '../../../api/Client';
 import { HttpStatus } from '../../../constants/Http_status';
 import { Client } from '../../../interfaces/Client.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
+import { successMessage } from '../../../utils/AntdMessage';
 
 const ClientPage: FunctionComponent = () => {
   const [clients, setClients] = useState<Client[]>([]);
@@ -55,15 +56,11 @@ const ClientPage: FunctionComponent = () => {
     const response  = await deleteClientById(token, itemId);
     if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
       setClients(clients.filter((item: any) => item._id !== itemId));
-      deleteMessage()
+      successMessage('Suppression du client réussie !')
     } else {
       console.log("Error");
     }
   }
-
-  const deleteMessage = () => {
-    message.success('Suppression du client réussie !');
-  };
 
   function EditClient(item: Client) {
     setSelectedItem(item);

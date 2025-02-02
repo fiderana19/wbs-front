@@ -1,11 +1,12 @@
 import { FunctionComponent, useState, useEffect } from 'react'
-import { Button, Card, message, Modal, Input } from 'antd'
+import { Button, Card, Modal, Input } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, ShoppingCartOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import AddProduct from './AddProductPage';
 import { deleteProductById, getAllProduct, patchProduct } from '../../../api/Product';
 import { HttpStatus } from '../../../constants/Http_status';
 import { Product } from '../../../interfaces/Product.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
+import { successMessage } from '../../../utils/AntdMessage';
 
 const ProductPage: FunctionComponent = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -49,7 +50,7 @@ const ProductPage: FunctionComponent = () => {
     const response = await deleteProductById(token, itemId);
     if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
       setProducts(products.filter((item: any) => item._id !== itemId));
-      deleteMessage();
+      successMessage('Suppression du produit réussie !');
     } else {
       console.log("Error");
     }
@@ -92,10 +93,6 @@ const ProductPage: FunctionComponent = () => {
       handleDelete(itemToDelete._id);
       setIsDeleteModalVisible(false);
     }
-  };
-
-  const deleteMessage = () => {
-    message.success('Suppression du produit réussie !');
   };
 
   const handleKeyPress =async (e: React.KeyboardEvent<HTMLInputElement>) => {
