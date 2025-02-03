@@ -4,6 +4,7 @@ import { ShoppingCartOutlined, DollarCircleOutlined, UserOutlined } from '@ant-d
 import DashboardChart from '../../../components/dashboard/DashboardChart';
 import { getClientTotal, getProductTotal, getTransactionTotal } from '../../../api/Dashboard';
 import { HttpStatus } from '../../../constants/Http_status';
+import { errorMessage } from '../../../utils/AntdMessage';
 
 const DashboardPage: FunctionComponent = () => {
   let [totalClient, setTotalClient] = useState()
@@ -25,7 +26,7 @@ const DashboardPage: FunctionComponent = () => {
     if(response?.status === HttpStatus.OK) {
       setTotalClient(response.data);
     } else {
-      console.log("Error")
+      errorMessage("Erreur sur la recupartion des données sur les clients ! ")
     }
   }
 
@@ -34,7 +35,7 @@ const DashboardPage: FunctionComponent = () => {
     if(response?.status === HttpStatus.OK) {
       setTotalProduct(response.data);
     } else {
-      console.log("Error")
+      errorMessage("Erreur sur la recupartion des données sur les produits ! ")
     }
   }
 
@@ -43,7 +44,7 @@ const DashboardPage: FunctionComponent = () => {
     if(response?.status === HttpStatus.OK) {
       setTotalTransaction(response.data);
     } else {
-      console.log("Error")
+      errorMessage("Erreur sur la recupartion des données sur les transactions ! ")
     }
   }
 

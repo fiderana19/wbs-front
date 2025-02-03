@@ -3,7 +3,7 @@ import React, { FunctionComponent, useState } from 'react'
 import { postClient } from '../../../api/Client';
 import { HttpStatus } from '../../../constants/Http_status';
 import { CreateClientInterface } from '../../../interfaces/Client.interface';
-import { successMessage } from '../../../utils/AntdMessage';
+import { errorMessage, successMessage } from '../../../utils/AntdMessage';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -24,7 +24,7 @@ const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
       successMessage('Client ajouté avec succés !');
       handleNext()
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur l'ajout du client !")
     }
   }
 

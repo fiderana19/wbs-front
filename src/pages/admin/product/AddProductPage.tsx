@@ -3,6 +3,7 @@ import React, { FunctionComponent, useState } from 'react'
 import { postProduct } from '../../../api/Product';
 import { HttpStatus } from '../../../constants/Http_status';
 import { CreateProductInterface } from '../../../interfaces/Product.interface';
+import { errorMessage, successMessage } from '../../../utils/AntdMessage';
 
 const AddProductPage: FunctionComponent = () => {
   const [productCredentials, setProductCredentials] = useState<CreateProductInterface>({ libelle: "", description: "", pu: 0, stock: 0});
@@ -14,9 +15,9 @@ const AddProductPage: FunctionComponent = () => {
     e.preventDefault();
     const response = await postProduct(token, productCredentials);
     if(response?.status === HttpStatus.CREATED) {
-      console.log("Success");
+      successMessage("Produit ajoutée avec succès ! ")
     } else {
-      console.log("Error")
+      errorMessage("Erreur sur l'ajout du produit ! ")
     }
   }
 

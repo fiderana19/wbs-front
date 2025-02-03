@@ -48,7 +48,7 @@ const TransactionSearchPage: FunctionComponent = () => {
       setTransactions(transactions.filter((item: any) => item._id !== itemId));
       successMessage('Suppression de la transaction réussie !')
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur la suppression de la transaction ! ")
     }
   }
   //show delete transaction
@@ -84,7 +84,7 @@ const TransactionSearchPage: FunctionComponent = () => {
       if(response?.status === HttpStatus.OK) {
         setSearchTransaction(response.data);
       } else {
-        console.log("Error")
+        errorMessage("Erreur sur la recherche des transactions ! ")
       }
     }else{
       errorMessage('Veuillez selectionner des dates !');
@@ -101,14 +101,14 @@ const TransactionSearchPage: FunctionComponent = () => {
     if(response?.status === HttpStatus.OK) {
       setSelectTransaction(response.data);
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur la recuperation de la transaction ! ")
     }
     const res = await getDetailById(token, itemId);
     if(res?.status === HttpStatus.OK) {
       setDetails(res.data)
       showDetail()
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur la recuperation des details de la transaction ! ")
     }
   }
 
@@ -134,7 +134,7 @@ const TransactionSearchPage: FunctionComponent = () => {
         if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
           setEditedItem({ _id: '', date_transaction: '' , nom_client: '', ref: '', montant_transaction: 0,});
         } else {
-          console.log("Error");
+          errorMessage("Erreur sur la modification de la transaction ! ")
         }
       } else {
         errorMessage('Veuillez selectionner des dates !')

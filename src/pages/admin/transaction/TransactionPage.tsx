@@ -45,7 +45,7 @@ const TransactionPage: FunctionComponent = () => {
         setTransactions(response.data);
         setLoading(false);
       } else {
-        console.log("Error");
+      errorMessage("Erreur sur la recuperation des transactions ! ")
       }
     }
 
@@ -55,7 +55,7 @@ const TransactionPage: FunctionComponent = () => {
       setTransactions(transactions.filter((item: any) => item._id !== itemId));
       successMessage('Suppression de la transaction réussie !')
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur la suppression de la transaction ! ")
     }
   }
 
@@ -76,14 +76,14 @@ const TransactionPage: FunctionComponent = () => {
     if(response?.status === HttpStatus.OK) {
       setSelectTransaction(response.data);
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur la recuperation de la transaction ! ")
     }
     const res = await getDetailById(token, itemId);
     if(res?.status === HttpStatus.OK) {
       setDetails(res.data)
       setIsModalDetailOpen(true)
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur la recuperation des details de la transaction ! ")
     }
   }
 
@@ -109,7 +109,7 @@ const TransactionPage: FunctionComponent = () => {
           setEditedItem({ _id: '', date_transaction: '' , nom_client: '', ref: '', montant_transaction: 0,});
           fetchAllTransaction();
         } else {
-          console.log("Error");
+          errorMessage("Erreur sur la modification de la transaction ! ")
         }
       } else {
         errorMessage('Veuillez selectionner des dates !')

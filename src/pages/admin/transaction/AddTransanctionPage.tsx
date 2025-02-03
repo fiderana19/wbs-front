@@ -34,7 +34,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
     if(response?.status === HttpStatus.OK) {
       setClients(response.data);
     } else {
-      console.log("Error")
+      errorMessage("Erreur sur la recuperation des clients ! ")
     }
   }
 
@@ -57,7 +57,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
         successMessage('Transaction ajoutée avec succés !')
         handleNext()
       } else {
-        console.log("Error")
+        errorMessage("Erreur sur l'ajout de la transaction ! ")
       }
     } else {
       errorMessage('Veuillez remplir les champs !')

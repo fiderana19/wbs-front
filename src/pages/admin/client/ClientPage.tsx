@@ -6,7 +6,7 @@ import { deleteClientById, getAllClient, patchClientById } from '../../../api/Cl
 import { HttpStatus } from '../../../constants/Http_status';
 import { Client } from '../../../interfaces/Client.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
-import { successMessage } from '../../../utils/AntdMessage';
+import { errorMessage, successMessage } from '../../../utils/AntdMessage';
 
 const ClientPage: FunctionComponent = () => {
   const [clients, setClients] = useState<Client[]>([]);
@@ -36,7 +36,7 @@ const ClientPage: FunctionComponent = () => {
       setClients(response.data);
       setLoading(false)
     } else {
-      console.log("Error")
+      errorMessage("Erreur sur la recuperation des clients ! ")
     }
   }
 
@@ -58,7 +58,7 @@ const ClientPage: FunctionComponent = () => {
       setClients(clients.filter((item: any) => item._id !== itemId));
       successMessage('Suppression du client réussie !')
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur la suppression du client !")
     }
   }
 
@@ -83,7 +83,7 @@ const ClientPage: FunctionComponent = () => {
       fetchAllClient();
       setIsEditClientModalOpen(false);
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur la modification du client ! ")
     }
   }
 

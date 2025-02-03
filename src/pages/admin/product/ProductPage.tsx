@@ -6,7 +6,7 @@ import { deleteProductById, getAllProduct, patchProduct } from '../../../api/Pro
 import { HttpStatus } from '../../../constants/Http_status';
 import { Product } from '../../../interfaces/Product.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
-import { successMessage } from '../../../utils/AntdMessage';
+import { errorMessage, successMessage } from '../../../utils/AntdMessage';
 
 const ProductPage: FunctionComponent = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -37,7 +37,7 @@ const ProductPage: FunctionComponent = () => {
       setProducts(response.data);
       setLoading(false);
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur la recuperation des produits ! ")
     }
   }
 
@@ -52,7 +52,7 @@ const ProductPage: FunctionComponent = () => {
       setProducts(products.filter((item: any) => item._id !== itemId));
       successMessage('Suppression du produit réussie !');
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur la suppression du produit ! ")
     }
   }
 
@@ -75,9 +75,10 @@ const ProductPage: FunctionComponent = () => {
     if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
       setEditedItem({ _id: '', libelle: '' , description: '', pu: 0, stock: 0, });
       fetchAllProduct();
+      successMessage("Produit modifié avec succès !")
       setIsEditProductModalOpen(false);
     } else {
-      console.log("Error");
+      errorMessage("Erreur sur la modification du produit ! ")
     }
   }
 
