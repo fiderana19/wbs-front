@@ -12,40 +12,40 @@ const AppLayout: FunctionComponent = () => {
 
     const items: MenuProps['items'] = [
         {
-            label: <Link to='admin/page'>
-                        <div  className={location.pathname === 'admin/page' ? 'text-primary' : ''}>
+            label: <Link to='/admin/page'>
+                        <div  className={location.pathname === '/admin/page' ? 'text-second' : ''}>
                             <HomeOutlined /> ACCUEIL
                         </div>
                     </Link>,
             key: '01'
         },
         {
-            label: <Link to='admin/page/dashboard'>
-                    <div className={location.pathname === '/dashboard' ? 'text-primary' : ''}>
+            label: <Link to='/admin/page/dashboard'>
+                    <div className={location.pathname === '/admin/page/dashboard' ? 'text-second' : ''}>
                         <BarChartOutlined /> DASHBOARD
                     </div>
                 </Link>,
             key: '1'
         },
         {
-            label: <Link to='admin/page/transaction'>
-                <div className={location.pathname === '/transaction' ? 'text-primary' : ''}>
+            label: <Link to='/admin/page/transaction'>
+                <div className={location.pathname === '/admin/page/transaction' ? 'text-second' : ''}>
                     <MoneyCollectOutlined /> TRANSACTION
                 </div>
                 </Link>,
             key: '3'
         },
         {
-            label: <Link to='admin/page/product'>
-                <div className={location.pathname === '/product' ? 'text-primary' : ''}>
+            label: <Link to='/admin/page/product'>
+                <div className={location.pathname === '/admin/page/product' ? 'text-second' : ''}>
                     <ShoppingCartOutlined /> PRODUIT
                 </div>
                 </Link>,
             key: '4'
         },
         {
-            label: <Link  to='admin/page/client'>
-                <div className={location.pathname === '/client' ? 'text-primary' : ''}>
+            label: <Link  to='/admin/page/client'>
+                <div className={location.pathname === '/admin/page/client' ? 'text-second' : ''}>
                     <UserOutlined /> CLIENT
                 </div>
                 </Link>,
