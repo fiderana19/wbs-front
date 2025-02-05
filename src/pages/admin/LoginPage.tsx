@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
     const [loginCredentials, setLoginCredentials] = useState<LoginInterface>({ usrid: "", password: "" });
+    const [isLoginSlide, setIsLoginSlide] = useState<boolean>(false);
     const { login } = useAuth();
 
     const loginSubmit = async () => {

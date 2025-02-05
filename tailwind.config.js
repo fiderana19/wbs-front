@@ -22,12 +22,14 @@ module.exports = {
       },
       keyframes: {
         wrapper: {
-          '50%': { transform: 'translateY(-48px)' },
-          '100%': {  transform: 'translateY(-96px)'},
-        }
+          '0%' : { opacity: '0' },
+          '49.99%' : { opacity: '0.3' },
+          '50%' : { opacity: '0.7' },
+          '100%' : { opacity: '1' },
+        },
       },
       animation: {
-        wrapper: 'wrapper 5s ease-in-out infinite alternate',
+        wrapper: 'wrapper 1s ease-in-out',
       },
       gridTemplateColumns: {
         customized: 'repeat(auto-fill , minmax(280px,295px))',
