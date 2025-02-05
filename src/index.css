@@ -2,7 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: sans-serif;
+*{
+    padding: 0;
+    margin: 0;
+    font-family: LatoRegular;
 }
 
+@font-face {
+    font-family: 'Geist';
+    src: url('./fonts/Geist-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+  font-family: 'GeistMono';
+  src: url('./fonts/GeistMono-VariableFont_wght.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Prompt';
+  src: url('./fonts/Prompt-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: 'HostGrotesk';
+    src: url('./fonts/HostGrotesk-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LatoBold';
+    src: url('./fonts/Lato-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'LatoRegular';
+    src: url('./fonts/Lato-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'LatoBlack';
+    src: url('./fonts/Lato-Black.ttf') format('truetype');
+}
