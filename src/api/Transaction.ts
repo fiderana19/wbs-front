@@ -103,7 +103,7 @@ export const getTransactionById = async (token: string | null, id: string) => {
 export const searchTransactionBetweenDates = async (token: string | null, data: any) => {
     try {
         const response = await axios({
-            method: 'get',
+            method: 'post',
             url: `${TransactionAPIURL}/search`,
             data: data,
             headers: {

@@ -164,7 +164,7 @@ const TransactionPage: FunctionComponent = () => {
               }
               return(
                 <div key={index}>
-                  <div className='w-full relative sm:pr-20 block sm:flex justify-between bg-six mt-1 sm:p-3 p-2'>
+                  <div className='w-full relative sm:pr-4 block sm:flex justify-between bg-six mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all'  onClick={() => getDetail(transaction._id)}>
                     <div className='sm:w-11/12 w-full'>
                       <div className='sm:flex text-xs'>
                         <div className='flex'>
@@ -183,12 +183,9 @@ const TransactionPage: FunctionComponent = () => {
                         <div className='ml-2'> { transaction.montant_transaction.toLocaleString('fr-FR') } <span className='text-xs'>MGA</span></div>
                       </div>
                     </div>
-                    <div className='flex sm:flex-col sm:justify-center sm:pr-0 pr-8 sm:mt-0 mt-2 justify-end'>
+                    <div className='flex sm:flex-col sm:justify-center sm:pr-0 sm:mt-0 mt-2 justify-end'>
                       <button className='sm:my-1 p-1 rounded bg-blue-400 hover:bg-blue-500 flex'   onClick={() => EditTransaction(transaction)} > <EditOutlined/></button>
                       <button className='p-1 sm:mx-0 mx-1 rounded bg-red-700 hover:bg-red-800 flex' onClick={ () => showDeleteConfirmation(transaction)}> <DeleteOutlined/> </button>
-                    </div>
-                    <div className='absolute sm:top-6 bottom-2 right-4'>
-                      <button className='sm:my-3 p-1 sm:text-xs sm:rounded-none rounded bg-gray-200 hover:bg-gray-300 flex' onClick={() => getDetail(transaction._id)}><EyeOutlined/><div className='sm:block hidden ml-1'> Detail</div></button>
                     </div>
                   </div>
                 </div>

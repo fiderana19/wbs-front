@@ -39,7 +39,7 @@ const HomePage: FunctionComponent= () => {
                     <Typewriter text={text} />
                 </div>
                 <div className='my-4 flex justify-center'>
-                    <Link to='/addforms'>
+                    <Link to='/admin/addforms'>
                         <Button>AJOUTER TRANSACTION</Button>
                     </Link>
                 </div>
@@ -70,7 +70,7 @@ const HomePage: FunctionComponent= () => {
                     }                       
                 </div>
                 <div className='px-2 py-2 bg-gray-600 text-right'>
-                    <Link to='/transaction'>
+                    <Link to='/admin/page/transaction'>
                         <Button type='primary' className='text-xs bg-blue-400'>Voir tout les transactions</Button>
                     </Link>
                 </div>
