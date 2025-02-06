@@ -24,11 +24,11 @@ const Login: React.FC = () => {
                 <div className="w-full">
                     <div className="mx-auto my-3">
                         <div className="text-xs">Identifiant</div>
-                        <input onChange={handleInputChange} type="text" name="usrid" className="w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500" />
+                        <input value={loginCredentials.usrid} onChange={handleInputChange} type="text" name="usrid" className="w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500" />
                     </div>
                     <div className="mx-auto my-3">
                         <div className="text-xs">Mot de passe</div>
-                        <input onChange={handleInputChange} type="password" name="password" className="w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500" />
+                        <input value={loginCredentials.password} onChange={handleInputChange} type="password" name="password" className="w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500" />
                     </div>
                     <button onClick={loginSubmit} className="bg-blue-500 hover:bg-blue-700 text-white mx-auto font-latobold py-2 px-4 my-1 rounded w-64">Se connecter</button>
                 </div>
