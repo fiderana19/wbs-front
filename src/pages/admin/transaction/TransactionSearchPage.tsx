@@ -178,8 +178,8 @@ const TransactionSearchPage: FunctionComponent = () => {
               searchTransaction.map((searchtransaction: any, index) =>{
                 return(
                   <div key={index}>
-                  <div className='w-full relative sm:pr-4 z-10 block sm:flex justify-between bg-six mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all' onClick={() => getDetail(searchtransaction._id)}>
-                    <div className='sm:w-11/12 w-full'>
+                  <div className='w-full relative sm:pr-4 z-10 block sm:flex justify-between bg-six mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all' >
+                    <div className='sm:w-11/12 w-full'  onClick={() => getDetail(searchtransaction._id)}>
                       <div className='sm:flex text-xs'>
                         <div className='flex'>
                           <div className=''> Date :</div>
