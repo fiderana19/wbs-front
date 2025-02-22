@@ -12,6 +12,8 @@
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
     "@react-pdf/renderer": "^4.1.4",
+    "@tanstack/react-query": "^5.66.9",
+    "@tanstack/react-query-devtools": "^5.66.9",
     "@types/react-qr-reader": "^2.1.7",
     "antd": "^5.21.4",
     "apexcharts": "^3.54.1",
@@ -22,6 +24,7 @@
     "react-dom": "^18.3.1",
     "react-qr-reader": "^3.0.0-beta-1",
     "react-router-dom": "^6.27.0",
+    "react-toastify": "^11.0.3",
     "tailwind-clip-path": "^1.0.0",
     "typed.js": "^2.1.0",
     "typeface-lato": "^1.1.13"
