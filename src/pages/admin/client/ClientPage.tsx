@@ -7,14 +7,13 @@ import { HttpStatus } from '../../../constants/Http_status';
 import { Client } from '../../../interfaces/Client.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
 import { errorMessage, successMessage } from '../../../utils/AntdMessage';
+import { useGetAllClient } from '../../../hooks/useGetAllClient';
 
 const ClientPage: FunctionComponent = () => {
-  const [clients, setClients] = useState<Client[]>([]);
   const [isEditClientModalOpen, setIsEditClientModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Client | null>(null);
   const [itemToDelete, setItemToDelete] = useState<Client | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [loading , setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
@@ -25,20 +24,7 @@ const ClientPage: FunctionComponent = () => {
     mail_client: '',
     telephone_client: '',
   });
-
-  useEffect(() => {        
-    fetchAllClient()
-  }, [])
-
-  async function fetchAllClient() {
-    const response  = await getAllClient(token);
-    if(response?.status === HttpStatus.OK) {
-      setClients(response.data);
-      setLoading(false)
-    } else {
-      errorMessage("Erreur sur la recuperation des clients ! ")
-    }
-  }
+  const { data: clients, error, isError, isLoading } = useGetAllClient();
 
   const showDeleteConfirmation = async (item: Client) => {
     setItemToDelete(item);
@@ -80,7 +66,6 @@ const ClientPage: FunctionComponent = () => {
     const response = await patchClientById(token, editedItem._id, editedItem);
     if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
       setEditedItem({ _id: '', nom_client: '' , adresse_client: '', mail_client: '', telephone_client: ''});
-      fetchAllClient();
       setIsEditClientModalOpen(false);
     } else {
       errorMessage("Erreur sur la modification du client ! ")
@@ -112,7 +97,7 @@ const ClientPage: FunctionComponent = () => {
         </div>
         <div className='my-7 grid gap-2 justify-center grid-cols-customized'>
           {
-            loading ? (
+            isLoading ? (
               <div className='text-center my-10'>
                 <LoadingOutlined className='text-3xl' />
                 <div>Chargement...</div>
