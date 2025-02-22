@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginAuth } from "../api/Auth";
+import { ToastContainer } from "react-toastify";
 
 type AuthContextProps = {
     token?: string | null;
@@ -56,6 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }}
         >
             {children}
+            <ToastContainer />
         </AuthContext.Provider>
     )
 }
