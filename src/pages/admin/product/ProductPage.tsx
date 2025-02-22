@@ -7,15 +7,14 @@ import { HttpStatus } from '../../../constants/Http_status';
 import { Product } from '../../../interfaces/Product.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
 import { errorMessage, successMessage } from '../../../utils/AntdMessage';
+import { useGetAllProduct } from '../../../hooks/useGetAllProduct';
 
 const ProductPage: FunctionComponent = () => {
-  const [products, setProducts] = useState<Product[]>([]);
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<Product | null>(null);
-  const [loading , setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
@@ -27,19 +26,7 @@ const ProductPage: FunctionComponent = () => {
     stock: 0,
   });
 
-  useEffect(() => {      
-    fetchAllProduct();  
-  }, [])
-
-  async function fetchAllProduct() {
-    const response = await getAllProduct(token);
-    if(response?.status === HttpStatus.OK) {
-      setProducts(response.data);
-      setLoading(false);
-    } else {
-      errorMessage("Erreur sur la recuperation des produits ! ")
-    }
-  }
+  const { data: products, error, isError, isLoading } = useGetAllProduct();
 
   const showDeleteConfirmation = (item: Product) => {
     setItemToDelete(item);
@@ -116,7 +103,7 @@ const ProductPage: FunctionComponent = () => {
         </Modal>
         <div className='my-7 grid gap-2 justify-center grid-cols-customized'>
           {
-            loading ? (
+            isLoading ? (
               <div className='text-center my-10'>
                 <LoadingOutlined className='text-3xl' />
                 <div>Chargement...</div>

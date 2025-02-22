@@ -10,9 +10,9 @@ import { getDetailById } from '../../../api/Detail';
 import { DetailInTransaction } from '../../../interfaces/Detail.interface';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem } from '../../../interfaces/Transaction.interface';
 import { errorMessage, successMessage } from '../../../utils/AntdMessage';
+import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 
 const TransactionPage: FunctionComponent = () => {
-    let [transactions, setTransactions] = useState<TransactionForDisplay[]>([]);
     let [selectTransaction, setSelectTransaction] = useState<TransactionForDisplay[]>();
     let [details, setDetails] = useState<DetailInTransaction[]>([]);
     const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
@@ -35,19 +35,7 @@ const TransactionPage: FunctionComponent = () => {
       montant_transaction: 0,
     });
 
-    useEffect( () => {         
-      fetchAllTransaction();
-    } ,[])
-
-    async function fetchAllTransaction() {
-      const response = await getAllTransaction(token);
-      if(response?.status === HttpStatus.OK) {
-        setTransactions(response.data);
-        setLoading(false);
-      } else {
-      errorMessage("Erreur sur la recuperation des transactions ! ")
-      }
-    }
+  const { data: transactions, isError, error, isLoading } = useGetAllTransaction();
 
   async function handleDeleteTransaction(itemId: string) {
     const response = await deleteTransaction(token, itemId);
@@ -151,7 +139,7 @@ const TransactionPage: FunctionComponent = () => {
         </div>
         <div className='bg-transparent'>
           {
-            loading ? (
+            isLoading ? (
               <div className='text-center my-10'>
                   <LoadingOutlined className='text-3xl' />
                   <div>Chargement...</div>

@@ -14,19 +14,14 @@ export const getLatestTransaction = async (token: string | null) => {
 }
 
 export const getAllTransaction = async (token: string | null) => {
-    try {
-        const response = await axios({
-            method: 'get',
-            url: `${TransactionAPIURL}`,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+    const response = await axios({
+        method: 'get',
+        url: `${TransactionAPIURL}`,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }
 
 export const postTransaction = async (token: string | null, data: any) => {
