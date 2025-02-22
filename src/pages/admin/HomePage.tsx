@@ -1,33 +1,13 @@
 import { Button } from 'antd';
 import dayjs from 'dayjs';
-import { FunctionComponent, useState, useEffect } from 'react';
+import { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
 import Typewriter from '../../components/Typewritter';
 import { LoadingOutlined } from '@ant-design/icons';
-import { getLatestTransaction } from '../../api/Transaction';
-import { HttpStatus } from '../../constants/Http_status';
-import { Transaction } from '../../interfaces/Transaction.interface';
+import { useGetLastTransation } from '../../hooks/useGetLastTransaction';
 
 const HomePage: FunctionComponent= () => {
-    let [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [loading , setLoading] = useState(true);
-    const [token, setToken] = useState<string |null>(
-        localStorage.getItem("token")
-    )
-   
-    useEffect(() => {
-        fetchLatestTransaction();
-    }, [])
-
-     async function fetchLatestTransaction() {
-        const response = await getLatestTransaction(token);
-        if(response?.status === HttpStatus.OK) {
-          setTransactions(response.data);
-          setLoading(false);
-        } else {
-          console.log("Error")
-        }
-    }
+    const { data: transactions, isError, error, isLoading } = useGetLastTransation();
     
     const text = 'BIENVENUE SUR NOTRE PLATEFORME DE GESTION DE CAISSE';
 
@@ -46,19 +26,28 @@ const HomePage: FunctionComponent= () => {
             </div>
             <div className='bg-gray-300 h-max'>
                 <div className='px-4 py-4 bg-gray-900 text-white font-bold font-lato'>
-                    DERNIERS TRANSACTIONS
+                    DERNIERES TRANSACTIONS
                 </div>
                 <div className='px-2 py-2'>
-                    {
-                        loading ? (
+                    <div>
+                        {isLoading && (
                             <div className='text-center my-10'>
                                 <LoadingOutlined className='text-3xl' />
                                 <div>Chargement...</div>
                             </div>
-                        ) : (
-                        transactions.map((transaction: any, index) => {
+                        )}
+                    </div>
+                    <div>
+                        {isError && (
+                            <div className='text-center my-10 w-full'>
+                                <div>Un erreur est survenu lors de la récuperation des transactions</div>
+                            </div>
+                        )}
+                    </div>
+                    {
+                        transactions?.map((transaction: any) => {
                             return(
-                                <div key={index} className='bg-gray-100 my-1 px-2 py-1'>
+                                <div className='bg-gray-100 my-1 px-2 py-1'>
                                     <div className='text-black text-xs'>{ dayjs(transaction.date_transaction).format('DD-MM-YYYY HH:mm') }</div>
                                     <div className='text-xs'> Ref : { transaction.ref }</div>
                                     <div className='font-bold font-sans'>{ transaction.nom_client }</div>
@@ -66,7 +55,6 @@ const HomePage: FunctionComponent= () => {
                                 </div>
                             )
                         })
-                        )
                     }                       
                 </div>
                 <div className='px-2 py-2 bg-gray-600 text-right'>

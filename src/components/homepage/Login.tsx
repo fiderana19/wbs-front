@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { LoginInterface } from '../../interfaces/Auth.interface';
-import { showToast } from '../../utils/Toast';
-import { TOAST_TYPE } from '../../constants/ToastType';
 
 const Login: React.FC = () => {  
     const [loginCredentials, setLoginCredentials] = useState<LoginInterface>({ usrid: "", password: "" });
@@ -17,10 +15,6 @@ const Login: React.FC = () => {
         const {name, value} = e.target;
 
         setLoginCredentials((prev) => ({...prev, [name]: value}));
-        showToast({toastProps: {
-            message: "Kaiza",
-            type: TOAST_TYPE.SUCCESS
-        }})
     }
 
     return(
