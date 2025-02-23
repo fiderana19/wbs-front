@@ -1,10 +1,10 @@
-import React, { FunctionComponent, useEffect, useState } from 'react'
-import { Button, DatePicker, Modal , message, Input } from 'antd'
+import React, { FunctionComponent, useState } from 'react'
+import { Button, DatePicker, Modal , Input } from 'antd'
 import { Link } from 'react-router-dom';
-import { EditOutlined, WarningOutlined, DeleteOutlined, EyeOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditOutlined, WarningOutlined, DeleteOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import TransactionSearch from './TransactionSearchPage';
-import { deleteTransaction, getAllTransaction, getTransactionById, patchTransaction } from '../../../api/Transaction';
+import { deleteTransaction, getTransactionById, patchTransaction } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
 import { getDetailById } from '../../../api/Detail';
 import { DetailInTransaction } from '../../../interfaces/Detail.interface';
@@ -23,7 +23,6 @@ const TransactionPage: FunctionComponent = () => {
     const [editTransactionCredentials, SetEditTransactionCredentials] = useState<TransactionForEdit>({ date_transaction: '' })
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);  
     const [selectedItemEdit, setSelectedItemEdit] = useState<TransactionItem | null>(null);
-    const [loading , setLoading] = useState(true);
     const [token, setToken] = useState<string | null>(
       localStorage.getItem("token")
     )

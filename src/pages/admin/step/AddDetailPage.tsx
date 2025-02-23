@@ -1,14 +1,11 @@
 import { Button, Input, Select, message } from 'antd'
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs';
-import { getAllProduct } from '../../../api/Product';
-import { HttpStatus } from '../../../constants/Http_status';
-import { getAllTransaction } from '../../../api/Transaction';
 import { CreateDetailInterface } from '../../../interfaces/Detail.interface';
-import { Transaction } from '../../../interfaces/Transaction.interface';
-import { ProductForDetail } from '../../../interfaces/Product.interface';
 import { usePostDetail } from '../../../hooks/usePostDetail';
+import { useGetAllProduct } from '../../../hooks/useGetAllProduct';
+import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -18,40 +15,13 @@ interface StepsPropsType {
 const { Option } = Select;
 
 const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
-  let [transactions, setTransactions] = useState<Transaction[]>([]);
   const [selectedTransactionId, setSelectedTransactionId] = useState('');
-  let [product, setProduct] = useState<ProductForDetail[]>([]);
   const [selectedProductId, setSelectedProductId] = useState('');
   const [detailCredentials, setDetailCredentials] = useState<CreateDetailInterface>({ quantite: 0, remise : 0, product: "", transaction: "" })
   const [quantiteError, setQuantiteError] = useState('');
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  )
   const { mutateAsync } = usePostDetail();
-  
-  useEffect(() => {
-    fetchAllProduct();
-    fetchAllTransaction();
-  }, []);
-
-  async function fetchAllProduct() {
-    const response = await getAllProduct(token);
-    if(response?.status === HttpStatus.OK) {
-      setProduct(response.data);
-    } else {
-      console.log("Error");
-    }
-  }
-
-  async function fetchAllTransaction() {
-    const response = await getAllTransaction(token);
-    if(response?.status === HttpStatus.OK) {
-      setTransactions(response.data);
-    } else {
-      console.log("Error")
-    }
-  }
-
+  const { data: products } = useGetAllProduct();
+  const { data: transactions } = useGetAllTransaction();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -126,9 +96,9 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
             >
               <Option value="">Sélectionnez une transaction</Option>
                 {
-                  transactions.map((tr: any, index) => {
+                  transactions && transactions.map((tr: any) => {
                     return(
-                      <Option key={index} value={tr._id}>
+                      <Option key={tr._id} value={tr._id}>
                         { `${tr.nom_client} ${dayjs(tr.date_transaction).format('DD-MM-YYYY HH:mm').toString()}` }
                       </Option>
                     )
@@ -149,9 +119,9 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
             >
               <Option value="">Sélectionnez un produit</Option>
               {
-                product.map((pr: any, index) => {
+                products && products.map((pr: any) => {
                   return(
-                    <Option key={index} value={pr._id}>
+                    <Option key={pr._id} value={pr._id}>
                       {pr.libelle}
                     </Option>
                   )

@@ -1,11 +1,10 @@
 import { message, Select  } from 'antd'
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import dayjs from 'dayjs';
 import { MailOutlined, ArrowLeftOutlined } from '@ant-design/icons'
-import { getAllTransaction } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
 import { getMailer } from '../../../api/Mailer';
-import { Transaction } from '../../../interfaces/Transaction.interface';
+import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -15,24 +14,11 @@ interface StepsPropsType {
 const { Option } = Select;
 
 const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
-  let [transactions, setTransactions] = useState<Transaction[]>([]);
   const [selectedTransactionId, setSelectedTransactionId] = useState('');
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
-
-  useEffect(() => {
-    fetchAllTransaction();
-  })
-
-  async function fetchAllTransaction() {
-    const response = await getAllTransaction(token);
-    if(response?.status === HttpStatus.OK) {
-      setTransactions(response.data);
-    } else {
-      console.log("Error")
-    }
-  }
+  const { data: transactions } = useGetAllTransaction();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -92,9 +78,9 @@ const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
             >
               <Option value="">Sélectionnez une transaction</Option>
               {
-                transactions.map((tr: any, index) => {
+                transactions && transactions.map((tr: any) => {
                   return(
-                    <Option key={index} value={tr._id}>
+                    <Option key={tr._id} value={tr._id}>
                       { `${tr.nom_client} ${dayjs(tr.date_transaction).format('DD-MM-YYYY HH:mm')}` }
                     </Option>
                   )
