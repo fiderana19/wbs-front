@@ -1,8 +1,8 @@
-import { FunctionComponent, useState, useEffect } from 'react'
+import { FunctionComponent, useState } from 'react'
 import { Input, Button, Card, Modal } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, UserOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { deleteClientById, getAllClient, patchClientById } from '../../../api/Client';
+import { deleteClientById, patchClientById } from '../../../api/Client';
 import { HttpStatus } from '../../../constants/Http_status';
 import { Client } from '../../../interfaces/Client.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
