@@ -19,18 +19,13 @@ export const getDetailById = async (token: string | null, id: string) => {
 }
 
 export const postDetail = async (token: string | null, data: any) => {
-    try {
-        const response = await axios({
-            method: 'post',
-            url: `${DetailTransactionAPIURL}`,
-            data: data,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+    const response = await axios({
+        method: 'post',
+        url: `${DetailTransactionAPIURL}`,
+        data: data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }

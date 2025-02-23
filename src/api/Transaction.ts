@@ -25,20 +25,15 @@ export const getAllTransaction = async (token: string | null) => {
 }
 
 export const postTransaction = async (token: string | null, data: any) => {
-    try {
-        const response = await axios({
-            method: 'post',
-            url: `${TransactionAPIURL}`,
-            data: data,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+    const response = await axios({
+        method: 'post',
+        url: `${TransactionAPIURL}`,
+        data: data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }
 
 export const deleteTransaction = async (token: string | null, id: string) => {

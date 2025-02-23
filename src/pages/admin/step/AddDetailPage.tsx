@@ -5,10 +5,10 @@ import dayjs from 'dayjs';
 import { getAllProduct } from '../../../api/Product';
 import { HttpStatus } from '../../../constants/Http_status';
 import { getAllTransaction } from '../../../api/Transaction';
-import { postDetail } from '../../../api/Detail';
 import { CreateDetailInterface } from '../../../interfaces/Detail.interface';
 import { Transaction } from '../../../interfaces/Transaction.interface';
 import { ProductForDetail } from '../../../interfaces/Product.interface';
+import { usePostDetail } from '../../../hooks/usePostDetail';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -27,6 +27,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
+  const { mutateAsync } = usePostDetail();
   
   useEffect(() => {
     fetchAllProduct();
@@ -62,18 +63,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
 
     if (selectedProductId && selectedTransactionId ) {
       if (detailCredentials.quantite >= 1) {
-
-        const response = await postDetail(token, detailCredentials);
-        if(response?.status === HttpStatus.CREATED) {
-          setDetailCredentials({ quantite: 0, remise : 0, product: "", transaction: "" })
-          successMessage();
-        } 
-        else if(response?.status === HttpStatus.BAD_REQUEST) {
-          alertStock();
-        }
-        else {
-          console.log("Error");
-        }
+        mutateAsync(detailCredentials);
       }
     } else {
       errorMessage()
@@ -88,16 +78,8 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
     }
   }
 
-  const alertStock = () => {
-    message.error("Le niveau du stock n'est suffisant !");
-  };
-
   const errorMessage = () => {
     message.error('Veuillez remplir les champs !');
-  };
-
-  const successMessage = () => {
-    message.success('Detail du transaction ajouté avec succés !');
   };
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,24 +1,15 @@
 import { Input  } from 'antd'
 import React, { FunctionComponent, useState } from 'react'
-import { postProduct } from '../../../api/Product';
-import { HttpStatus } from '../../../constants/Http_status';
 import { CreateProductInterface } from '../../../interfaces/Product.interface';
-import { errorMessage, successMessage } from '../../../utils/AntdMessage';
+import { usePostProduct } from '../../../hooks/usePostProduct';
 
 const AddProductPage: FunctionComponent = () => {
   const [productCredentials, setProductCredentials] = useState<CreateProductInterface>({ libelle: "", description: "", pu: 0, stock: 0});
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  )
+  const { mutateAsync } = usePostProduct();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await postProduct(token, productCredentials);
-    if(response?.status === HttpStatus.CREATED) {
-      successMessage("Produit ajoutée avec succès ! ")
-    } else {
-      errorMessage("Erreur sur l'ajout du produit ! ")
-    }
+    mutateAsync(productCredentials);
   }
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

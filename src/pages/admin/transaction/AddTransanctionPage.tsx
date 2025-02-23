@@ -1,13 +1,13 @@
-import { Select, DatePicker, message  } from 'antd'
+import { Select, DatePicker  } from 'antd'
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs';
 import { getAllClient } from '../../../api/Client';
 import { HttpStatus } from '../../../constants/Http_status';
-import { postTransaction } from '../../../api/Transaction';
 import { CreateTransactionInterface } from '../../../interfaces/Transaction.interface';
 import { ClientForTransaction } from '../../../interfaces/Client.interface';
-import { errorMessage, successMessage } from '../../../utils/AntdMessage';
+import { errorMessage } from '../../../utils/AntdMessage';
+import { usePostTransaction } from '../../../hooks/usePostTransaction';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -24,6 +24,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
+  const { mutateAsync, isError } = usePostTransaction();
 
   useEffect(() => {
     fetchAllClient();
@@ -52,12 +53,9 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (selectedClientId && selectedDate) {
-      const response = await postTransaction(token, transactionCredentials);
-      if(response?.status === HttpStatus.CREATED) {
-        successMessage('Transaction ajoutée avec succés !')
-        handleNext()
-      } else {
-        errorMessage("Erreur sur l'ajout de la transaction ! ")
+      mutateAsync(transactionCredentials);
+      if(!isError) {
+        handleNext();
       }
     } else {
       errorMessage('Veuillez remplir les champs !')

@@ -14,20 +14,15 @@ export const getAllClient = async (token: string | null) => {
 }
 
 export const postClient = async (token: string | null, data: any) => {
-    try {
-        const response = await axios({
-            method: 'post',
-            url: `${ClientAPIURL}`,
-            data: data,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+    const response = await axios({
+        method: 'post',
+        url: `${ClientAPIURL}`,
+        data: data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }
 
 export const deleteClientById = async (token: string | null, id: string) => {

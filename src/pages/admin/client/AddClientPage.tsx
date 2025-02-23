@@ -1,9 +1,7 @@
 import { Input  } from 'antd'
 import React, { FunctionComponent, useState } from 'react'
-import { postClient } from '../../../api/Client';
-import { HttpStatus } from '../../../constants/Http_status';
 import { CreateClientInterface } from '../../../interfaces/Client.interface';
-import { errorMessage, successMessage } from '../../../utils/AntdMessage';
+import { usePostClient } from '../../../hooks/usePostClient';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -12,19 +10,14 @@ interface StepsPropsType {
 
 const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
   const [clientCredentials, setClientCredentials] = useState<CreateClientInterface>({ nom_client: "", adresse_client: "", mail_client: "" , telephone_client: "",});
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  )
+  const { mutateAsync, isError } = usePostClient();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const response = await postClient(token, clientCredentials);
-    if(response?.status === HttpStatus.CREATED) {
-      successMessage('Client ajouté avec succés !');
-      handleNext()
-    } else {
-      errorMessage("Erreur sur l'ajout du client !")
+    mutateAsync(clientCredentials);
+    if(!isError) {
+      handleNext();
     }
   }
 

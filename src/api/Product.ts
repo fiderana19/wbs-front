@@ -14,20 +14,15 @@ export const getAllProduct = async (token: string | null) => {
 }
 
 export const postProduct = async (token: string | null, data: any) => {
-    try {
-        const response = await axios({
-            method: 'post',
-            url: `${ProductAPIURL}`,
-            data: data,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+    const response = await axios({
+        method: 'post',
+        url: `${ProductAPIURL}`,
+        data: data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }
 
 export const deleteProductById = async (token: string | null, id: string) => {
