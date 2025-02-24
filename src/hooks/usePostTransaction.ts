@@ -1,4 +1,4 @@
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { showToast } from "../utils/Toast";
 import { TOAST_TYPE } from "../constants/ToastType";
 import { AxiosError } from "axios";
@@ -7,7 +7,7 @@ import { postTransaction } from "../api/Transaction";
 
 export const usePostTransaction = () => {
     const token  = localStorage.getItem("token");
-    const queryClient = new QueryClient();
+    const queryClient = useQueryClient();
 
     const mutation = useMutation({
         mutationFn: (mutateData: any) => postTransaction(token, mutateData),
@@ -15,9 +15,6 @@ export const usePostTransaction = () => {
             queryClient.invalidateQueries({
                 queryKey: ['transactions'],
                 exact: true,
-            });
-            queryClient.refetchQueries({
-                queryKey: ['transactions']
             });
             showToast({toastProps: {
                 type: TOAST_TYPE.SUCCESS,

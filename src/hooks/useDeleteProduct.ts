@@ -3,22 +3,22 @@ import { showToast } from "../utils/Toast";
 import { TOAST_TYPE } from "../constants/ToastType";
 import { AxiosError } from "axios";
 import { HttpStatus } from "../constants/Http_status";
-import { postDetail } from "../api/Detail";
+import { deleteProductById } from "../api/Product";
 
-export const usePostDetail = () => {
+export const useDeleteProduct = () => {
     const token  = localStorage.getItem("token");
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (mutateData: any) => postDetail(token, mutateData),
+        mutationFn: (id: string) => deleteProductById(token, id),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['details'],
+                queryKey: ['products'],
                 exact: true,
             });
             showToast({toastProps: {
                 type: TOAST_TYPE.SUCCESS,
-                message: "Detail de transaction ajouté avec succés !",
+                message: "Produit supprimé !",
             }});
         },
         onError: (error: AxiosError) => {

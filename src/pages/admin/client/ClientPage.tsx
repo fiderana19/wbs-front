@@ -8,6 +8,7 @@ import { Client } from '../../../interfaces/Client.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
 import { errorMessage, successMessage } from '../../../utils/AntdMessage';
 import { useGetAllClient } from '../../../hooks/useGetAllClient';
+import { useDeleteClient } from '../../../hooks/useDeleteClient';
 
 const ClientPage: FunctionComponent = () => {
   const [isEditClientModalOpen, setIsEditClientModalOpen] = useState(false);
@@ -25,6 +26,7 @@ const ClientPage: FunctionComponent = () => {
     telephone_client: '',
   });
   const { data: clients, error, isError, isLoading } = useGetAllClient();
+  const { mutateAsync: deleteClient } = useDeleteClient();
 
   const showDeleteConfirmation = async (item: Client) => {
     setItemToDelete(item);
@@ -39,13 +41,7 @@ const ClientPage: FunctionComponent = () => {
   }
 
   async function handleDelete(itemId: string) {
-    const response  = await deleteClientById(token, itemId);
-    if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
-      setClients(clients.filter((item: any) => item._id !== itemId));
-      successMessage('Suppression du client réussie !')
-    } else {
-      errorMessage("Erreur sur la suppression du client !")
-    }
+    deleteClient(itemId);
   }
 
   function EditClient(item: Client) {
@@ -103,9 +99,9 @@ const ClientPage: FunctionComponent = () => {
                 <div>Chargement...</div>
               </div>
             ) : (
-              clients.map((client: any, index) =>{
+              clients && clients.map((client: any) =>{
                 return(
-                  <Card  key={index} className='hover:scale-105 duration-300'>
+                  <Card  key={client._id} className='hover:scale-105 duration-300'>
                     <div className='w-40 text-center'>
                       <UserOutlined className='text-5xl' />
                       <div className='py-3'>

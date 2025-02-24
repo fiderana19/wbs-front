@@ -1,4 +1,4 @@
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postClient } from "../api/Client";
 import { showToast } from "../utils/Toast";
 import { TOAST_TYPE } from "../constants/ToastType";
@@ -7,7 +7,7 @@ import { HttpStatus } from "../constants/Http_status";
 
 export const usePostClient = () => {
     const token  = localStorage.getItem("token");
-    const queryClient = new QueryClient();
+    const queryClient = useQueryClient();
 
     const mutation = useMutation({
         mutationFn: (mutateData: any) => postClient(token, mutateData),

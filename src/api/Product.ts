@@ -26,19 +26,14 @@ export const postProduct = async (token: string | null, data: any) => {
 }
 
 export const deleteProductById = async (token: string | null, id: string) => {
-    try {
-        const response = await axios({
-            method: 'delete',
-            url: `${ProductAPIURL}/${id}`,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+    const response = await axios({
+        method: 'delete',
+        url: `${ProductAPIURL}/${id}`,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }
 
 export const patchProduct = async (token: string | null, id: string, data: any) => {

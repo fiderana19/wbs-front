@@ -1,13 +1,14 @@
-import { FunctionComponent, useState, useEffect } from 'react'
+import { FunctionComponent, useState } from 'react'
 import { Button, Card, Modal, Input } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, ShoppingCartOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import AddProduct from './AddProductPage';
-import { deleteProductById, getAllProduct, patchProduct } from '../../../api/Product';
+import { patchProduct } from '../../../api/Product';
 import { HttpStatus } from '../../../constants/Http_status';
 import { Product } from '../../../interfaces/Product.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
 import { errorMessage, successMessage } from '../../../utils/AntdMessage';
 import { useGetAllProduct } from '../../../hooks/useGetAllProduct';
+import { useDeleteProduct } from '../../../hooks/useDeleteProduct';
 
 const ProductPage: FunctionComponent = () => {
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
@@ -27,6 +28,7 @@ const ProductPage: FunctionComponent = () => {
   });
 
   const { data: products, error, isError, isLoading } = useGetAllProduct();
+  const { mutateAsync: deleteProduct } = useDeleteProduct();
 
   const showDeleteConfirmation = (item: Product) => {
     setItemToDelete(item);
@@ -34,13 +36,7 @@ const ProductPage: FunctionComponent = () => {
   };
 
   async function handleDelete(itemId: string) {
-    const response = await deleteProductById(token, itemId);
-    if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
-      setProducts(products.filter((item: any) => item._id !== itemId));
-      successMessage('Suppression du produit réussie !');
-    } else {
-      errorMessage("Erreur sur la suppression du produit ! ")
-    }
+    deleteProduct(itemId);
   }
 
   function EditProduct(item: Product) {
@@ -61,7 +57,6 @@ const ProductPage: FunctionComponent = () => {
     const response = await patchProduct(token, editedItem._id, editedItem);
     if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
       setEditedItem({ _id: '', libelle: '' , description: '', pu: 0, stock: 0, });
-      fetchAllProduct();
       successMessage("Produit modifié avec succès !")
       setIsEditProductModalOpen(false);
     } else {
@@ -109,9 +104,9 @@ const ProductPage: FunctionComponent = () => {
                 <div>Chargement...</div>
               </div>
             ) : (
-              products && products.map((product: any, index) =>{
+              products && products.map((product: any) =>{
                 return(
-                  <Card key={index} className='hover:scale-105 duration-300'>
+                  <Card key={product._id} className='hover:scale-105 duration-300'>
                     <div className='w-40 text-center'>
                       <ShoppingCartOutlined className='text-5xl' />
                       <div className='py-3'>

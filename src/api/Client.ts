@@ -26,19 +26,14 @@ export const postClient = async (token: string | null, data: any) => {
 }
 
 export const deleteClientById = async (token: string | null, id: string) => {
-    try {
-        const response = await axios({
-            method: 'delete',
-            url: `${ClientAPIURL}/${id}`,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+    const response = await axios({
+        method: 'delete',
+        url: `${ClientAPIURL}/${id}`,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }
 
 export const patchClientById = async (token: string | null, id: string, data: any) => {
