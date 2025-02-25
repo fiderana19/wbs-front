@@ -2,22 +2,17 @@ import { FunctionComponent, useState } from 'react'
 import { Input, Button, Card, Modal } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, UserOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { deleteClientById, patchClientById } from '../../../api/Client';
-import { HttpStatus } from '../../../constants/Http_status';
 import { Client } from '../../../interfaces/Client.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
-import { errorMessage, successMessage } from '../../../utils/AntdMessage';
 import { useGetAllClient } from '../../../hooks/useGetAllClient';
 import { useDeleteClient } from '../../../hooks/useDeleteClient';
+import { usePatchClient } from '../../../hooks/usePatchClient';
 
 const ClientPage: FunctionComponent = () => {
   const [isEditClientModalOpen, setIsEditClientModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Client | null>(null);
   const [itemToDelete, setItemToDelete] = useState<Client | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  )
   const [editedItem, setEditedItem] = useState<Client>({   
     _id: '',
     nom_client: '',
@@ -25,8 +20,9 @@ const ClientPage: FunctionComponent = () => {
     mail_client: '',
     telephone_client: '',
   });
-  const { data: clients, error, isError, isLoading } = useGetAllClient();
+  const { data: clients, isLoading } = useGetAllClient();
   const { mutateAsync: deleteClient } = useDeleteClient();
+  const { mutateAsync: patchClient } = usePatchClient();
 
   const showDeleteConfirmation = async (item: Client) => {
     setItemToDelete(item);
@@ -35,13 +31,9 @@ const ClientPage: FunctionComponent = () => {
 
   const handleDeleteConfirm = async () => {
     if (itemToDelete) {
-      handleDelete(itemToDelete._id);
+      deleteClient(itemToDelete._id);
       setIsDeleteModalVisible(false);
     }
-  }
-
-  async function handleDelete(itemId: string) {
-    deleteClient(itemId);
   }
 
   function EditClient(item: Client) {
@@ -59,13 +51,8 @@ const ClientPage: FunctionComponent = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await patchClientById(token, editedItem._id, editedItem);
-    if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
-      setEditedItem({ _id: '', nom_client: '' , adresse_client: '', mail_client: '', telephone_client: ''});
-      setIsEditClientModalOpen(false);
-    } else {
-      errorMessage("Erreur sur la modification du client ! ")
-    }
+    patchClient(editedItem);
+    setIsEditClientModalOpen(false);
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
