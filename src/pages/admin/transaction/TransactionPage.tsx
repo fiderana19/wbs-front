@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom';
 import { EditOutlined, WarningOutlined, DeleteOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import TransactionSearch from './TransactionSearchPage';
-import { deleteTransaction, getTransactionById, patchTransaction } from '../../../api/Transaction';
+import { getTransactionById, patchTransaction } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
 import { getDetailById } from '../../../api/Detail';
 import { DetailInTransaction } from '../../../interfaces/Detail.interface';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem } from '../../../interfaces/Transaction.interface';
-import { errorMessage, successMessage } from '../../../utils/AntdMessage';
+import { errorMessage } from '../../../utils/AntdMessage';
 import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
+import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
 
 const TransactionPage: FunctionComponent = () => {
     let [selectTransaction, setSelectTransaction] = useState<TransactionForDisplay[]>();
@@ -34,16 +35,11 @@ const TransactionPage: FunctionComponent = () => {
       montant_transaction: 0,
     });
 
-  const { data: transactions, isError, error, isLoading } = useGetAllTransaction();
+  const { data: transactions, isLoading } = useGetAllTransaction();
+  const { mutateAsync: deleteTransaction } = useDeleteTransaction();
 
   async function handleDeleteTransaction(itemId: string) {
-    const response = await deleteTransaction(token, itemId);
-    if(response?.status === HttpStatus.OK) {
-      setTransactions(transactions.filter((item: any) => item._id !== itemId));
-      successMessage('Suppression de la transaction réussie !')
-    } else {
-      errorMessage("Erreur sur la suppression de la transaction ! ")
-    }
+    deleteTransaction(itemId);
   }
 
   const showDeleteConfirmation = (item: TransactionForDisplay) => {

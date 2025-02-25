@@ -1,16 +1,16 @@
-import React, { FunctionComponent, useEffect, useState } from 'react'
-import { DatePicker, Modal , message, Input } from 'antd'
-import { SearchOutlined, EditOutlined, WarningOutlined, DeleteOutlined, EyeOutlined, CloseOutlined } from '@ant-design/icons';
+import React, { FunctionComponent, useState } from 'react'
+import { DatePicker, Modal , Input } from 'antd'
+import { SearchOutlined, EditOutlined, WarningOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { deleteTransaction, getTransactionById, patchTransaction, searchTransactionBetweenDates } from '../../../api/Transaction';
+import { getTransactionById, patchTransaction, searchTransactionBetweenDates } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
 import { getDetailById } from '../../../api/Detail';
 import { DetailInTransaction } from '../../../interfaces/Detail.interface';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem, TransactionSearch } from '../../../interfaces/Transaction.interface';
-import { errorMessage, successMessage } from '../../../utils/AntdMessage';
+import { errorMessage } from '../../../utils/AntdMessage';
+import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
 
 const TransactionSearchPage: FunctionComponent = () => {
-    let [transactions, setTransactions] = useState<TransactionForDisplay[]>([]);
     let [selectTransaction, setSelectTransaction] = useState<TransactionForDisplay[] | null>();
     let [searchTransaction, setSearchTransaction] = useState<TransactionForDisplay[] | null>();
     let [details, setDetails] = useState<DetailInTransaction[]>([]);
@@ -33,6 +33,7 @@ const TransactionSearchPage: FunctionComponent = () => {
       ref: '',
       montant_transaction: 0,
     });
+  const { mutateAsync: deleteTransaction } = useDeleteTransaction();
 
   const handleDateDebutChange = (date: any) => {
     setSelectedDateDebut(date);
@@ -43,13 +44,7 @@ const TransactionSearchPage: FunctionComponent = () => {
   };
   //handle delete transaction confirmation
   async function handleDeleteTransaction(itemId: string) {
-    const response = await deleteTransaction(token, itemId);
-    if(response?.status === HttpStatus.OK) {
-      setTransactions(transactions.filter((item: any) => item._id !== itemId));
-      successMessage('Suppression de la transaction réussie !')
-    } else {
-      errorMessage("Erreur sur la suppression de la transaction ! ")
-    }
+    deleteTransaction(itemId);
   }
   //show delete transaction
   const showDeleteConfirmation = (item: TransactionForDisplay) => {

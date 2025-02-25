@@ -36,20 +36,15 @@ export const postTransaction = async (token: string | null, data: any) => {
     return response;
 }
 
-export const deleteTransaction = async (token: string | null, id: string) => {
-    try {
-        const response = await axios({
-            method: 'delete',
-            url: `${TransactionAPIURL}/${id}`,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+export const deleteTransactionById = async (token: string | null, id: string) => {
+    const response = await axios({
+        method: 'delete',
+        url: `${TransactionAPIURL}/${id}`,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }
 
 export const patchTransaction = async (token: string | null, id: string, data: any) => {
