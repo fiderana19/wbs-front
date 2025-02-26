@@ -7,7 +7,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useGetLastTransation } from '../../hooks/useGetLastTransaction';
 
 const HomePage: FunctionComponent= () => {
-    const { data: transactions, isError, error, isLoading } = useGetLastTransation();
+    const { data: transactions, isError, isLoading } = useGetLastTransation();
     
     const text = 'BIENVENUE SUR NOTRE PLATEFORME DE GESTION DE CAISSE';
 

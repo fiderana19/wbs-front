@@ -60,7 +60,6 @@ const ClientPage: FunctionComponent = () => {
     setEditedItem({ ...editedItem, [name]: value });
   };
 
-
   const handleKeyPress =async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const charCode = e.which || e.keyCode;
   

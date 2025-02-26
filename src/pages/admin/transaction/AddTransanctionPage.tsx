@@ -1,13 +1,11 @@
 import { Select, DatePicker  } from 'antd'
-import React, { FunctionComponent, useState, useEffect } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs';
-import { getAllClient } from '../../../api/Client';
-import { HttpStatus } from '../../../constants/Http_status';
 import { CreateTransactionInterface } from '../../../interfaces/Transaction.interface';
-import { ClientForTransaction } from '../../../interfaces/Client.interface';
 import { errorMessage } from '../../../utils/AntdMessage';
 import { usePostTransaction } from '../../../hooks/usePostTransaction';
+import { useGetAllClient } from '../../../hooks/useGetAllClient';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -17,27 +15,11 @@ interface StepsPropsType {
 const { Option } = Select;
 
 const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
-  let [clients, setClients] = useState<ClientForTransaction[]>([]);
   const [selectedClientId, setSelectedClientId] = useState('');
   const [transactionCredentials, setTransactionCredentials] = useState<CreateTransactionInterface>({ client: '', date_transaction: '' })
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  )
   const { mutateAsync, isError } = usePostTransaction();
-
-  useEffect(() => {
-    fetchAllClient();
-  }, []);
-
-  async function fetchAllClient() {
-    const response = await getAllClient(token);
-    if(response?.status === HttpStatus.OK) {
-      setClients(response.data);
-    } else {
-      errorMessage("Erreur sur la recuperation des clients ! ")
-    }
-  }
+  const { data: clients } = useGetAllClient();
 
   const handleDateChange = (date: any) => {
     setSelectedDate(date);
@@ -93,9 +75,9 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
                     >
                         <Option value="">Sélectionnez un client</Option>
                         {
-                          clients.map((cl: any, index) => {
+                          clients && clients.map((cl: any) => {
                             return(
-                            <Option key={index} value={cl._id}>
+                            <Option key={cl._id} value={cl._id}>
                               { `${cl.nom_client} ${cl.telephone_client}` }
                             </Option>
                             )

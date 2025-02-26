@@ -2,14 +2,13 @@ import React, { FunctionComponent, useState } from 'react'
 import { DatePicker, Modal , Input } from 'antd'
 import { SearchOutlined, EditOutlined, WarningOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { patchTransaction } from '../../../api/Transaction';
-import { HttpStatus } from '../../../constants/Http_status';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem, TransactionSearch } from '../../../interfaces/Transaction.interface';
 import { errorMessage } from '../../../utils/AntdMessage';
 import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
 import { useGetDetailByTransactionId } from '../../../hooks/useGetDetailByTransactionId';
 import { useGetTransactionById } from '../../../hooks/useGetTransactionById';
 import { useGetTransactionBetweenDates } from '../../../hooks/useGetTransactionBetweenDates';
+import { usePatchTransaction } from '../../../hooks/usePatchTransaction';
 
 const TransactionSearchPage: FunctionComponent = () => {
     const [selectedDateDebut, setSelectedDateDebut] = useState<dayjs.Dayjs | null>(null);
@@ -18,12 +17,9 @@ const TransactionSearchPage: FunctionComponent = () => {
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<TransactionForDisplay | null>(null);
-    const [editTransactionCredentials, setEditTransactionCredentials] = useState<TransactionForEdit>({ date_transaction: '' })
+    const [editTransactionCredentials, setEditTransactionCredentials] = useState<TransactionForEdit>({ _id: '', date_transaction: '' })
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);  
     const [selectedItemEdit, setSelectedItemEdit] = useState<TransactionItem | null>(null);
-    const [token, setToken] = useState<string | null>(
-      localStorage.getItem("token")
-    )
     const [editedItem, setEditedItem] = useState<TransactionItem>({
       _id: '',
       date_transaction: '',
@@ -35,6 +31,7 @@ const TransactionSearchPage: FunctionComponent = () => {
   const { mutateAsync: getDetailByTransactionById, data: details } = useGetDetailByTransactionId();
   const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
   const { mutateAsync: searchTransactionBetweenDates, data: searchTransaction } = useGetTransactionBetweenDates();
+  const { mutateAsync: patchTransaction } = usePatchTransaction();
 
   const handleDateDebutChange = (date: any) => {
     setSelectedDateDebut(date);
@@ -89,6 +86,10 @@ const TransactionSearchPage: FunctionComponent = () => {
   //edit trasanction item
   function EditTransaction(item: TransactionItem) {
     setSelectedItemEdit(item);
+    setEditTransactionCredentials({
+      ...editTransactionCredentials,
+      _id: item._id,
+    });
     setIsEditTransactionModalOpen(true)
 
     setEditedItem({
@@ -104,12 +105,7 @@ const TransactionSearchPage: FunctionComponent = () => {
     e.preventDefault();
     if (editedItem) {
       if (selectedDate) {
-        const response = await patchTransaction(token, editedItem._id, editTransactionCredentials);
-        if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
-          setEditedItem({ _id: '', date_transaction: '' , nom_client: '', ref: '', montant_transaction: 0,});
-        } else {
-          errorMessage("Erreur sur la modification de la transaction ! ")
-        }
+        patchTransaction(editTransactionCredentials)
       } else {
         errorMessage('Veuillez selectionner des dates !')
       }

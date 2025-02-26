@@ -26,6 +26,7 @@ export interface TransactionItem {
 }
 
 export interface TransactionForEdit {
+    _id: string;
     date_transaction: string;
 }
   

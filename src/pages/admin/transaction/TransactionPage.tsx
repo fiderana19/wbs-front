@@ -4,14 +4,13 @@ import { Link } from 'react-router-dom';
 import { EditOutlined, WarningOutlined, DeleteOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import TransactionSearch from './TransactionSearchPage';
-import { patchTransaction } from '../../../api/Transaction';
-import { HttpStatus } from '../../../constants/Http_status';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem } from '../../../interfaces/Transaction.interface';
 import { errorMessage } from '../../../utils/AntdMessage';
 import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
 import { useGetDetailByTransactionId } from '../../../hooks/useGetDetailByTransactionId';
 import { useGetTransactionById } from '../../../hooks/useGetTransactionById';
+import { usePatchTransaction } from '../../../hooks/usePatchTransaction';
 
 const TransactionPage: FunctionComponent = () => {
     const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
@@ -19,12 +18,9 @@ const TransactionPage: FunctionComponent = () => {
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<TransactionForDisplay | null>(null);
     const [searchRef, setSearchRef] = useState('');
-    const [editTransactionCredentials, SetEditTransactionCredentials] = useState<TransactionForEdit>({ date_transaction: '' })
+    const [editTransactionCredentials, setEditTransactionCredentials] = useState<TransactionForEdit>({ _id: '', date_transaction: '' })
     const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);  
     const [selectedItemEdit, setSelectedItemEdit] = useState<TransactionItem | null>(null);
-    const [token, setToken] = useState<string | null>(
-      localStorage.getItem("token")
-    )
     const [editedItem, setEditedItem] = useState<TransactionItem>({
       _id: '',
       date_transaction: '',
@@ -32,11 +28,11 @@ const TransactionPage: FunctionComponent = () => {
       ref: '',
       montant_transaction: 0,
     });
-
   const { data: transactions, isLoading } = useGetAllTransaction();
   const { mutateAsync: deleteTransaction } = useDeleteTransaction();
   const { mutateAsync: getDetailByTransactionById, data: details } = useGetDetailByTransactionId();
   const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
+  const { mutateAsync: patchTransaction } = usePatchTransaction();
 
   async function handleDeleteTransaction(itemId: string) {
     deleteTransaction(itemId);
@@ -62,6 +58,10 @@ const TransactionPage: FunctionComponent = () => {
 
   function EditTransaction(item: TransactionItem) {
     setSelectedItemEdit(item);
+    setEditTransactionCredentials({
+      ...editTransactionCredentials,
+      _id: item._id,
+    });
     setIsEditTransactionModalOpen(true);
 
     setEditedItem({
@@ -77,12 +77,7 @@ const TransactionPage: FunctionComponent = () => {
     // e.preventDefault();
     if (editedItem) {
       if (selectedDate) {
-        const response = await patchTransaction(token, editedItem._id, editTransactionCredentials);
-        if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
-          setEditedItem({ _id: '', date_transaction: '' , nom_client: '', ref: '', montant_transaction: 0,});
-        } else {
-          errorMessage("Erreur sur la modification de la transaction ! ")
-        }
+        patchTransaction(editTransactionCredentials)
       } else {
         errorMessage('Veuillez selectionner des dates !')
       }
@@ -93,7 +88,7 @@ const TransactionPage: FunctionComponent = () => {
     setSelectedDate(date);
     if (date) {
       const isoDate = date.toISOString();
-      SetEditTransactionCredentials({
+      setEditTransactionCredentials({
         ...editTransactionCredentials,
         date_transaction: isoDate,
       });

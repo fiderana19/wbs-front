@@ -47,21 +47,16 @@ export const deleteTransactionById = async (token: string | null, id: string) =>
     return response;
 }
 
-export const patchTransaction = async (token: string | null, id: string, data: any) => {
-    try {
-        const response = await axios({
-            method: 'patch',
-            url: `${TransactionAPIURL}/${id}`,
-            data: data,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+export const patchTransaction = async (token: string | null, data: any) => {
+    const response = await axios({
+        method: 'patch',
+        url: `${TransactionAPIURL}/${data._id}`,
+        data: data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }
 
 export const getTransactionById = async (token: string | null, id: string) => {
