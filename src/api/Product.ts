@@ -36,19 +36,14 @@ export const deleteProductById = async (token: string | null, id: string) => {
     return response;
 }
 
-export const patchProduct = async (token: string | null, id: string, data: any) => {
-    try {
-        const response = await axios({
-            method: 'patch',
-            url: `${ProductAPIURL}/${id}`,
-            data: data,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+export const patchProduct = async (token: string | null, data: any) => {
+    const response = await axios({
+        method: 'patch',
+        url: `${ProductAPIURL}/${data?._id}`,
+        data: data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }

@@ -2,13 +2,11 @@ import { FunctionComponent, useState } from 'react'
 import { Button, Card, Modal, Input } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, ShoppingCartOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import AddProduct from './AddProductPage';
-import { patchProduct } from '../../../api/Product';
-import { HttpStatus } from '../../../constants/Http_status';
 import { Product } from '../../../interfaces/Product.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
-import { errorMessage, successMessage } from '../../../utils/AntdMessage';
 import { useGetAllProduct } from '../../../hooks/useGetAllProduct';
 import { useDeleteProduct } from '../../../hooks/useDeleteProduct';
+import { usePatchProduct } from '../../../hooks/usePatchProduct';
 
 const ProductPage: FunctionComponent = () => {
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
@@ -16,9 +14,6 @@ const ProductPage: FunctionComponent = () => {
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<Product | null>(null);
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  )
   const [editedItem, setEditedItem] = useState<Product>({   
     _id: '',
     libelle: '',
@@ -27,8 +22,9 @@ const ProductPage: FunctionComponent = () => {
     stock: 0,
   });
 
-  const { data: products, error, isError, isLoading } = useGetAllProduct();
+  const { data: products, isLoading } = useGetAllProduct();
   const { mutateAsync: deleteProduct } = useDeleteProduct();
+  const { mutateAsync: patchProduct } = usePatchProduct();
 
   const showDeleteConfirmation = (item: Product) => {
     setItemToDelete(item);
@@ -54,14 +50,9 @@ const ProductPage: FunctionComponent = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await patchProduct(token, editedItem._id, editedItem);
-    if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
-      setEditedItem({ _id: '', libelle: '' , description: '', pu: 0, stock: 0, });
-      successMessage("Produit modifié avec succès !")
-      setIsEditProductModalOpen(false);
-    } else {
-      errorMessage("Erreur sur la modification du produit ! ")
-    }
+    patchProduct(editedItem);
+    setEditedItem({ _id: '', libelle: '' , description: '', pu: 0, stock: 0, });
+    setIsEditProductModalOpen(false);
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

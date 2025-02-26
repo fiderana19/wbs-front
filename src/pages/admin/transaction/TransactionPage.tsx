@@ -61,7 +61,7 @@ const TransactionPage: FunctionComponent = () => {
       errorMessage("Erreur sur la recuperation de la transaction ! ")
     }
     getDetailByTransactionById(itemId);
-    setIsModalDetailOpen(true)
+    setIsModalDetailOpen(true);
   }
 
   function EditTransaction(item: TransactionItem) {
