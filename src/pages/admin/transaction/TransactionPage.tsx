@@ -6,16 +6,14 @@ import dayjs from 'dayjs';
 import TransactionSearch from './TransactionSearchPage';
 import { getTransactionById, patchTransaction } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
-import { getDetailById } from '../../../api/Detail';
-import { DetailInTransaction } from '../../../interfaces/Detail.interface';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem } from '../../../interfaces/Transaction.interface';
 import { errorMessage } from '../../../utils/AntdMessage';
 import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
+import { useGetDetailByTransactionId } from '../../../hooks/useGetDetailByTransactionId';
 
 const TransactionPage: FunctionComponent = () => {
     let [selectTransaction, setSelectTransaction] = useState<TransactionForDisplay[]>();
-    let [details, setDetails] = useState<DetailInTransaction[]>([]);
     const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -37,6 +35,7 @@ const TransactionPage: FunctionComponent = () => {
 
   const { data: transactions, isLoading } = useGetAllTransaction();
   const { mutateAsync: deleteTransaction } = useDeleteTransaction();
+  const { mutateAsync: getDetailByTransactionById, data: details } = useGetDetailByTransactionId();
 
   async function handleDeleteTransaction(itemId: string) {
     deleteTransaction(itemId);
@@ -61,13 +60,8 @@ const TransactionPage: FunctionComponent = () => {
     } else {
       errorMessage("Erreur sur la recuperation de la transaction ! ")
     }
-    const res = await getDetailById(token, itemId);
-    if(res?.status === HttpStatus.OK) {
-      setDetails(res.data)
-      setIsModalDetailOpen(true)
-    } else {
-      errorMessage("Erreur sur la recuperation des details de la transaction ! ")
-    }
+    getDetailByTransactionById(itemId);
+    setIsModalDetailOpen(true)
   }
 
   function EditTransaction(item: TransactionItem) {
@@ -90,7 +84,6 @@ const TransactionPage: FunctionComponent = () => {
         const response = await patchTransaction(token, editedItem._id, editTransactionCredentials);
         if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
           setEditedItem({ _id: '', date_transaction: '' , nom_client: '', ref: '', montant_transaction: 0,});
-          fetchAllTransaction();
         } else {
           errorMessage("Erreur sur la modification de la transaction ! ")
         }
@@ -141,12 +134,12 @@ const TransactionPage: FunctionComponent = () => {
               </div>
              ) : (
             // handling the ref 
-            transactions.map((transaction: any, index) =>{
+            transactions && transactions.map((transaction: any) =>{
               if (searchRef && !transaction.ref.includes(searchRef)) {
                  return null;
               }
               return(
-                <div key={index}>
+                <div key={transaction._id}>
                   <div className='w-full relative sm:pr-4 block sm:flex justify-between bg-six mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all' >
                     <div className='sm:w-11/12 w-full'  onClick={() => getDetail(transaction._id)}>
                       <div className='sm:flex text-xs'>
@@ -244,9 +237,9 @@ const TransactionPage: FunctionComponent = () => {
             }
             <div className='w-full bg-seven mb-1'>
               {
-                details.map((detail: any , index) => {
+                details && details.map((detail: any) => {
                   return(
-                    <div key={index}>
+                    <div key={detail._id}>
                       <div className='px-5 py-1 border-b-2 border-gray-200'>
                         <div className='flex text-xs'>
                           <div className=''> Produit :</div>

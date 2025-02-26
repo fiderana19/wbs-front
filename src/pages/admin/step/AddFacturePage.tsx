@@ -3,7 +3,6 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import dayjs from 'dayjs';
 import { FileZipOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer';
-import { getDetailById } from '../../../api/Detail';
 import { getAllTransaction, getTransactionForFacture } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
 import { Transaction } from '../../../interfaces/Transaction.interface';
@@ -122,12 +121,12 @@ const footer = StyleSheet.create({
 //generate pdf function
 const generatePDF = async (token: string | null,  selectedTransId: string ) => {
   //getting all detail of the transaction
-  const response = await getDetailById(token, selectedTransId);
-  const data = response.data;
-  //filling the table blank
-  while (data.length < 13) {
-    data.push({ quantite: '', product: '', montant_brut: '', remise: '', montant_total: '' });
-  }
+  // const response = await getDetailById(token, selectedTransId);
+  // const data = response.data;
+  // //filling the table blank
+  // while (data.length < 13) {
+  //   data.push({ quantite: '', product: '', montant_brut: '', remise: '', montant_total: '' });
+  // }
 
   const res = await getTransactionForFacture(token, selectedTransId);
   const transaction = res.data[0];
@@ -174,7 +173,7 @@ const generatePDF = async (token: string | null,  selectedTransId: string ) => {
                 <Text>Montant total</Text>
               </View>
             </View>
-            {data.map((detail: any, index: any) => (
+            {/* {data.map((detail: any, index: any) => (
               <View style={styles.row} key={index}>
                 <View style={styles.cell}>
                   <Text>{detail.quantite}</Text>
@@ -192,7 +191,7 @@ const generatePDF = async (token: string | null,  selectedTransId: string ) => {
                   <Text>{detail.montant_total} <Text style={styles.unit}>MGA</Text></Text>
                 </View>
               </View>
-            ))}
+            ))} */}
           </View>
           <View style={styles.totalchamp}>
             <Text style={styles.totaltext}>Total</Text>

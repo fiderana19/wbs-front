@@ -4,16 +4,14 @@ import { SearchOutlined, EditOutlined, WarningOutlined, DeleteOutlined, CloseOut
 import dayjs from 'dayjs';
 import { getTransactionById, patchTransaction, searchTransactionBetweenDates } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
-import { getDetailById } from '../../../api/Detail';
-import { DetailInTransaction } from '../../../interfaces/Detail.interface';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem, TransactionSearch } from '../../../interfaces/Transaction.interface';
 import { errorMessage } from '../../../utils/AntdMessage';
 import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
+import { useGetDetailByTransactionId } from '../../../hooks/useGetDetailByTransactionId';
 
 const TransactionSearchPage: FunctionComponent = () => {
     let [selectTransaction, setSelectTransaction] = useState<TransactionForDisplay[] | null>();
     let [searchTransaction, setSearchTransaction] = useState<TransactionForDisplay[] | null>();
-    let [details, setDetails] = useState<DetailInTransaction[]>([]);
     const [selectedDateDebut, setSelectedDateDebut] = useState<dayjs.Dayjs | null>(null);
     const [selectedDateEnd, setSelectedDateEnd] = useState<dayjs.Dayjs | null>(null);
     const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
@@ -34,6 +32,7 @@ const TransactionSearchPage: FunctionComponent = () => {
       montant_transaction: 0,
     });
   const { mutateAsync: deleteTransaction } = useDeleteTransaction();
+  const { mutateAsync: getDetailByTransactionById, data: details } = useGetDetailByTransactionId();
 
   const handleDateDebutChange = (date: any) => {
     setSelectedDateDebut(date);
@@ -51,12 +50,6 @@ const TransactionSearchPage: FunctionComponent = () => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
   };
-
-  //show modal of detail
-  const showDetail = () => {
-    setIsModalDetailOpen(true);
-  };
-
   //handle delete confirm
   const handleDeleteConfirm = () => {
     if (itemToDelete) {
@@ -98,13 +91,8 @@ const TransactionSearchPage: FunctionComponent = () => {
     } else {
       errorMessage("Erreur sur la recuperation de la transaction ! ")
     }
-    const res = await getDetailById(token, itemId);
-    if(res?.status === HttpStatus.OK) {
-      setDetails(res.data)
-      showDetail()
-    } else {
-      errorMessage("Erreur sur la recuperation des details de la transaction ! ")
-    }
+    getDetailByTransactionById(itemId);
+    setIsModalDetailOpen(true);
   }
 
   //edit trasanction item
@@ -273,9 +261,9 @@ const TransactionSearchPage: FunctionComponent = () => {
           }
            <div className='w-full bg-seven mb-1'>
             {
-              details.map((detail: any , index) => {
+              details && details.map((detail: any) => {
                 return(
-                  <div key={index}>
+                  <div key={detail._id}>
                     <div className='sm:px-5 px-2 py-1 border-b-2 border-gray-200'>
                       <div className='flex text-xs'>
                         <div className=''> Produit :</div>

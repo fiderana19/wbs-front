@@ -34,7 +34,7 @@ const ClientPage: FunctionComponent = () => {
       deleteClient(itemToDelete._id);
       setIsDeleteModalVisible(false);
     }
-  }
+  } 
 
   function EditClient(item: Client) {
     setSelectedItem(item);
