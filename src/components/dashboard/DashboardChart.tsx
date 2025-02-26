@@ -1,12 +1,9 @@
 import { FunctionComponent, useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts';
-import { getProductForChart } from '../../api/Dashboard';
-import { HttpStatus } from '../../constants/Http_status';
+import { useGetProductForChart } from '../../hooks/useGetProductForChart';
 
 const DashboardChart: FunctionComponent = () => {
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  );
+  const { data: products4Chart } = useGetProductForChart();
   const [chartData, setChartData] = useState<{ options: any; series: any[] }>({
     options: {
       xaxis: {
@@ -20,24 +17,21 @@ const DashboardChart: FunctionComponent = () => {
   }, []);
 
   async function fetchProductForChart() {
-    const response = await getProductForChart(token);
-    if(response?.status === HttpStatus.OK) {
+    if(products4Chart) {
       const newchartData = {
         options: {
           xaxis: {
-            categories: response.data.map((item: any) => item.libelle), 
+            categories: products4Chart.map((item: any) => item.libelle), 
           },
         },
         series: [
           {
             name: 'Stock',
-            data: response.data.map((item: any) => item.stock),
+            data: products4Chart.map((item: any) => item.stock),
           }
         ],
       };
       setChartData(newchartData);
-    } else {
-      console.log("Error")
     }
   }
 

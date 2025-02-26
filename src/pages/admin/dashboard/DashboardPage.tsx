@@ -1,54 +1,17 @@
-import { FunctionComponent, useState , useEffect } from 'react'
+import { FunctionComponent } from 'react'
 import { Card, Space, Statistic } from 'antd';
 import { ShoppingCartOutlined, DollarCircleOutlined, UserOutlined } from '@ant-design/icons';
 import DashboardChart from '../../../components/dashboard/DashboardChart';
-import { getClientTotal, getProductTotal, getTransactionTotal } from '../../../api/Dashboard';
-import { HttpStatus } from '../../../constants/Http_status';
-import { errorMessage } from '../../../utils/AntdMessage';
+import { useGetTransactionTotal } from '../../../hooks/useGetTransactionTotal';
+import { useGetProductTotal } from '../../../hooks/useGetProductTotal';
+import { useGetClientTotal } from '../../../hooks/useGetClientTotal';
 
 const DashboardPage: FunctionComponent = () => {
-  let [totalClient, setTotalClient] = useState()
-  let [totalProduct, setTotalProduct] = useState()
-  let [totalTransaction, setTotalTransaction] = useState()
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  )
+  const { data: totalTransaction } = useGetTransactionTotal();
+  const { data: totalProduct } = useGetProductTotal();
+  const { data: totalClient } = useGetClientTotal();
 
-  useEffect(() => { 
-    fetchClientTotal();   
-    fetchProductTotal();
-    fetchTransactionTotal();    
-  },[])
-
-
-  async function fetchClientTotal() {
-    const response = await getClientTotal(token);
-    if(response?.status === HttpStatus.OK) {
-      setTotalClient(response.data);
-    } else {
-      errorMessage("Erreur sur la recupartion des données sur les clients ! ")
-    }
-  }
-
-  async function fetchProductTotal() {
-    const response = await getProductTotal(token);
-    if(response?.status === HttpStatus.OK) {
-      setTotalProduct(response.data);
-    } else {
-      errorMessage("Erreur sur la recupartion des données sur les produits ! ")
-    }
-  }
-
-  async function fetchTransactionTotal() {
-    const response = await getTransactionTotal(token);
-    if(response?.status === HttpStatus.OK) {
-      setTotalTransaction(response.data);
-    } else {
-      errorMessage("Erreur sur la recupartion des données sur les transactions ! ")
-    }
-  }
-
-  return (
+  return (  
     <div className='md:px-32 lg: px sm:px-10 px-4 pb-5 pt-24'>
       <div>
         <div className='text-xl font-bold font-lato'>Dashboard</div>
