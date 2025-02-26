@@ -65,50 +65,35 @@ export const patchTransaction = async (token: string | null, id: string, data: a
 }
 
 export const getTransactionById = async (token: string | null, id: string) => {
-    try {
-        const response = await axios({
-            method: 'get',
-            url: `${TransactionAPIURL}/find/${id}`,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+    const response = await axios({
+        method: 'get',
+        url: `${TransactionAPIURL}/find/${id}`,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }
 
-export const searchTransactionBetweenDates = async (token: string | null, data: any) => {
-    try {
-        const response = await axios({
-            method: 'post',
-            url: `${TransactionAPIURL}/search`,
-            data: data,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+export const getTransactionBetweenDates = async (token: string | null, data: any) => {
+    const response = await axios({
+        method: 'post',
+        url: `${TransactionAPIURL}/search`,
+        data: data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }
 
 export const getTransactionForFacture = async (token: string | null, id: string) => {
-    try {
-        const response = await axios({
-            method: 'get',
-            url: `${TransactionAPIURL}/findfacture/${id}`,
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-
-        return response;
-    } catch (error: any) {
-        return error;
-    }
+    const response = await axios({
+        method: 'get',
+        url: `${TransactionAPIURL}/findfacture/${id}`,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response;
 }

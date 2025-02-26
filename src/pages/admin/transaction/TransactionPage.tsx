@@ -4,16 +4,16 @@ import { Link } from 'react-router-dom';
 import { EditOutlined, WarningOutlined, DeleteOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import TransactionSearch from './TransactionSearchPage';
-import { getTransactionById, patchTransaction } from '../../../api/Transaction';
+import { patchTransaction } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem } from '../../../interfaces/Transaction.interface';
 import { errorMessage } from '../../../utils/AntdMessage';
 import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
 import { useGetDetailByTransactionId } from '../../../hooks/useGetDetailByTransactionId';
+import { useGetTransactionById } from '../../../hooks/useGetTransactionById';
 
 const TransactionPage: FunctionComponent = () => {
-    let [selectTransaction, setSelectTransaction] = useState<TransactionForDisplay[]>();
     const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -36,6 +36,7 @@ const TransactionPage: FunctionComponent = () => {
   const { data: transactions, isLoading } = useGetAllTransaction();
   const { mutateAsync: deleteTransaction } = useDeleteTransaction();
   const { mutateAsync: getDetailByTransactionById, data: details } = useGetDetailByTransactionId();
+  const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
 
   async function handleDeleteTransaction(itemId: string) {
     deleteTransaction(itemId);
@@ -54,12 +55,7 @@ const TransactionPage: FunctionComponent = () => {
   };
 
   const getDetail = async (itemId: string) => {
-    const response  = await getTransactionById(token, itemId);
-    if(response?.status === HttpStatus.OK) {
-      setSelectTransaction(response.data);
-    } else {
-      errorMessage("Erreur sur la recuperation de la transaction ! ")
-    }
+    getTransactionById(itemId);
     getDetailByTransactionById(itemId);
     setIsModalDetailOpen(true);
   }
@@ -208,9 +204,9 @@ const TransactionPage: FunctionComponent = () => {
             {selectTransaction &&
               <div> 
                 {
-                  selectTransaction.map((transaction: any, index) =>{
+                  selectTransaction && selectTransaction.map((transaction: any) =>{
                     return(
-                      <div key={index}>
+                      <div key={transaction._id}>
                         <div className='w-full block sm:flex justify-between bg-six mt-1 p-3'>
                           <div className='w-full'>
                             <div className='flex text-xs'>

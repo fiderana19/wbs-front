@@ -2,16 +2,16 @@ import React, { FunctionComponent, useState } from 'react'
 import { DatePicker, Modal , Input } from 'antd'
 import { SearchOutlined, EditOutlined, WarningOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { getTransactionById, patchTransaction, searchTransactionBetweenDates } from '../../../api/Transaction';
+import { patchTransaction } from '../../../api/Transaction';
 import { HttpStatus } from '../../../constants/Http_status';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem, TransactionSearch } from '../../../interfaces/Transaction.interface';
 import { errorMessage } from '../../../utils/AntdMessage';
 import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
 import { useGetDetailByTransactionId } from '../../../hooks/useGetDetailByTransactionId';
+import { useGetTransactionById } from '../../../hooks/useGetTransactionById';
+import { useGetTransactionBetweenDates } from '../../../hooks/useGetTransactionBetweenDates';
 
 const TransactionSearchPage: FunctionComponent = () => {
-    let [selectTransaction, setSelectTransaction] = useState<TransactionForDisplay[] | null>();
-    let [searchTransaction, setSearchTransaction] = useState<TransactionForDisplay[] | null>();
     const [selectedDateDebut, setSelectedDateDebut] = useState<dayjs.Dayjs | null>(null);
     const [selectedDateEnd, setSelectedDateEnd] = useState<dayjs.Dayjs | null>(null);
     const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
@@ -33,6 +33,8 @@ const TransactionSearchPage: FunctionComponent = () => {
     });
   const { mutateAsync: deleteTransaction } = useDeleteTransaction();
   const { mutateAsync: getDetailByTransactionById, data: details } = useGetDetailByTransactionId();
+  const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
+  const { mutateAsync: searchTransactionBetweenDates, data: searchTransaction } = useGetTransactionBetweenDates();
 
   const handleDateDebutChange = (date: any) => {
     setSelectedDateDebut(date);
@@ -64,16 +66,10 @@ const TransactionSearchPage: FunctionComponent = () => {
   //handling the search
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setSearchTransaction(null);
 
     if(selectedDateDebut && selectedDateEnd){
       const data : TransactionSearch = { start: selectedDateDebut.toISOString(), end: selectedDateEnd.toISOString() } 
-      const response = await searchTransactionBetweenDates(token, data);
-      if(response?.status === HttpStatus.OK || response?.status === HttpStatus.CREATED) {
-        setSearchTransaction(response.data);
-      } else {
-        errorMessage("Erreur sur la recherche des transactions ! ")
-      }
+      searchTransactionBetweenDates(data);
     }else{
       errorMessage('Veuillez selectionner des dates !');
     }
@@ -85,12 +81,7 @@ const TransactionSearchPage: FunctionComponent = () => {
 
   //get detail function
   const getDetail = async (itemId: string) => {
-    const response  = await getTransactionById(token, itemId);
-    if(response?.status === HttpStatus.OK) {
-      setSelectTransaction(response.data);
-    } else {
-      errorMessage("Erreur sur la recuperation de la transaction ! ")
-    }
+    getTransactionById(itemId);
     getDetailByTransactionById(itemId);
     setIsModalDetailOpen(true);
   }
@@ -158,9 +149,9 @@ const TransactionSearchPage: FunctionComponent = () => {
                 </div>
               )
               : (
-              searchTransaction.map((searchtransaction: any, index) =>{
+              searchTransaction && searchTransaction.map((searchtransaction: any) =>{
                 return(
-                  <div key={index}>
+                  <div key={searchTransaction._id}>
                   <div className='w-full relative sm:pr-4 z-10 block sm:flex justify-between bg-six mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all' >
                     <div className='sm:w-11/12 w-full'  onClick={() => getDetail(searchtransaction._id)}>
                       <div className='sm:flex text-xs'>
@@ -232,9 +223,9 @@ const TransactionSearchPage: FunctionComponent = () => {
           {selectTransaction &&
             <div> 
               {
-                selectTransaction.map((transaction: any, index) =>{
+                selectTransaction && selectTransaction.map((transaction: any) =>{
                   return(
-                    <div key={index}>
+                    <div key={transaction._id}>
                       <div className='w-full block sm:flex justify-between bg-six mt-1 sm:p-3 p-2'>
                         <div className='w-full'>
                           <div className='flex text-xs'>

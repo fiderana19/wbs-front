@@ -1,11 +1,10 @@
 import { message, Select  } from 'antd'
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import dayjs from 'dayjs';
 import { FileZipOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer';
-import { getAllTransaction, getTransactionForFacture } from '../../../api/Transaction';
-import { HttpStatus } from '../../../constants/Http_status';
-import { Transaction } from '../../../interfaces/Transaction.interface';
+import { getTransactionForFacture } from '../../../api/Transaction';
+import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -218,11 +217,11 @@ const generatePDF = async (token: string | null,  selectedTransId: string ) => {
 const { Option } = Select;
 
 const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
-  let [trans, setTrans] = useState<Transaction[]>([]);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
   const [selectedTransId, setSelectedTransId] = useState('');
+  const { data: trans } = useGetAllTransaction();
   const [pdfData, setPdfData] =  useState<null | JSX.Element>(null);
   //handling the form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -234,18 +233,6 @@ const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
       })
     } else {
       errorMessage()
-    }
-  }
-  //fetching all transaction item
-  useEffect(() => {
-    fetchAllTransaction();
-  })
-  async function fetchAllTransaction() {
-    const response = await getAllTransaction(token);
-    if(response?.status === HttpStatus.OK) {
-      setTrans(response.data);
-    } else {
-      console.log("Error")
     }
   }
   //error message
@@ -281,9 +268,9 @@ const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
             >
               <Option value="">Sélectionnez une transaction</Option>
               {
-                trans.map((tr: any, index) => {
+                trans && trans.map((tr: any) => {
                   return(
-                    <Option key={index} value={tr._id}>
+                    <Option key={trans._id} value={tr._id}>
                       { `${tr.nom_client} ${dayjs(tr.date_transaction).format('DD-MM-YYYY HH:mm')}` }
                     </Option>
                   )
