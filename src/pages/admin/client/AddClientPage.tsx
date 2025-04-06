@@ -1,34 +1,40 @@
 import { Input  } from 'antd'
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import { CreateClientInterface } from '../../../interfaces/Client.interface';
 import { usePostClient } from '../../../hooks/usePostClient';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { LoadingOutlined } from '@ant-design/icons';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
   handleNext: ()=>void;
 }
 
+const clientSchema = yup.object({
+  nom_client: yup.string().required("Le champ nom du client est requis! "),
+  adresse_client: yup.string().required("Le champ adresse du client est requis ! "),
+  mail_client: yup.string().email("Adresse email invalide !").required("Le champ email du client requis !"),
+  telephone_client: yup.string().length(9, "Le numero de telephone doit etre à 9 carateres !").required("Le champ telephone du client requis ! ")
+})
+
 const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
-  const [clientCredentials, setClientCredentials] = useState<CreateClientInterface>({ nom_client: "", adresse_client: "", mail_client: "" , telephone_client: "",});
   const { mutateAsync, isError } = usePostClient();
+  const { handleSubmit: submit, control, formState } = useForm<CreateClientInterface>({
+    resolver: yupResolver(clientSchema)
+  });
+  const { errors, isSubmitting } = formState;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    mutateAsync(clientCredentials);
+  const handleSubmit = async (data: CreateClientInterface) => {
+    mutateAsync(data);
     if(!isError) {
       handleNext();
     }
   }
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    setClientCredentials((prevFormData) => ({...prevFormData, [name]: value}));
-  }
-
   const handleKeyPress =async (e: React.KeyboardEvent<HTMLInputElement>) => {
     const charCode = e.which || e.keyCode;
-
     if (charCode < 48 || charCode > 57) {
       e.preventDefault();
     }
@@ -38,17 +44,58 @@ const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
     <div className='py-16  flex justify-center'>
       <div className='text-center'>
         <div className='text-2xl font-bold'>CLIENT</div>
-        <form className='my-7 w-60 text-left' onSubmit={handleSubmit}>
+        <form className='my-7 w-60 text-left' onSubmit={submit(handleSubmit)}>
           <label htmlFor='nom_client'>Nom : </label><br />
-          <Input name='nom_client' className='my-1' value={clientCredentials.nom_client} onChange={handleChange} required /><br />
+          <Controller 
+            name='nom_client'
+            control={control}
+            render={({
+              field: { onChange, value, onBlur },
+            }) => (
+              <Input className={errors.nom_client ? 'my-1 border-red-500 text-red-500 rounded' : 'my-1'} value={value} onChange={onChange} onBlur={onBlur} />
+            )}
+          />
+          { errors?.nom_client && <div className='text-left text-red-500 text-xs'>{ errors.nom_client.message }</div> }
           <label htmlFor='adresse_client'>Adresse : </label><br />
-          <Input name='adresse_client' className='my-1' value={clientCredentials.adresse_client} onChange={handleChange} required/><br />
+          <Controller
+            control={control}
+            name='adresse_client'
+            render={({
+              field: { value, onChange, onBlur }
+            }) => (
+              <Input className={errors.adresse_client ? 'my-1 border-red-500 text-red-500 rounded' : 'my-1'} value={value} onChange={onChange} onBlur={onBlur} />
+            )}
+            />
+          { errors?.adresse_client && <div className='text-left text-red-500 text-xs'>{ errors.adresse_client.message }</div> }
           <label htmlFor='mail_client'>Mail : </label><br />
-          <Input name='mail_client' className='my-1' value={clientCredentials.mail_client} onChange={handleChange} /><br />
+          <Controller 
+            control={control}
+            name='mail_client'
+            render={({
+              field: { value, onBlur, onChange }
+            }) => (
+              <Input className={errors.mail_client ? 'my-1 border-red-500 text-red-500 rounded' : 'my-1'} value={value} onChange={onChange} onBeforeInput={onBlur} />
+            )}
+          />
+          { errors?.mail_client && <div className='text-left text-red-500 text-xs'>{ errors.mail_client.message }</div> }
           <label htmlFor='telephone_client'>Numero de telephone : </label><br />
-          <Input name='telephone_client' className='my-1' value={clientCredentials.telephone_client} onChange={handleChange} onKeyPress={handleKeyPress} required /><br />
+          <Controller 
+            control={control}
+            name='telephone_client'
+            render={({
+              field: { value, onChange, onBlur }
+            }) => (
+              <Input className={errors.telephone_client ? 'my-1 border-red-500 text-red-500 rounded' : 'my-1'} value={value} onChange={onChange} onBlur={onBlur} onKeyPress={handleKeyPress}  />
+            )}
+          />
+          { errors?.telephone_client && <div className='text-left text-red-500 text-xs'>{ errors.telephone_client.message }</div> }
           <div className='flex justify-center my-3'>
-            <button className='bg-green-500 hover:bg-green-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-green-500' type='submit'>AJOUTER</button>
+            <button className='bg-green-500 hover:bg-green-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-green-500' type='submit'>
+              {
+                isSubmitting && <LoadingOutlined />
+              }
+              AJOUTER
+            </button>
           </div>
         </form>
       </div>
