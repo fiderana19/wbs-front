@@ -6,7 +6,7 @@ export interface Transaction {
 
 export interface CreateTransactionInterface {
     client: string;
-    date_transaction: string;
+    date_transaction: any;
 }
 
 export interface TransactionForDisplay {
