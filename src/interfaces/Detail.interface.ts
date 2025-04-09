@@ -1,6 +1,6 @@
 export interface CreateDetailInterface {
-    quantite: number;
-    remise: number;
+    quantite: string;
+    remise: string;
     product: string;
     transaction: string
 }
