@@ -9,8 +9,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 const productSchema = yup.object({
   libelle: yup.string().required("Le libelle est requis! "),
   description: yup.string().required("La description du produit est requise !"),
-  pu: yup.string().required("Le prix unitaire est requis !"),
-  stock: yup.string().required("Le stock du produit est requis !")
+  pu: yup.number().required("Le prix unitaire est requis !"),
+  stock: yup.number().required("Le stock du produit est requis !")
 })
 const AddProductPage: FunctionComponent = () => {
   const { mutateAsync } = usePostProduct();

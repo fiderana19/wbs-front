@@ -7,8 +7,23 @@ import { okDeleteStyle } from '../../../constants/ModalStyle';
 import { useGetAllProduct } from '../../../hooks/useGetAllProduct';
 import { useDeleteProduct } from '../../../hooks/useDeleteProduct';
 import { usePatchProduct } from '../../../hooks/usePatchProduct';
+import { Controller, useForm } from 'react-hook-form';
+import { handleNumberKeyPress } from '../../../utils/keypress';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
+const ProductEditSchema = yup.object({
+  _id: yup.string().required(),
+  libelle: yup.string().required("Le libelle ne doit pas être vide !"),
+  description: yup.string().required("La description ne doit pas être vide !"),
+  pu: yup.number().required("Le prix unitaire ne doit pas être vide !"),
+  stock: yup.number().required("Le stock ne doit pas être vide !"),
+})
 const ProductPage: FunctionComponent = () => {
+  const { control, handleSubmit: edit, formState, register } = useForm<Product>({
+    resolver: yupResolver(ProductEditSchema)
+  });
+  const { errors } = formState;
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
@@ -48,19 +63,11 @@ const ProductPage: FunctionComponent = () => {
     });    
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    patchProduct(editedItem);
+  const handleSubmitEdit = async (data: Product) => {
+    patchProduct(data);
     setEditedItem({ _id: '', libelle: '' , description: '', pu: 0, stock: 0, });
     setIsEditProductModalOpen(false);
   }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (editedItem) {
-      const { name, value } = e.target;
-      setEditedItem({ ...editedItem, [name]: value });
-    }
-  };
 
   const handleDeleteConfirm = () => {
     if (itemToDelete) {
@@ -68,14 +75,6 @@ const ProductPage: FunctionComponent = () => {
       setIsDeleteModalVisible(false);
     }
   };
-
-  const handleKeyPress =async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const charCode = e.which || e.keyCode;
-
-    if (charCode < 48 || charCode > 57) {
-      e.preventDefault();
-    }
-  }
 
   return (
     <div className='pb-5 pt-24'>
@@ -126,18 +125,58 @@ const ProductPage: FunctionComponent = () => {
           }
         </div>
         <Modal title="MODIFIER PRODUIT" open={isEditProductModalOpen} onCancel={() => setIsEditProductModalOpen(false)} footer={null} >
-          {/* {selectedItem && <EditProduct item={selectedItem} />} */}
           {selectedItem && 
             <div>
-              <form className='w-2/3 my-7 mx-auto' onSubmit={handleSubmit}>
+              <form className='w-2/3 my-7 mx-auto' onSubmit={edit(handleSubmitEdit)}>
+                <input className='hidden' defaultValue={editedItem._id} {...register('_id')} />
                 <label htmlFor='libelle' >Libelle : </label> <br />
-                <Input name='libelle' value={editedItem.libelle} onChange={handleInputChange}/>
+                <Controller 
+                  control={control}
+                  name='libelle'
+                  defaultValue={editedItem.libelle}
+                  render={({
+                    field: { value, onBlur, onChange }
+                  }) => (
+                    <Input value={value} onBlur={onBlur} onChange={onChange} className={errors.libelle ? 'border border-red-500 rounded text-red-500' : ''} />
+                  )}
+                />
+                {errors.libelle && <div className='text-xs text-red-500 text-left'>{ errors.libelle.message }</div>}
                 <label htmlFor='description' >Description : </label> <br />
-                <Input name='description' value={editedItem.description} onChange={handleInputChange}/>
+                <Controller 
+                  control={control}
+                  name='description'
+                  defaultValue={editedItem.description}
+                  render={({
+                    field: { value, onBlur, onChange }
+                  }) => (
+                    <Input value={value} onBlur={onBlur} onChange={onChange} className={errors.description ? 'border border-red-500 rounded text-red-500' : ''}/>
+                  )}
+                />
+                {errors.description && <div className='text-xs text-red-500 text-left'>{ errors.description.message }</div>}
                 <label htmlFor='pu' >Prix unitaire : </label> <br />
-                <Input name='pu' value={editedItem.pu} onChange={handleInputChange} onKeyPress={handleKeyPress} />
+                <Controller 
+                  control={control}
+                  name='pu'
+                  defaultValue={editedItem.pu}
+                  render={({
+                    field: { value, onBlur, onChange }
+                  }) => (
+                    <Input value={value} onBlur={onBlur} onChange={onChange} onKeyPress={handleNumberKeyPress} className={errors.pu ? 'border border-red-500 rounded text-red-500' : ''} />
+                  )}
+                />
+                {errors.pu && <div className='text-xs text-red-500 text-left'>{ errors.pu.message }</div>}
                 <label htmlFor='stock' >Stock : </label> <br />
-                <Input name='stock' value={editedItem.stock} onChange={handleInputChange} onKeyPress={handleKeyPress} />
+                <Controller 
+                  control={control}
+                  name='stock'
+                  defaultValue={editedItem.stock}
+                  render={({
+                    field: { value, onBlur, onChange }
+                  }) => (
+                    <Input value={value} onBlur={onBlur} onChange={onChange} onKeyPress={handleNumberKeyPress} className={errors.stock ? 'border border-red-500 rounded text-red-500' : ''}/>
+                  )}
+                />
+                {errors.stock && <div className='text-xs text-red-500 text-left'>{ errors.stock.message }</div>}
                 <div className='flex justify-center my-3'>
                   <button className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500' type='submit'>MODIFIER</button>
                 </div>
