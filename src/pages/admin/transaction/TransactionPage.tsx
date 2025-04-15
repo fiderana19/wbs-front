@@ -1,33 +1,36 @@
-import React, { FunctionComponent, useState } from 'react'
+import { FunctionComponent, useState } from 'react'
 import { Button, DatePicker, Modal , Input } from 'antd'
 import { Link } from 'react-router-dom';
 import { EditOutlined, WarningOutlined, DeleteOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import TransactionSearch from './TransactionSearchPage';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem } from '../../../interfaces/Transaction.interface';
-import { errorMessage } from '../../../utils/AntdMessage';
 import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
 import { useGetDetailByTransactionId } from '../../../hooks/useGetDetailByTransactionId';
 import { useGetTransactionById } from '../../../hooks/useGetTransactionById';
 import { usePatchTransaction } from '../../../hooks/usePatchTransaction';
+import { Controller, useForm } from 'react-hook-form';
+import { handleNumberKeyPress } from '../../../utils/keypress';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
+const TransactionEditSchema = yup.object({
+  _id: yup.string().required(),
+  date_transaction: yup.string().required("Veuillez selectionner une date !")
+})
 const TransactionPage: FunctionComponent = () => {
+    const { control, handleSubmit: edit, formState, register } = useForm<TransactionForEdit>({
+      resolver: yupResolver(TransactionEditSchema)
+    });
+    const { errors } = formState;
     const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<TransactionForDisplay | null>(null);
     const [searchRef, setSearchRef] = useState('');
     const [editTransactionCredentials, setEditTransactionCredentials] = useState<TransactionForEdit>({ _id: '', date_transaction: '' })
-    const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);  
     const [selectedItemEdit, setSelectedItemEdit] = useState<TransactionItem | null>(null);
-    const [editedItem, setEditedItem] = useState<TransactionItem>({
-      _id: '',
-      date_transaction: '',
-      nom_client: '',
-      ref: '',
-      montant_transaction: 0,
-    });
   const { data: transactions, isLoading } = useGetAllTransaction();
   const { mutateAsync: deleteTransaction } = useDeleteTransaction();
   const { mutateAsync: getDetailByTransactionById, data: details } = useGetDetailByTransactionId();
@@ -63,44 +66,11 @@ const TransactionPage: FunctionComponent = () => {
       _id: item._id,
     });
     setIsEditTransactionModalOpen(true);
-
-    setEditedItem({
-      _id: item._id,
-      date_transaction: item.date_transaction,
-      nom_client: item.nom_client,
-      ref: item.ref,
-      montant_transaction: item.montant_transaction,
-     }); 
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    // e.preventDefault();
-    if (editedItem) {
-      if (selectedDate) {
-        patchTransaction(editTransactionCredentials)
-      } else {
-        errorMessage('Veuillez selectionner des dates !')
-      }
-    }
-  }
-
-  const handleDateChange = (date: any) => {
-    setSelectedDate(date);
-    if (date) {
-      const isoDate = date.toISOString();
-      setEditTransactionCredentials({
-        ...editTransactionCredentials,
-        date_transaction: isoDate,
-      });
-    }
-  };
-
-  const handleKeyPress =async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const charCode = e.which || e.keyCode;
-
-    if (charCode < 48 || charCode > 57) {
-      e.preventDefault();
-    }
+  const handleSubmitEdit = async (data: TransactionForEdit) => {
+    patchTransaction(data)
+    setIsEditTransactionModalOpen(false);
   }
 
   return (
@@ -114,7 +84,7 @@ const TransactionPage: FunctionComponent = () => {
           <Link to='/admin/addforms'>
             <Button className='mt-1'><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden' > AJOUTER</div></Button>
           </Link>
-          <Input className='my-1 ml-1 w-52' placeholder='Saisir la ref...' value={searchRef} onChange={(e) => setSearchRef(e.target.value)} onKeyPress={handleKeyPress} />
+          <Input className='my-1 ml-1 w-52' placeholder='Saisir la ref...' value={searchRef} onChange={(e) => setSearchRef(e.target.value)} onKeyPress={handleNumberKeyPress} />
         </div>
         <div className='bg-transparent'>
           {
@@ -162,15 +132,26 @@ const TransactionPage: FunctionComponent = () => {
           }
           <Modal title="MODIFIER TRANSACTION" open={isEditTransactionModalOpen} onCancel={() => setIsEditTransactionModalOpen(false)} footer={null} >
             {selectedItemEdit && <div>
-              <form className='w-2/3 my-7 mx-auto' onSubmit={handleSubmit}>
+              <form className='w-2/3 my-7 mx-auto' onSubmit={edit(handleSubmitEdit)}>
+                <input defaultValue={selectedItemEdit._id} className='hidden' {...register('_id')} />
                 <label htmlFor='nom_client' >Nom du client : </label> <br />
                 <Input name='nom_client' value={selectedItemEdit.nom_client} readOnly />
                 <label htmlFor='ref' >Ref de la transaction : </label> <br />
-              <Input name='ref' value={selectedItemEdit.ref} readOnly />
+                <Input name='ref' value={selectedItemEdit.ref} readOnly />
                 <label htmlFor='montant_transaction' >Montant de la transaction : </label> <br />
                 <Input name='montant_transaction' value={selectedItemEdit.montant_transaction} readOnly />
                 <label htmlFor='datetransaction' >Date : </label> <br />
-                <DatePicker onChange={handleDateChange}  className="w-full" showTime format="YYYY-MM-DD HH:mm:ss" />
+                <Controller 
+                  control={control}
+                  name='date_transaction'
+                  defaultValue={selectedItemEdit.date_transaction.toString()}
+                  render={({
+                    field: { value, onChange, onBlur }
+                  }) => (
+                    <DatePicker onChange={(date) => onChange(date ? date.toISOString() : null)} value={value ? dayjs(value) : null} onBlur={onBlur} className={errors.date_transaction ? "w-full border border-red-500 rounded text-red-500" : "w-full"} showTime format="YYYY-MM-DD HH:mm:ss" />
+                  )}
+                />
+                {errors.date_transaction && <div className='text-red-500 text-xs text-left'>{ errors.date_transaction.message }</div>}
                 <div className='flex justify-center my-3'>
                   <button className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500' type='submit'>MODIFIER</button>
                 </div>
