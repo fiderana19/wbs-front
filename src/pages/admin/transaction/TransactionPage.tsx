@@ -76,7 +76,10 @@ const TransactionPage: FunctionComponent = () => {
   return (
     <div className='pb-5 pt-24 lg:px-32 sm:px-10 px-4'>
       <div className='transaction-body'>
-        <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+        <Suspense fallback={<div className='text-center my-10'>
+            <LoadingOutlined className='text-5xl' />
+          </div>}
+        >
           <TransactionSearch />        
         </Suspense>
         <div className='my-4 font-bold text-2xl text-center font-lato'>

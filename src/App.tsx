@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
 const AppLayout = lazy(() => import('./layouts/AppLayout'));
 const NotFound = lazy(() => import('./pages/admin/NotFound'));
 const AddForms = lazy(() => import('./pages/admin/step/AddStep'));
@@ -14,7 +15,9 @@ const MainPage = lazy(() => import('./pages/MainPage'));
 
 function App() {
   return (
-    <Suspense fallback={<div className='text-center'>Chargement...</div>}
+    <Suspense fallback={<div className='text-center my-10'>
+        <LoadingOutlined className='text-5xl' />
+      </div>}
     >
        <Routes>
             <Route index element={<MainPage/>}/>

@@ -1,6 +1,6 @@
 import { Steps ,Button  } from 'antd'
 import { FunctionComponent, lazy, Suspense, useState } from 'react'
-import { HomeOutlined ,ArrowRightOutlined } from '@ant-design/icons'
+import { HomeOutlined ,ArrowRightOutlined, LoadingOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom';
 const AddClientPage = lazy(() => import('../client/AddClientPage'));
 const AddTransanctionPage = lazy(() => import('../transaction/AddTransanctionPage'));
@@ -43,7 +43,10 @@ const AddForms: FunctionComponent = () => {
           {/* Contenu de la page actuelle */}
           {currentStep === 0 && (
             <div>
-              <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+              <Suspense fallback={<div className='text-center my-10'>
+                  <LoadingOutlined className='text-5xl' />
+                </div>}
+              >
                 <AddClientPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
                 <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
               </Suspense>
@@ -51,7 +54,10 @@ const AddForms: FunctionComponent = () => {
           )}
           {currentStep === 1 && (
             <div>
-              <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+              <Suspense fallback={<div className='text-center my-10'>
+                  <LoadingOutlined className='text-5xl' />
+                </div>}
+              >
                 <AddTransanctionPage handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
                 <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
               </Suspense>
@@ -59,7 +65,10 @@ const AddForms: FunctionComponent = () => {
           )}
           {currentStep === 2 && (
             <div>
-              <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+              <Suspense fallback={<div className='text-center my-10'>
+                  <LoadingOutlined className='text-5xl' />
+                </div>}
+              >
                 <AddDetailPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
                 <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
               </Suspense>
@@ -67,7 +76,10 @@ const AddForms: FunctionComponent = () => {
           )}
           {currentStep === 3 && (
             <div>
-              <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+              <Suspense fallback={<div className='text-center my-10'>
+                  <LoadingOutlined className='text-5xl' />
+                </div>}
+              >
                 <AddFacturePage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
                 <Button className='mr-10 float-right  mb-32' onClick={handleNextPage}>Envoyer facture par mail <ArrowRightOutlined/> </Button>
               </Suspense>
@@ -75,7 +87,10 @@ const AddForms: FunctionComponent = () => {
           )}
            {currentStep === 4 && (
             <div>
-              <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+              <Suspense fallback={<div className='text-center my-10'>
+                  <LoadingOutlined className='text-5xl' />
+                </div>}
+              >
                   <AddMailPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
               </Suspense>
             </div>

@@ -1,6 +1,6 @@
 import { FunctionComponent, lazy, Suspense } from 'react'
 import { Card, Space, Statistic } from 'antd';
-import { ShoppingCartOutlined, DollarCircleOutlined, UserOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined, DollarCircleOutlined, UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useGetTransactionTotal } from '../../../hooks/useGetTransactionTotal';
 import { useGetProductTotal } from '../../../hooks/useGetProductTotal';
 import { useGetClientTotal } from '../../../hooks/useGetClientTotal';
@@ -44,7 +44,10 @@ const DashboardPage: FunctionComponent = () => {
               <div>
                 <div className='text-center text-2xl font-bold font-lato'>STOCK DES PRODUITS</div>
                 <div className='w-full h-72 my-3'>
-                  <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                  <Suspense fallback={<div className='text-center my-10'>
+                      <LoadingOutlined className='text-5xl' />
+                    </div>}
+                  >
                     <DashboardChart/>
                   </Suspense>
                 </div>

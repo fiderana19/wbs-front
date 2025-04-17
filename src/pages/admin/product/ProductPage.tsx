@@ -84,7 +84,10 @@ const ProductPage: FunctionComponent = () => {
           <Button onClick={() => setIsAddProductModalOpen(true)} ><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden'> AJOUTER </div></Button>
         </div>
         <Modal title="AJOUTER UN PRODUIT" open={isAddProductModalOpen} onCancel={() => setIsAddProductModalOpen(false)} footer={null} >
-          <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+          <Suspense fallback={<div className='text-center my-10'>
+              <LoadingOutlined className='text-5xl' />
+            </div>}
+          >
             <AddProduct />          
           </Suspense>
         </Modal>

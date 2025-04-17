@@ -76,7 +76,7 @@ const ClientPage: FunctionComponent = () => {
         <div className='flex justify-between'>
           <div className='text-xl font-bold font-lato'>LISTE DES CLIENTS</div>
           <Link to='/admin/addforms'>
-          <Button ><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden'> AJOUTER </div></Button>
+            <Button ><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden'> AJOUTER </div></Button>
           </Link>
         </div>
         <div className='my-7 grid gap-2 justify-center grid-cols-customized'>
