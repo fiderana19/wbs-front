@@ -44,7 +44,7 @@ const DashboardPage: FunctionComponent = () => {
               <div>
                 <div className='text-center text-2xl font-bold font-lato'>STOCK DES PRODUITS</div>
                 <div className='w-full h-72 my-3'>
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<div className='text-center'>Chargement...</div>}>
                     <DashboardChart/>
                   </Suspense>
                 </div>

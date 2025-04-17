@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useState } from "react";
 import WbsLogo from '../assets/image/wbs-logo.png';
+import { LoadingOutlined } from "@ant-design/icons";
 const Login = lazy(() => import("../components/homepage/Login"));
 const Signup = lazy(() => import('../components/homepage/Signup'));
 
@@ -11,7 +12,7 @@ const MainPage: React.FC = () => {
             <div className={isLoginSlide ? "w-1/2 bg-primary h-full absolute top-0 z-50 transition-all duration-500" : "w-1/2 bg-primary h-full absolute top-0 animate-wrapper translate-x-full transition-all duration-500 z-10" }>
                <img src={WbsLogo} alt="Logo" className="h-14 object-cover absolute top-5 left-5" />
                <div className="flex flex-col justify-center h-full">
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className='text-center'>Chargement...</div>}>
                         <Login />                    
                     </Suspense>
                </div>
@@ -19,7 +20,7 @@ const MainPage: React.FC = () => {
             <div className={isLoginSlide ? "w-1/2 bg-primary absolute h-full top-0 right-0 z-10 -translate-x-full transition-all duration-500 animate-wrapper" : "w-1/2 bg-primary h-full absolute top-0 right-0 z-50 transition-all duration-500 animate-wrapper" }>
                 <img src={WbsLogo} alt="Logo" className="h-14 object-cover absolute top-5 left-5" />
                 <div className="flex flex-col justify-center h-full">
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className='text-center'>Chargement...</div>}>
                         <Signup />
                     </Suspense>
                 </div>

@@ -14,7 +14,8 @@ const MainPage = lazy(() => import('./pages/MainPage'));
 
 function App() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div className='text-center'>Chargement...</div>}
+    >
        <Routes>
             <Route index element={<MainPage/>}/>
             <Route path='unauthorized' element={<Unauthorized/>}/>
