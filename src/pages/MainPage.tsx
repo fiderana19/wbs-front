@@ -1,6 +1,7 @@
 import React, { lazy, Suspense, useState } from "react";
 import WbsLogo from '../assets/image/wbs-logo.png';
 import { LoadingOutlined } from "@ant-design/icons";
+import ToggleTheme from "../components/ToggleTheme";
 const Login = lazy(() => import("../components/homepage/Login"));
 const Signup = lazy(() => import('../components/homepage/Signup'));
 
@@ -37,6 +38,9 @@ const MainPage: React.FC = () => {
                             <div className="absolute h-12 object-cover top-5 right-5 flex gap-4 items-center">
                                 <div>Déjà eu un compte ?</div>
                                 <button  onClick={() => setIsLoginSlide(true)} className="border hover:shadow-lg transition-all font-latobold py-1.5 px-2.5 my-1 rounded-full">Se connecter</button>
+                            </div>
+                            <div className="absolute top-5 left-5">
+                                <ToggleTheme />
                             </div>
                             <div className="text-5xl">
                                 Bienvenue sur <span className="font-latobold">WBS-Caisse</span>
