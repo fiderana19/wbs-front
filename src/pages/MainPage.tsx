@@ -1,6 +1,5 @@
 import React, { lazy, Suspense, useState } from "react";
 import WbsLogo from '../assets/image/wbs-logo.png';
-import { LoadingOutlined } from "@ant-design/icons";
 const Login = lazy(() => import("../components/homepage/Login"));
 const Signup = lazy(() => import('../components/homepage/Signup'));
 

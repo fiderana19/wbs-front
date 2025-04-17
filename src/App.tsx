@@ -15,26 +15,67 @@ const MainPage = lazy(() => import('./pages/MainPage'));
 
 function App() {
   return (
-    <Suspense fallback={<div className='text-center my-10'>
-        <LoadingOutlined className='text-5xl' />
-      </div>}
+    <Suspense fallback={<div className='text-center'>Chargement...</div>}
     >
        <Routes>
-            <Route index element={<MainPage/>}/>
-            <Route path='unauthorized' element={<Unauthorized/>}/>
-            <Route path='*' element={<NotFound />} />
-            <Route path="/admin" element={<ProtectedRoute />}>
-              <Route path='addforms' element={<AddForms/>}/>
-              <Route path='page' element={<AppLayout />}> 
-                <Route index element={<HomePage/>}/>
-                <Route path='product' element={<ProductPage/>}/>
-                <Route path='transaction' element={<TransactionPage/>}/>
-                <Route path='dashboard' element={<DashboardPage/>}/>
-                <Route path='client' element={<ClientPage/>}/>
+            <Route index element={
+              <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                <MainPage/>
+              </Suspense>
+              }/>
+            <Route path='unauthorized' element={
+              <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                <Unauthorized/>
+              </Suspense>
+              }/>
+            <Route path='*' element={
+              <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                <NotFound />
+              </Suspense>
+              } />
+            <Route path="/admin" element={
+              <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                <ProtectedRoute />
+              </Suspense>
+              }>
+              <Route path='addforms' element={
+                <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                  <AddForms/>
+                </Suspense>
+                }/>
+              <Route path='page' element={
+                <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                  <AppLayout />
+                </Suspense>
+                }> 
+                <Route index element={
+                  <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                    <HomePage/>
+                  </Suspense>
+                  }/>
+                <Route path='product' element={
+                  <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                    <ProductPage/>
+                  </Suspense>
+                  }/>
+                <Route path='transaction' element={
+                  <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                    <TransactionPage/>
+                  </Suspense>
+                  }/>
+                <Route path='dashboard' element={
+                  <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                    <DashboardPage/>
+                  </Suspense>
+                  }/>
+                <Route path='client' element={
+                  <Suspense fallback={<div className='text-center'>Chargement...</div>}>
+                    <ClientPage/>
+                  </Suspense>
+                  }/>
               </Route>
             </Route>
        </Routes>
-    </Suspense>
   );
 }
 
