@@ -1,10 +1,10 @@
 import React, { lazy, Suspense, useState } from "react";
 import WbsLogo from '../assets/image/wbs-logo.png';
 import { LoadingOutlined } from "@ant-design/icons";
-import ToggleTheme from "../components/ToggleTheme";
 import { useDark } from "../context/DarkThemeContext";
 const Login = lazy(() => import("../components/homepage/Login"));
 const Signup = lazy(() => import('../components/homepage/Signup'));
+const ToggleTheme = lazy(() => import('../components/ToggleTheme'))
 
 const MainPage: React.FC = () => {
     const { isDark } = useDark();
@@ -42,7 +42,11 @@ const MainPage: React.FC = () => {
                                 <button  onClick={() => setIsLoginSlide(true)} className="border hover:shadow-lg transition-all font-latobold py-1.5 px-2.5 my-1 rounded-full">Se connecter</button>
                             </div>
                             <div className="absolute top-5 left-5">
-                                <ToggleTheme />
+                                <Suspense fallback={
+                                    <div className="text-xl"><LoadingOutlined /></div>
+                                }>
+                                    <ToggleTheme />
+                                </Suspense>
                             </div>
                             <div className="text-5xl">
                                 Bienvenue sur <span className="font-latobold">WBS-Caisse</span>
@@ -59,7 +63,11 @@ const MainPage: React.FC = () => {
                                 <button  onClick={() => setIsLoginSlide(false)} className="border hover:shadow-lg transition-all font-latobold py-1.5 px-2.5 my-1 rounded-full">S'inscrire</button>
                             </div>
                             <div className="absolute top-5 left-5">
-                                <ToggleTheme />
+                                <Suspense fallback={
+                                    <div className="text-xl"><LoadingOutlined /></div>
+                                }>
+                                    <ToggleTheme />
+                                </Suspense>
                             </div>
                             <div className="text-5xl">
                                 Bienvenue sur <span className="font-latobold">WBS-Caisse</span>

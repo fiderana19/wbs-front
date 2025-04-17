@@ -1,11 +1,11 @@
 import { Dropdown, MenuProps, Space } from "antd";
-import { FunctionComponent } from "react";
+import { FunctionComponent, lazy, Suspense } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import { ShoppingCartOutlined , HomeOutlined, BarChartOutlined , MoneyCollectOutlined, MenuOutlined , UserOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined , HomeOutlined, BarChartOutlined , MoneyCollectOutlined, MenuOutlined , UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useAuth } from "../context/AuthContext";
 import WbsLogo from '../assets/image/wbs-logo.png';
-import ToggleTheme from "../components/ToggleTheme";
+const ToggleTheme = lazy(() => import('../components/ToggleTheme'))
 
 const AppLayout: FunctionComponent = () => {
     const location = useLocation();
@@ -88,7 +88,11 @@ const AppLayout: FunctionComponent = () => {
                         </div>
                     </Link>
                     <div className="mx-2">
-                        <ToggleTheme />
+                        <Suspense fallback={
+                            <div className="text-xl"><LoadingOutlined /></div>
+                        }>
+                            <ToggleTheme />
+                        </Suspense>
                     </div>
                     <button onClick={logout} className=" border hover:bg-white hover:text-primary transition-all text-white mx-auto font-latobold py-0.5 px-2.5 my-1 rounded-full">Deconnexion</button>
                 </div>

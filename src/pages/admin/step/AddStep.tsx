@@ -8,6 +8,7 @@ const AddTransanctionPage = lazy(() => import('../transaction/AddTransanctionPag
 const AddDetailPage = lazy(() => import('./AddDetailPage'));
 const AddFacturePage = lazy(() => import('./AddFacturePage'));
 const AddMailPage = lazy(() => import('./AddMailPage'));
+const ToggleTheme = lazy(() => import('../../../components/ToggleTheme'))
 
 const {Step} = Steps
 
@@ -26,11 +27,18 @@ const AddForms: FunctionComponent = () => {
   return (
     <div className={isDark ? 'h-full' : '' }>
         <div className={isDark ? ' w-full fixed bottom-7' : 'w-full fixed bottom-7'}>
+          <div className='fixed top-5 right-10'>
+            <Suspense fallback={
+              <div className='text-xl'><LoadingOutlined /></div>
+            }>
+              <ToggleTheme />
+            </Suspense>
+          </div>
           <Link to='/admin/page'>
-          <button
-            >
-              <HomeOutlined className='fixed top-4 right-10 p-2 rounded-full text-white text-xl  hover:scale-105 hover:text-opacity-100  transition duration-300' style={{ backgroundColor: 'rgba(0,0,0,.25)' }} />
-          </button>
+            <button
+              >
+                <HomeOutlined className='fixed top-4 right-28 p-2 rounded-full text-white text-xl  hover:scale-105 hover:text-opacity-100  transition duration-300' style={{ backgroundColor: 'rgba(0,0,0,.25)' }} />
+            </button>
           </Link>
           <div className={isDark ? 'mx-10' : 'mx-10'}>
             <Steps current={currentStep}>
