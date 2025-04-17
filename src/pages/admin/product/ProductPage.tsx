@@ -1,7 +1,6 @@
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, lazy, Suspense, useState } from 'react'
 import { Button, Card, Modal, Input } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, ShoppingCartOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import AddProduct from './AddProductPage';
 import { Product } from '../../../interfaces/Product.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
 import { useGetAllProduct } from '../../../hooks/useGetAllProduct';
@@ -11,6 +10,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { handleNumberKeyPress } from '../../../utils/keypress';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+const AddProduct = lazy(() => import('./AddProductPage'));
 
 const ProductEditSchema = yup.object({
   _id: yup.string().required(),
@@ -84,7 +84,9 @@ const ProductPage: FunctionComponent = () => {
           <Button onClick={() => setIsAddProductModalOpen(true)} ><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden'> AJOUTER </div></Button>
         </div>
         <Modal title="AJOUTER UN PRODUIT" open={isAddProductModalOpen} onCancel={() => setIsAddProductModalOpen(false)} footer={null} >
-          <AddProduct />
+          <Suspense fallback={<div>Loading...</div>}>
+            <AddProduct />          
+          </Suspense>
         </Modal>
         <div className='my-7 grid gap-2 justify-center grid-cols-customized'>
           {

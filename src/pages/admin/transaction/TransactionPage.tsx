@@ -1,9 +1,8 @@
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, lazy, Suspense, useState } from 'react'
 import { Button, DatePicker, Modal , Input } from 'antd'
 import { Link } from 'react-router-dom';
 import { EditOutlined, WarningOutlined, DeleteOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import TransactionSearch from './TransactionSearchPage';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem } from '../../../interfaces/Transaction.interface';
 import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
@@ -14,6 +13,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { handleNumberKeyPress } from '../../../utils/keypress';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+const TransactionSearch = lazy(() => import('./TransactionSearchPage'));
 
 const TransactionEditSchema = yup.object({
   _id: yup.string().required(),
@@ -76,7 +76,9 @@ const TransactionPage: FunctionComponent = () => {
   return (
     <div className='pb-5 pt-24 lg:px-32 sm:px-10 px-4'>
       <div className='transaction-body'>
-        <TransactionSearch />
+        <Suspense fallback={<div>Loading...</div>}>
+          <TransactionSearch />        
+        </Suspense>
         <div className='my-4 font-bold text-2xl text-center font-lato'>
           TRANSACTIONS
         </div>

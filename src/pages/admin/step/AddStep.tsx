@@ -1,12 +1,12 @@
 import { Steps ,Button  } from 'antd'
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, lazy, Suspense, useState } from 'react'
 import { HomeOutlined ,ArrowRightOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom';
-import AddClientPage from '../client/AddClientPage';
-import AddTransanctionPage from '../transaction/AddTransanctionPage';
-import AddDetailPage from './AddDetailPage';
-import AddFacturePage from './AddFacturePage';
-import AddMailPage from './AddMailPage';
+const AddClientPage = lazy(() => import('../client/AddClientPage'));
+const AddTransanctionPage = lazy(() => import('../transaction/AddTransanctionPage'));
+const AddDetailPage = lazy(() => import('./AddDetailPage'));
+const AddFacturePage = lazy(() => import('./AddFacturePage'));
+const AddMailPage = lazy(() => import('./AddMailPage'));
 
 const {Step} = Steps
 
@@ -43,31 +43,41 @@ const AddForms: FunctionComponent = () => {
           {/* Contenu de la page actuelle */}
           {currentStep === 0 && (
             <div>
-              <AddClientPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
-              <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
+              <Suspense fallback={<div>Loading...</div>}>
+                <AddClientPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
+                <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
+              </Suspense>
             </div>
           )}
           {currentStep === 1 && (
             <div>
-              <AddTransanctionPage handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
-              <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
+              <Suspense fallback={<div>Loading...</div>}>
+                <AddTransanctionPage handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
+                <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
+              </Suspense>
             </div>
           )}
           {currentStep === 2 && (
             <div>
-              <AddDetailPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
-              <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
+              <Suspense fallback={<div>Loading...</div>}>
+                <AddDetailPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
+                <Button className='mr-10 float-right mb-32' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
+              </Suspense>
             </div>
           )}
           {currentStep === 3 && (
             <div>
-              <AddFacturePage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
-              <Button className='mr-10 float-right  mb-32' onClick={handleNextPage}>Envoyer facture par mail <ArrowRightOutlined/> </Button>
+              <Suspense fallback={<div>Loading...</div>}>
+                <AddFacturePage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
+                <Button className='mr-10 float-right  mb-32' onClick={handleNextPage}>Envoyer facture par mail <ArrowRightOutlined/> </Button>
+              </Suspense>
             </div>
           )}
            {currentStep === 4 && (
             <div>
-              <AddMailPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
+              <Suspense fallback={<div>Loading...</div>}>
+                <AddMailPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
+              </Suspense>
             </div>
           )}
         </div>

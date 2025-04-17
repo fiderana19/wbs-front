@@ -1,10 +1,10 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, lazy, Suspense } from 'react'
 import { Card, Space, Statistic } from 'antd';
 import { ShoppingCartOutlined, DollarCircleOutlined, UserOutlined } from '@ant-design/icons';
-import DashboardChart from '../../../components/dashboard/DashboardChart';
 import { useGetTransactionTotal } from '../../../hooks/useGetTransactionTotal';
 import { useGetProductTotal } from '../../../hooks/useGetProductTotal';
 import { useGetClientTotal } from '../../../hooks/useGetClientTotal';
+const DashboardChart = lazy(() => import('../../../components/dashboard/DashboardChart'));
 
 const DashboardPage: FunctionComponent = () => {
   const { data: totalTransaction } = useGetTransactionTotal();
@@ -44,7 +44,9 @@ const DashboardPage: FunctionComponent = () => {
               <div>
                 <div className='text-center text-2xl font-bold font-lato'>STOCK DES PRODUITS</div>
                 <div className='w-full h-72 my-3'>
-                  <DashboardChart/>
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <DashboardChart/>
+                  </Suspense>
                 </div>
               </div>
             </Card>

@@ -5,16 +5,13 @@ import { HttpStatus } from '../../constants/Http_status';
 import { errorMessage } from '../../utils/AntdMessage';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
-import { useNavigate } from 'react-router-dom';
 
 const Signup: React.FC = () => {
     const [signupCredentials, setSignupCredentials] = useState<SingupInterface>({ username: "", password: "" });
     const [usrId, setUsrId] = useState<string>("");
     const [isSignupSuccessModalOpen, setIsSignupSuccessModalOpen] = useState<boolean>(false);  
-    const navigate = useNavigate();
 
     const signupSubmit = async () => {
-        console.log(signupCredentials);
 
         const response = await signupUser(signupCredentials);
         if(response?.status === HttpStatus.CREATED) {

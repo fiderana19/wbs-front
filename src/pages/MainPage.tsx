@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import Login from "../components/homepage/Login";
-import Signup from "../components/homepage/Signup";
-import WbsLogo from '../assets/image/wbs-logo.png'
+import React, { lazy, Suspense, useState } from "react";
+import WbsLogo from '../assets/image/wbs-logo.png';
+const Login = lazy(() => import("../components/homepage/Login"));
+const Signup = lazy(() => import('../components/homepage/Signup'));
 
 const MainPage: React.FC = () => {
     const [isLoginSlide, setIsLoginSlide] = useState<boolean>(true);
@@ -11,13 +11,17 @@ const MainPage: React.FC = () => {
             <div className={isLoginSlide ? "w-1/2 bg-primary h-full absolute top-0 z-50 transition-all duration-500" : "w-1/2 bg-primary h-full absolute top-0 animate-wrapper translate-x-full transition-all duration-500 z-10" }>
                <img src={WbsLogo} alt="Logo" className="h-14 object-cover absolute top-5 left-5" />
                <div className="flex flex-col justify-center h-full">
-                    <Login />
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Login />                    
+                    </Suspense>
                </div>
             </div>
             <div className={isLoginSlide ? "w-1/2 bg-primary absolute h-full top-0 right-0 z-10 -translate-x-full transition-all duration-500 animate-wrapper" : "w-1/2 bg-primary h-full absolute top-0 right-0 z-50 transition-all duration-500 animate-wrapper" }>
                 <img src={WbsLogo} alt="Logo" className="h-14 object-cover absolute top-5 left-5" />
                 <div className="flex flex-col justify-center h-full">
-                    <Signup />
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Signup />
+                    </Suspense>
                 </div>
             </div>
             <div className="w-full absolute h-screen flex justify-between">
