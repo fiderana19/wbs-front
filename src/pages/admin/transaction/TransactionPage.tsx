@@ -13,6 +13,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { handleNumberKeyPress } from '../../../utils/keypress';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useDark } from '../../../context/DarkThemeContext';
 const TransactionSearch = lazy(() => import('./TransactionSearchPage'));
 
 const TransactionEditSchema = yup.object({
@@ -36,6 +37,7 @@ const TransactionPage: FunctionComponent = () => {
   const { mutateAsync: getDetailByTransactionById, data: details } = useGetDetailByTransactionId();
   const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
   const { mutateAsync: patchTransaction } = usePatchTransaction();
+  const { isDark } = useDark();
 
   async function handleDeleteTransaction(itemId: string) {
     deleteTransaction(itemId);
@@ -74,7 +76,7 @@ const TransactionPage: FunctionComponent = () => {
   }
 
   return (
-    <div className='pb-5 pt-24 lg:px-32 sm:px-10 px-4'>
+    <div className={isDark ? 'dark-container pb-5 pt-24 lg:px-32 sm:px-10 px-4' : 'pb-5 pt-24 lg:px-32 sm:px-10 px-4'}>
       <div className='transaction-body'>
         <Suspense fallback={<div className='text-center my-10'>
             <LoadingOutlined className='text-5xl' />
@@ -106,7 +108,7 @@ const TransactionPage: FunctionComponent = () => {
               }
               return(
                 <div key={transaction._id}>
-                  <div className='w-full relative sm:pr-4 block sm:flex justify-between bg-six mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all' >
+                  <div className={isDark ? 'w-full relative sm:pr-4 block sm:flex justify-between bg-gray-600 mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all' : 'w-full relative sm:pr-4 block sm:flex justify-between bg-six mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all'} >
                     <div className='sm:w-11/12 w-full'  onClick={() => getDetail(transaction._id)}>
                       <div className='sm:flex text-xs'>
                         <div className='flex'>

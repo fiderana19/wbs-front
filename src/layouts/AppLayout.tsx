@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { ShoppingCartOutlined , HomeOutlined, BarChartOutlined , MoneyCollectOutlined, MenuOutlined , UserOutlined } from '@ant-design/icons';
 import { useAuth } from "../context/AuthContext";
 import WbsLogo from '../assets/image/wbs-logo.png';
+import ToggleTheme from "../components/ToggleTheme";
 
 const AppLayout: FunctionComponent = () => {
     const location = useLocation();
@@ -86,6 +87,9 @@ const AppLayout: FunctionComponent = () => {
                             <UserOutlined /> Client
                         </div>
                     </Link>
+                    <div className="mx-2">
+                        <ToggleTheme />
+                    </div>
                     <button onClick={logout} className=" border hover:bg-white hover:text-primary transition-all text-white mx-auto font-latobold py-0.5 px-2.5 my-1 rounded-full">Deconnexion</button>
                 </div>
                 <Dropdown className="visible md:hidden" menu={{items}} trigger={['click']}>

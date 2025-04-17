@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { LoadingOutlined } from '@ant-design/icons';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useDark } from '../../../context/DarkThemeContext';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -25,7 +26,7 @@ const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
     resolver: yupResolver(clientSchema)
   });
   const { errors, isSubmitting } = formState;
-
+  const { isDark } = useDark();
   const handleSubmit = async (data: CreateClientInterface) => {
     mutateAsync(data);
     if(!isError) {
@@ -41,7 +42,7 @@ const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
   }
     
   return (
-    <div className='py-16  flex justify-center'>
+    <div className={isDark ? 'dark-container py-16 flex justify-center min-h-screen h-full' : 'py-16  flex justify-center'}>
       <div className='text-center'>
         <div className='text-2xl font-bold'>CLIENT</div>
         <form className='my-7 w-60 text-left' onSubmit={submit(handleSubmit)}>

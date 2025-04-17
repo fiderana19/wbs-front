@@ -9,6 +9,7 @@ import { useGetDetailByTransactionId } from '../../../hooks/useGetDetailByTransa
 import { useGetTransactionById } from '../../../hooks/useGetTransactionById';
 import { useGetTransactionBetweenDates } from '../../../hooks/useGetTransactionBetweenDates';
 import { usePatchTransaction } from '../../../hooks/usePatchTransaction';
+import { useDark } from '../../../context/DarkThemeContext';
 
 const TransactionSearchPage: FunctionComponent = () => {
     const [selectedDateDebut, setSelectedDateDebut] = useState<dayjs.Dayjs | null>(null);
@@ -32,6 +33,7 @@ const TransactionSearchPage: FunctionComponent = () => {
   const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
   const { mutateAsync: searchTransactionBetweenDates, data: searchTransaction } = useGetTransactionBetweenDates();
   const { mutateAsync: patchTransaction } = usePatchTransaction();
+  const { isDark } = useDark();
 
   const handleDateDebutChange = (date: any) => {
     setSelectedDateDebut(date);
@@ -148,7 +150,7 @@ const TransactionSearchPage: FunctionComponent = () => {
               searchTransaction && searchTransaction.map((searchtransaction: any) =>{
                 return(
                   <div key={searchTransaction._id}>
-                  <div className='w-full relative sm:pr-4 z-10 block sm:flex justify-between bg-six mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all' >
+                  <div className={isDark ? 'w-full relative sm:pr-4 z-10 block sm:flex justify-between bg-gray-600 mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all' : 'w-full relative sm:pr-4 z-10 block sm:flex justify-between bg-six mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all'} >
                     <div className='sm:w-11/12 w-full'  onClick={() => getDetail(searchtransaction._id)}>
                       <div className='sm:flex text-xs'>
                         <div className='flex'>

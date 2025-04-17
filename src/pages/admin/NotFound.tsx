@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import WbsLogo from '../../assets/image/wbs-logo.png'
+import { useDark } from '../../context/DarkThemeContext';
 
 function NotFound() {
-    
+    const { isDark } = useDark();
+
     return(
-            <div className=' h-screen flex flex-col justify-center'>
+            <div className={isDark ? ' h-screen flex flex-col justify-center dark-container' : ' h-screen flex flex-col justify-center'}>
                 <div className='w-80 mx-auto'>
                     <div className='text-center'>
                         <img src={WbsLogo} className='h-36 w-36 object-cover mx-auto' alt="Logo du ministere" />

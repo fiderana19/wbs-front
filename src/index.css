@@ -9,6 +9,11 @@
     font-family: LatoRegular;
 }
 
+.dark-container {
+    background: #2d2d30;
+    color: white;
+}
+
 @font-face {
     font-family: 'Geist';
     src: url('./fonts/Geist-VariableFont_wght.ttf') format('truetype');

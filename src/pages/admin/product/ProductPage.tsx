@@ -10,6 +10,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { handleNumberKeyPress } from '../../../utils/keypress';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useDark } from '../../../context/DarkThemeContext';
 const AddProduct = lazy(() => import('./AddProductPage'));
 
 const ProductEditSchema = yup.object({
@@ -29,6 +30,7 @@ const ProductPage: FunctionComponent = () => {
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<Product | null>(null);
+  const { isDark } = useDark();
   const [editedItem, setEditedItem] = useState<Product>({   
     _id: '',
     libelle: '',
@@ -77,7 +79,7 @@ const ProductPage: FunctionComponent = () => {
   };
 
   return (
-    <div className='pb-5 pt-24'>
+    <div className={isDark ? 'dark-container pb-5 pt-24 min-h-screen' : 'pb-5 pt-24'}>
       <div className='md:px-32 sm:px-10 px-4'>
         <div className='flex justify-between'>
           <div className='text-xl font-bold font-lato'>LISTE DES PRODUITS</div>
@@ -101,10 +103,10 @@ const ProductPage: FunctionComponent = () => {
             ) : (
               products && products.map((product: any) =>{
                 return(
-                  <Card key={product._id} className='hover:scale-105 duration-300'>
-                    <div className='w-40 text-center'>
+                  <Card key={product._id} className={isDark ? ' bg-gray-600 border-gray-800 hover:scale-105 duration-300' : 'hover:scale-105 duration-300'}>
+                    <div className='w-40'>
                       <ShoppingCartOutlined className='text-5xl' />
-                      <div className='py-3'>
+                      <div className={isDark ? 'py-3 text-white' : 'py-3'}>
                         <div className='text-base text-primary font-bold'>
                           { product.libelle }
                         </div>
@@ -112,15 +114,15 @@ const ProductPage: FunctionComponent = () => {
                           { product.description }
                         </div>
                         <div className='text-sm'>
-                          <span className='text-gray-500 font-semibold'> Unité: </span>{ product.pu.toLocaleString('fr-FR') } <span className='text-xs'>MGA</span>
+                          <span className={isDark ? 'text-gray-100 font-latobold' : 'text-gray-500 font-semibold'}> Unité: </span>{ product.pu.toLocaleString('fr-FR') } <span className='text-xs'>MGA</span>
                         </div>
                         <div className='text-sm'>
-                          <span className='text-gray-500 font-semibold'>Stock: </span> { product.stock }
+                          <span className={isDark ? 'text-gray-100 font-latobold' : 'text-gray-500 font-semibold'}>Stock: </span> { product.stock }
                         </div>
                       </div>
                       <div className='flex justify-center'>
-                        <Button className='mx-1 bg-blue-400'  onClick={() => EditProduct(product)} > <EditOutlined/> </Button>
-                        <Button className='mx-1 bg-red-700'  onClick={() => showDeleteConfirmation(product)}> <DeleteOutlined/> </Button>
+                        <Button className='mx-1 bg-blue-400 border-blue-500' onClick={() => EditProduct(product)} > <EditOutlined/> </Button>
+                        <Button  className='mx-1 bg-red-700 border-red-800 hover:text-red-500'  onClick={() => showDeleteConfirmation(product)}> <DeleteOutlined/> </Button>
                       </div>
                     </div>
                   </Card>

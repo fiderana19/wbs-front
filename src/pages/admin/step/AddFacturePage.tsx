@@ -5,6 +5,7 @@ import { FileZipOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer';
 import { getTransactionForFacture } from '../../../api/Transaction';
 import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
+import { useDark } from '../../../context/DarkThemeContext';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -223,6 +224,7 @@ const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   const [selectedTransId, setSelectedTransId] = useState('');
   const { data: trans } = useGetAllTransaction();
   const [pdfData, setPdfData] =  useState<null | JSX.Element>(null);
+  const { isDark } = useDark();
   //handling the form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -245,7 +247,7 @@ const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   };
 
   return (
-    <div className='py-16 '>
+    <div className={isDark ? 'dark-container py-16 min-h-screen h-full' : 'py-16'}>
       <button onClick={handlePrev}
         className='fixed top-4 left-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
       >

@@ -2,10 +2,12 @@ import React, { lazy, Suspense, useState } from "react";
 import WbsLogo from '../assets/image/wbs-logo.png';
 import { LoadingOutlined } from "@ant-design/icons";
 import ToggleTheme from "../components/ToggleTheme";
+import { useDark } from "../context/DarkThemeContext";
 const Login = lazy(() => import("../components/homepage/Login"));
 const Signup = lazy(() => import('../components/homepage/Signup'));
 
 const MainPage: React.FC = () => {
+    const { isDark } = useDark();
     const [isLoginSlide, setIsLoginSlide] = useState<boolean>(true);
 
     return (
@@ -32,7 +34,7 @@ const MainPage: React.FC = () => {
                     </Suspense>
                 </div>
             </div>
-            <div className="w-full absolute h-screen flex justify-between">
+            <div className={isDark ? "w-full absolute h-screen flex justify-between dark-container" : "w-full absolute h-screen flex justify-between"}>
                 <div className='w-1/2 flex flex-col justify-center relative p-5'>
                     <div className={isLoginSlide ? "hidden" : "block" }>
                             <div className="absolute h-12 object-cover top-5 right-5 flex gap-4 items-center">
@@ -55,6 +57,9 @@ const MainPage: React.FC = () => {
                             <div className="absolute h-12 object-cover top-5 right-5 flex gap-4 items-center">
                                 <div>Pas encore de compte ?</div>
                                 <button  onClick={() => setIsLoginSlide(false)} className="border hover:shadow-lg transition-all font-latobold py-1.5 px-2.5 my-1 rounded-full">S'inscrire</button>
+                            </div>
+                            <div className="absolute top-5 left-5">
+                                <ToggleTheme />
                             </div>
                             <div className="text-5xl">
                                 Bienvenue sur <span className="font-latobold">WBS-Caisse</span>

@@ -5,6 +5,7 @@ import { MailOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { HttpStatus } from '../../../constants/Http_status';
 import { getMailer } from '../../../api/Mailer';
 import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
+import { useDark } from '../../../context/DarkThemeContext';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -18,6 +19,7 @@ const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   )
+  const { isDark } = useDark();
   const { data: transactions } = useGetAllTransaction();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -55,7 +57,7 @@ const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   };
 
   return (
-    <div className='py-16 '>
+    <div className={isDark ? 'dark-container py-16 min-h-screen h-full' : 'py-16 '}>
       <button onClick={handlePrev}
         className='fixed top-4 left-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
       >

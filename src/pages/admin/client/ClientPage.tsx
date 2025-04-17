@@ -11,6 +11,7 @@ import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { handleNumberKeyPress } from '../../../utils/keypress';
+import { useDark } from '../../../context/DarkThemeContext';
 
 const ClientEditSchema = yup.object({
   _id: yup.string().required("Le nom du client ne doit pas être vide !"),
@@ -38,6 +39,7 @@ const ClientPage: FunctionComponent = () => {
   const { data: clients, isLoading } = useGetAllClient();
   const { mutateAsync: deleteClient } = useDeleteClient();
   const { mutateAsync: patchClient } = usePatchClient();
+  const { isDark } = useDark();
 
   const showDeleteConfirmation = async (item: Client) => {
     setItemToDelete(item);
@@ -71,7 +73,7 @@ const ClientPage: FunctionComponent = () => {
   }
 
   return (
-    <div className='pb-5 pt-24'>
+    <div className={isDark ? 'dark-container pb-5 pt-24 min-h-screen' : 'pb-5 pt-24'}>
       <div className='md:px-32 sm:px-10 px-4'>
         <div className='flex justify-between'>
           <div className='text-xl font-bold font-lato'>LISTE DES CLIENTS</div>
@@ -89,10 +91,10 @@ const ClientPage: FunctionComponent = () => {
             ) : (
               clients && clients.map((client: any) =>{
                 return(
-                  <Card  key={client._id} className='hover:scale-105 duration-300'>
-                    <div className='w-40 text-center'>
+                  <Card  key={client._id} className={isDark ? ' bg-gray-600 border-gray-800 hover:scale-105 duration-300' : 'hover:scale-105 duration-300'}>
+                    <div className='w-40 text-center mx-auto'>
                       <UserOutlined className='text-5xl' />
-                      <div className='py-3'>
+                      <div className={isDark ? 'py-3 text-white' : 'py-3'}>
                         <div className='text-base text-primary font-bold'>
                           { client.nom_client }
                         </div>
@@ -107,8 +109,8 @@ const ClientPage: FunctionComponent = () => {
                         </div>
                       </div>
                       <div className='flex justify-center'>
-                        <Button className='mx-1 bg-blue-400'  onClick={() => EditClient(client)} > <EditOutlined/> </Button>
-                        <Button className='mx-1 bg-red-700'  onClick={() => showDeleteConfirmation(client)}> <DeleteOutlined/> </Button>
+                        <Button className='mx-1 bg-blue-400 border-blue-500'  onClick={() => EditClient(client)} > <EditOutlined/> </Button>
+                        <Button className='mx-1 bg-red-700 border-red-800'  onClick={() => showDeleteConfirmation(client)}> <DeleteOutlined/> </Button>
                       </div>
                     </div>
                   </Card>

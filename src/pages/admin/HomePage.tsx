@@ -5,14 +5,16 @@ import { Link } from 'react-router-dom';
 import Typewriter from '../../components/Typewritter';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useGetLastTransation } from '../../hooks/useGetLastTransaction';
+import { useDark } from '../../context/DarkThemeContext';
 
 const HomePage: FunctionComponent= () => {
     const { data: transactions, isError, isLoading } = useGetLastTransation();
+    const { isDark } = useDark();
     
     const text = 'BIENVENUE SUR NOTRE PLATEFORME DE GESTION DE CAISSE';
 
   return (
-    <div className='lg:px-32 sm:px-10 px-4 pb-5 pt-24 sm:h-screen h-full'>
+    <div className={isDark ? 'dark-container lg:px-32 sm:px-10 px-4 pb-5 pt-24 sm:h-screen h-full' : 'lg:px-32 sm:px-10 px-4 pb-5 pt-24 sm:h-screen h-full'}>
         <div className='block sm:justify-between sm:flex h-full'>
             <div className='flex flex-col sm:py-0 py-32 justify-center w-full sm:w-1/2'>
                 <div className='sm:text-3xl text-2xl  font-bold font-lato'>
@@ -24,7 +26,7 @@ const HomePage: FunctionComponent= () => {
                     </Link>
                 </div>
             </div>
-            <div className='bg-gray-300 h-max'>
+            <div className={isDark ? 'bg-gray-600 h-max' : 'bg-gray-300 h-max'}>
                 <div className='px-4 py-4 bg-gray-900 text-white font-bold font-lato'>
                     DERNIERES TRANSACTIONS
                 </div>
@@ -47,8 +49,8 @@ const HomePage: FunctionComponent= () => {
                     {
                         transactions?.map((transaction: any) => {
                             return(
-                                <div className='bg-gray-100 my-1 px-2 py-1'>
-                                    <div className='text-black text-xs'>{ dayjs(transaction.date_transaction).format('DD-MM-YYYY HH:mm') }</div>
+                                <div className={isDark ? 'my-1 px-2 py-1 dark-container' : 'bg-gray-100 my-1 px-2 py-1 text-black'}>
+                                    <div className=' text-xs'>{ dayjs(transaction.date_transaction).format('DD-MM-YYYY HH:mm') }</div>
                                     <div className='text-xs'> Ref : { transaction.ref }</div>
                                     <div className='font-bold font-sans'>{ transaction.nom_client }</div>
                                     <div className='text-right'>{ transaction.montant_transaction.toLocaleString('fr-FR') }<span className='text-xs ml-1'>MGA</span></div>

@@ -9,6 +9,7 @@ import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useDark } from '../../../context/DarkThemeContext';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -31,6 +32,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
   const { mutateAsync } = usePostDetail();
   const { data: products } = useGetAllProduct();
   const { data: transactions } = useGetAllTransaction();
+  const { isDark } = useDark();
 
   const handleSubmit = async (data: CreateDetailInterface) => {
     mutateAsync(data);
@@ -45,7 +47,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
   }
     
   return (
-    <div className='py-16 flex justify-center'>
+    <div className={isDark ? 'dark-container py-16 flex justify-center min-h-screen h-full' : 'py-16 flex justify-center'}>
       <button onClick={handlePrev}
         className='fixed top-4 left-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
       >
