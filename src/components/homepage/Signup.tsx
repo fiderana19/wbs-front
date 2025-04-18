@@ -5,29 +5,31 @@ import { HttpStatus } from '../../constants/Http_status';
 import { errorMessage } from '../../utils/AntdMessage';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup';
 
+const SignupSchema = yup.object({
+    username: yup.string().required("Username requis !"),
+    password: yup.string().min(6, "Le mot de passe doit comprendre au moins 6 caracteres !").required("Mot de passe requis !")
+})
 const Signup: React.FC = () => {
-    const [signupCredentials, setSignupCredentials] = useState<SingupInterface>({ username: "", password: "" });
+    const { handleSubmit: submit, register, formState } = useForm<SingupInterface>({
+        resolver: yupResolver(SignupSchema)
+    });
+    const { errors } = formState;
     const [usrId, setUsrId] = useState<string>("");
     const [isSignupSuccessModalOpen, setIsSignupSuccessModalOpen] = useState<boolean>(false);  
 
-    const signupSubmit = async () => {
-
-        const response = await signupUser(signupCredentials);
+    const signupSubmit = async (data: SingupInterface) => {
+        const response = await signupUser(data);
         if(response?.status === HttpStatus.CREATED) {
             console.log(response);
             setUsrId(response.data)
-            setSignupCredentials({username: "", password: ""});
             setIsSignupSuccessModalOpen(true);
         } else {
             errorMessage("Erreur lors de l'inscription !");
         }
-    }
-
-    const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
-
-        setSignupCredentials((prev) => ({...prev, [name]: value}));
     }
 
     const handleModalOk = async () => {
@@ -37,17 +39,19 @@ const Signup: React.FC = () => {
     return(
         <div className='w-max mx-auto'>
             <div className="mb-10 text-center font-latobold text-2xl">Inscription</div>
-            <div className="w-full">
+            <form onSubmit={submit(signupSubmit)} className="w-full">
                 <div className="mx-auto my-3">
                     <div className="text-xs">Nom d'utilisateur</div>
-                    <input value={signupCredentials.username} onChange={handleInputChange} type="text" name="username" className="w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500" />
+                    <input {...register("username")} type="text" className={errors.username ? "w-64 py-1.5 px-2 rounded bg-transparent border border-red-500" : "w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500"} />
+                    {errors.username && <div className='text-xs text-red-500 text-left'>{ errors.username.message }</div>}
                 </div>
                 <div className="mx-auto my-3">
                     <div className="text-xs">Mot de passe</div>
-                    <input value={signupCredentials.password} onChange={handleInputChange} type="password" name="password" className="w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500" />
+                    <input {...register("password")} type="password" className={errors.password ? "w-64 py-1.5 px-2 rounded bg-transparent border border-red-500 text-red-500" : "w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500"} />
+                    {errors.password && <div className='text-xs text-red-500 text-left'>{ errors.password.message }</div>}
                 </div>
-                <button onClick={signupSubmit} className="bg-blue-500 hover:bg-blue-700 text-white mx-auto font-latobold py-2 px-4 my-1 rounded w-64">S'inscrire</button>
-            </div>
+                <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white mx-auto font-latobold py-2 px-4 my-1 rounded w-64">S'inscrire</button>
+            </form>
             <Modal title="Inscription réussie !" 
                 open={isSignupSuccessModalOpen}
                 onOk={handleModalOk}
@@ -63,7 +67,6 @@ const Signup: React.FC = () => {
                     }
                 </div>
             </Modal>
-
         </div>
     )
 }

@@ -2,6 +2,8 @@ import { createContext, ReactNode, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginAuth } from "../api/Auth";
 import { ToastContainer } from "react-toastify";
+import { showToast } from "../utils/Toast";
+import { TOAST_TYPE } from "../constants/ToastType";
 
 type AuthContextProps = {
     token?: string | null;
@@ -34,6 +36,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 return { status: 201 }
             }
             if(response?.status === 401 || response?.status === 403) {
+                showToast({
+                    toastProps: {
+                        type: TOAST_TYPE.ERROR,
+                        message: "Identifiant ou mot de passe invalide !"
+                    }
+                })
                 return { status: 401, message: response?.response.data.message }
             }
         } catch (error) {
