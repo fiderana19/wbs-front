@@ -50,7 +50,7 @@ const DashboardPage: FunctionComponent = () => {
                       <LoadingOutlined className='text-5xl' />
                     </div>}
                   >
-                    <DashboardChart/>
+                    {/* <DashboardChart/> */}
                   </Suspense>
                 </div>
               </div>

@@ -52,13 +52,13 @@ const AddForms: FunctionComponent = () => {
         </div>
           {/* Contenu de la page actuelle */}
           {currentStep === 0 && (
-            <div className={isDark ? ' h-full' : ''}>
+            <div className={isDark ? ' h-full' : 'h-full'}>
               <Suspense fallback={<div className='text-center my-10'>
                   <LoadingOutlined className='text-5xl' />
                 </div>}
               >
                 <AddClientPage  handlePrev={handlePreviousPage} handleNext={handleNextPage}/>
-                <Button className='mr-10 fixed bottom-20 right-2' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
+                <Button className='ml-20 fixed right-0' onClick={handleNextPage}>Ignorer <ArrowRightOutlined/> </Button>
               </Suspense>
             </div>
           )}

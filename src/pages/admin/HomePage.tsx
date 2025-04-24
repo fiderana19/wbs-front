@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import dayjs from 'dayjs';
 import { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
@@ -6,6 +5,7 @@ import Typewriter from '../../components/Typewritter';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useGetLastTransation } from '../../hooks/useGetLastTransaction';
 import { useDark } from '../../context/DarkThemeContext';
+import { Button } from '@/components/ui/button';
 
 const HomePage: FunctionComponent= () => {
     const { data: transactions, isError, isLoading } = useGetLastTransation();
@@ -25,6 +25,15 @@ const HomePage: FunctionComponent= () => {
                         <Button>AJOUTER TRANSACTION</Button>
                     </Link>
                 </div>
+                <Button variant={'default'} size={'icon'}>999</Button>
+                <Button variant={'destructive'}>999</Button>
+                <Button variant={'ghost'}>999</Button>
+                <Button variant={'link'}>999</Button>
+                <Button variant={'outline'}>999</Button>
+                <Button variant={'secondary'}>999</Button>
+                <Button variant={'alert'}>999</Button>
+                <Button variant={'primary'}>999</Button>
+                <Button variant={'success'}>999</Button>
             </div>
             <div className={isDark ? 'bg-gray-600 h-max' : 'bg-gray-300 h-max'}>
                 <div className='px-4 py-4 bg-gray-900 text-white font-bold font-lato'>
@@ -61,7 +70,7 @@ const HomePage: FunctionComponent= () => {
                 </div>
                 <div className='px-2 py-2 bg-gray-600 text-right'>
                     <Link to='/admin/page/transaction'>
-                        <Button type='primary' className='text-xs bg-blue-400'>Voir tout les transactions</Button>
+                        <Button variant={'destructive'} className='text-xs bg-blue-400'>Voir tout les transactions</Button>
                     </Link>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState } from 'react'
-import ReactApexChart from 'react-apexcharts';
 import { useGetProductForChart } from '../../hooks/useGetProductForChart';
+import ReactApexChart from 'react-apexcharts';
 
 const DashboardChart: FunctionComponent = () => {
   const { data: products4Chart } = useGetProductForChart();
