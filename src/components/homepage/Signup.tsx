@@ -8,6 +8,7 @@ import { Modal } from 'antd';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Button } from '../ui/button';
 
 const SignupSchema = yup.object({
     username: yup.string().required("Username requis !"),
@@ -43,14 +44,14 @@ const Signup: React.FC = () => {
                 <div className="mx-auto my-3">
                     <div className="text-xs">Nom d'utilisateur</div>
                     <input {...register("username")} type="text" className={errors.username ? "w-64 py-1.5 px-2 rounded bg-transparent border border-red-500" : "w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500"} />
-                    {errors.username && <div className='text-xs text-red-500 text-left'>{ errors.username.message }</div>}
+                    {errors.username && <div className='text-xs text-red-500 text-left w-64'>{ errors.username.message }</div>}
                 </div>
                 <div className="mx-auto my-3">
                     <div className="text-xs">Mot de passe</div>
                     <input {...register("password")} type="password" className={errors.password ? "w-64 py-1.5 px-2 rounded bg-transparent border border-red-500 text-red-500" : "w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500"} />
-                    {errors.password && <div className='text-xs text-red-500 text-left'>{ errors.password.message }</div>}
+                    {errors.password && <div className='text-xs text-red-500 text-left w-64'>{ errors.password.message }</div>}
                 </div>
-                <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white mx-auto font-latobold py-2 px-4 my-1 rounded w-64">S'inscrire</button>
+                <Button variant={'success'} size={'lg'} className='w-64' type='submit'>S'INSCRIRE</Button>
             </form>
             <Modal title="Inscription réussie !" 
                 open={isSignupSuccessModalOpen}

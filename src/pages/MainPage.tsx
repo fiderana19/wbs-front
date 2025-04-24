@@ -2,6 +2,7 @@ import React, { lazy, Suspense, useState } from "react";
 import WbsLogo from '../assets/image/wbs-logo.png';
 import { LoadingOutlined } from "@ant-design/icons";
 import { useDark } from "../context/DarkThemeContext";
+import { Button } from "@/components/ui/button";
 const Login = lazy(() => import("../components/homepage/Login"));
 const Signup = lazy(() => import('../components/homepage/Signup'));
 const ToggleTheme = lazy(() => import('../components/ToggleTheme'))
@@ -39,7 +40,7 @@ const MainPage: React.FC = () => {
                     <div className={isLoginSlide ? "hidden" : "block" }>
                             <div className="absolute h-12 object-cover top-5 right-5 flex gap-4 items-center">
                                 <div>Déjà eu un compte ?</div>
-                                <button  onClick={() => setIsLoginSlide(true)} className="border hover:shadow-lg transition-all font-latobold py-1.5 px-2.5 my-1 rounded-full">Se connecter</button>
+                                <Button variant={'outline'} size={'sm'} onClick={() => setIsLoginSlide(true)} className="transition-all font-latobold my-1 rounded-full">Se connecter</Button>
                             </div>
                             <div className="absolute top-5 left-5">
                                 <Suspense fallback={
@@ -60,7 +61,7 @@ const MainPage: React.FC = () => {
                     <div className={isLoginSlide ? "block" : "hidden" }>
                             <div className="absolute h-12 object-cover top-5 right-5 flex gap-4 items-center">
                                 <div>Pas encore de compte ?</div>
-                                <button  onClick={() => setIsLoginSlide(false)} className="border hover:shadow-lg transition-all font-latobold py-1.5 px-2.5 my-1 rounded-full">S'inscrire</button>
+                                <Button variant={'outline'} size={'sm'} onClick={() => setIsLoginSlide(false)} className="transition-all font-latobold my-1 rounded-full">S'inscrire</Button>
                             </div>
                             <div className="absolute top-5 left-5">
                                 <Suspense fallback={
