@@ -1,5 +1,5 @@
 import { FunctionComponent, lazy, Suspense, useState } from 'react'
-import { Button, Card, Modal, Input } from 'antd'
+import { Modal } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, ShoppingCartOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { Product } from '../../../interfaces/Product.interface';
 import { okDeleteStyle } from '../../../constants/ModalStyle';
@@ -11,6 +11,9 @@ import { handleNumberKeyPress } from '../../../utils/keypress';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 const AddProduct = lazy(() => import('./AddProductPage'));
 
 const ProductEditSchema = yup.object({
@@ -103,10 +106,12 @@ const ProductPage: FunctionComponent = () => {
             ) : (
               products && products.map((product: any) =>{
                 return(
-                  <Card key={product._id} className={isDark ? ' bg-gray-600 border-gray-800 hover:scale-105 duration-300' : 'hover:scale-105 duration-300'}>
-                    <div className='w-40'>
-                      <ShoppingCartOutlined className='text-5xl' />
-                      <div className={isDark ? 'py-3 text-white' : 'py-3'}>
+                  <Card key={product._id} className={isDark ? ' bg-gray-600 border-gray-800' : ''}>
+                    <div className='w-48'>
+                      <CardHeader>
+                        <ShoppingCartOutlined className='text-7xl mx-auto' />
+                      </CardHeader>
+                      <CardContent className={isDark ? 'py-3 text-white' : 'py-3'}>
                         <div className='text-base text-primary font-bold'>
                           { product.libelle }
                         </div>
@@ -119,11 +124,11 @@ const ProductPage: FunctionComponent = () => {
                         <div className='text-sm'>
                           <span className={isDark ? 'text-gray-100 font-latobold' : 'text-gray-500 font-semibold'}>Stock: </span> { product.stock }
                         </div>
-                      </div>
-                      <div className='flex justify-center'>
-                        <Button className='mx-1 bg-blue-400 border-blue-500' onClick={() => EditProduct(product)} > <EditOutlined/> </Button>
-                        <Button  className='mx-1 bg-red-700 border-red-800 hover:text-red-500'  onClick={() => showDeleteConfirmation(product)}> <DeleteOutlined/> </Button>
-                      </div>
+                      </CardContent>
+                      <CardFooter className='flex justify-end gap-1'>
+                        <Button variant={'default'} size={'sm'} onClick={() => EditProduct(product)} > <EditOutlined/> </Button>
+                        <Button variant={'destructive'} size={'sm'} onClick={() => showDeleteConfirmation(product)}> <DeleteOutlined/> </Button>
+                      </CardFooter>
                     </div>
                   </Card>
                 )
@@ -185,7 +190,7 @@ const ProductPage: FunctionComponent = () => {
                 />
                 {errors.stock && <div className='text-xs text-red-500 text-left'>{ errors.stock.message }</div>}
                 <div className='flex justify-center my-3'>
-                  <button className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500' type='submit'>MODIFIER</button>
+                  <Button variant={'primary'} type='submit'>MODIFIER</Button>
                 </div>
               </form>
             </div>
