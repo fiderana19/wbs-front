@@ -37,12 +37,12 @@ const DashboardChart: FunctionComponent = () => {
 
   return (
     <div>
-      <ReactApexChart 
+      {/* <ReactApexChart 
         options={chartData.options} 
         series={chartData.series} 
         type="bar" 
         height={300} 
-      />
+      /> */}
     </div>
   )
 }
