@@ -49,7 +49,7 @@ const Login: React.FC = () => {
                             render={({
                                 field: { value, onChange, onBlur }
                             }) => (
-                                <Input value={value} onChange={onChange} onBlur={onBlur} className={errors.password ? "w-64 rounded bg-transparent border border-red-500" : "w-64 rounded bg-transparent"} />
+                                <Input type='text' value={value} onChange={onChange} onBlur={onBlur} className={errors.password ? "w-64 rounded bg-transparent border border-red-500" : "w-64 rounded bg-transparent"} />
                             )}
                         />
                         {errors.password && <div className='text-xs text-red-500 text-left'>{ errors.password.message }</div>}
