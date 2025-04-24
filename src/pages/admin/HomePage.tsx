@@ -22,18 +22,9 @@ const HomePage: FunctionComponent= () => {
                 </div>
                 <div className='my-4 flex justify-center'>
                     <Link to='/admin/addforms'>
-                        <Button>AJOUTER TRANSACTION</Button>
+                        <Button variant={'outline'}>AJOUTER TRANSACTION</Button>
                     </Link>
                 </div>
-                <Button variant={'default'} size={'icon'}>999</Button>
-                <Button variant={'destructive'}>999</Button>
-                <Button variant={'ghost'}>999</Button>
-                <Button variant={'link'}>999</Button>
-                <Button variant={'outline'}>999</Button>
-                <Button variant={'secondary'}>999</Button>
-                <Button variant={'alert'}>999</Button>
-                <Button variant={'primary'}>999</Button>
-                <Button variant={'success'}>999</Button>
             </div>
             <div className={isDark ? 'bg-gray-600 h-max' : 'bg-gray-300 h-max'}>
                 <div className='px-4 py-4 bg-gray-900 text-white font-bold font-lato'>
@@ -70,7 +61,7 @@ const HomePage: FunctionComponent= () => {
                 </div>
                 <div className='px-2 py-2 bg-gray-600 text-right'>
                     <Link to='/admin/page/transaction'>
-                        <Button variant={'destructive'} className='text-xs bg-blue-400'>Voir tout les transactions</Button>
+                        <Button variant={'secondary'} size={'sm'}>Voir tout les transactions</Button>
                     </Link>
                 </div>
             </div>
