@@ -49,6 +49,8 @@ const ProductPage: FunctionComponent = () => {
   const showDeleteConfirmation = (item: Product) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
+
+    console.log("efa izy mlay !!!!")
   };
 
   async function handleDelete(itemId: string) {
