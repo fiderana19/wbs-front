@@ -21,7 +21,7 @@ const TransactionEditSchema = yup.object({
   date_transaction: yup.string().required("Veuillez selectionner une date !")
 })
 const TransactionPage: FunctionComponent = () => {
-    const { control, handleSubmit: edit, formState, register } = useForm<TransactionForEdit>({
+    const { control, handleSubmit: edit, formState, register , watch } = useForm<TransactionForEdit>({
       resolver: yupResolver(TransactionEditSchema)
     });
     const { errors } = formState;
@@ -34,7 +34,7 @@ const TransactionPage: FunctionComponent = () => {
     const [selectedItemEdit, setSelectedItemEdit] = useState<TransactionItem | null>(null);
   const { data: transactions, isLoading } = useGetAllTransaction();
   const { mutateAsync: deleteTransaction } = useDeleteTransaction();
-  const { mutateAsync: getDetailByTransactionById, data: details } = useGetDetailByTransactionId();
+  const { data: details } = useGetDetailByTransactionId({id : watch('_id') || ''});
   const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
   const { mutateAsync: patchTransaction } = usePatchTransaction();
   const { isDark } = useDark();
@@ -57,7 +57,7 @@ const TransactionPage: FunctionComponent = () => {
 
   const getDetail = async (itemId: string) => {
     getTransactionById(itemId);
-    getDetailByTransactionById(itemId);
+    // getDetailByTransactionById(itemId);
     setIsModalDetailOpen(true);
   }
 

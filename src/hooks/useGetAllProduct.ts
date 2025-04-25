@@ -3,12 +3,13 @@ import { getAllProduct } from "../api/Product"
 import { useEffect } from "react";
 import { TOAST_TYPE } from "../constants/ToastType";
 import { showToast } from "../utils/Toast";
+import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetAllProduct = () => {
     const token = localStorage.getItem('token');
 
-    const { data, error, isError, isLoading } = useQuery({
-        queryKey: ['products'],
+    const { data, error, isError, isLoading , refetch} = useQuery({
+        queryKey: [QueryCacheKey.GET_ALL_PRODUCTS],
         queryFn: () => getAllProduct(token),
         staleTime: Infinity
     })
@@ -28,6 +29,7 @@ export const useGetAllProduct = () => {
         data: data?.data,
         error,
         isError,
+        refetch,
         isLoading
     }
 }

@@ -29,7 +29,7 @@ const TransactionSearchPage: FunctionComponent = () => {
       montant_transaction: 0,
     });
   const { mutateAsync: deleteTransaction } = useDeleteTransaction();
-  const { mutateAsync: getDetailByTransactionById, data: details } = useGetDetailByTransactionId();
+  const { data: details } = useGetDetailByTransactionId({ id: ''});
   const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
   const { mutateAsync: searchTransactionBetweenDates, data: searchTransaction } = useGetTransactionBetweenDates();
   const { mutateAsync: patchTransaction } = usePatchTransaction();
@@ -81,7 +81,7 @@ const TransactionSearchPage: FunctionComponent = () => {
   //get detail function
   const getDetail = async (itemId: string) => {
     getTransactionById(itemId);
-    getDetailByTransactionById(itemId);
+    // getDetailByTransactionById(itemId);
     setIsModalDetailOpen(true);
   }
 
