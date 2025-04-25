@@ -5,17 +5,15 @@ import { AxiosError } from "axios";
 import { HttpStatus } from "../constants/Http_status";
 import { postProduct } from "../api/Product";
 
-export const usePostProduct = () => {
+export const usePostProduct = ({action} : {action? : () => void}) => {
     const token  = localStorage.getItem("token");
-    const queryClient = useQueryClient();
 
     const mutation = useMutation({
         mutationFn: (mutateData: any) => postProduct(token, mutateData),
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['products'],
-                exact: true,
-            });
+            if(action){
+                action()
+            }
             showToast({toastProps: {
                 type: TOAST_TYPE.SUCCESS,
                 message: "Produit ajouté avec succés !",

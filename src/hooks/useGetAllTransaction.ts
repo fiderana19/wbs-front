@@ -10,7 +10,6 @@ export const useGetAllTransaction = () => {
     const { data, isError, error, isLoading } = useQuery({
         queryKey: ['transactions'],
         queryFn: () => getAllTransaction(token),
-        staleTime: Infinity
     })
 
     useEffect(() => {

@@ -8,24 +8,17 @@ import { useDeleteProduct } from '../../../hooks/useDeleteProduct';
 import { usePatchProduct } from '../../../hooks/usePatchProduct';
 import { Controller, useForm } from 'react-hook-form';
 import { handleNumberKeyPress } from '../../../utils/keypress';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { EditProductValidation } from '@/validation/edit-product.validation';
 const AddProduct = lazy(() => import('./AddProductPage'));
 
-const ProductEditSchema = yup.object({
-  _id: yup.string().required(),
-  libelle: yup.string().required("Le libelle ne doit pas être vide !"),
-  description: yup.string().required("La description ne doit pas être vide !"),
-  pu: yup.number().required("Le prix unitaire ne doit pas être vide !"),
-  stock: yup.number().required("Le stock ne doit pas être vide !"),
-})
 const ProductPage: FunctionComponent = () => {
   const { control, handleSubmit: edit, formState, register } = useForm<Product>({
-    resolver: yupResolver(ProductEditSchema)
+    resolver: yupResolver(EditProductValidation)
   });
   const { errors } = formState;
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
