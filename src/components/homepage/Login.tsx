@@ -2,19 +2,15 @@ import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { LoginInterface } from '../../interfaces/Auth.interface';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { LoginValidation } from '@/validation/login.validation';
 
-const LoginSchema = yup.object({
-    usrid: yup.string().required("L'Identifiant de l'utilisateur est requis !"),
-    password: yup.string().required("Password vide !")
-})
 const Login: React.FC = () => {  
     const { handleSubmit: submit, formState, control } = useForm<LoginInterface>({
-        resolver: yupResolver(LoginSchema)
+        resolver: yupResolver(LoginValidation)
     });
     const { errors } = formState;
     const { login } = useAuth();

@@ -11,18 +11,14 @@ import { useGetTransactionById } from '../../../hooks/useGetTransactionById';
 import { usePatchTransaction } from '../../../hooks/usePatchTransaction';
 import { Controller, useForm } from 'react-hook-form';
 import { handleNumberKeyPress } from '../../../utils/keypress';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
+import { EditTrnsactionValidation } from '@/validation/edit-transaction.validation';
 const TransactionSearch = lazy(() => import('./TransactionSearchPage'));
 
-const TransactionEditSchema = yup.object({
-  _id: yup.string().required(),
-  date_transaction: yup.string().required("Veuillez selectionner une date !")
-})
 const TransactionPage: FunctionComponent = () => {
     const { control, handleSubmit: edit, formState, register , watch } = useForm<TransactionForEdit>({
-      resolver: yupResolver(TransactionEditSchema)
+      resolver: yupResolver(EditTrnsactionValidation)
     });
     const { errors } = formState;
     const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);

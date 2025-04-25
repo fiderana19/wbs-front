@@ -6,19 +6,15 @@ import { errorMessage } from '../../utils/AntdMessage';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
+import { SignupValidation } from '@/validation/signup.validation';
 
-const SignupSchema = yup.object({
-    username: yup.string().required("Username requis !"),
-    password: yup.string().min(6, "Le mot de passe doit comprendre au moins 6 caracteres !").required("Mot de passe requis !")
-})
 const Signup: React.FC = () => {
     const { handleSubmit: submit, formState, control } = useForm<SingupInterface>({
-        resolver: yupResolver(SignupSchema)
+        resolver: yupResolver(SignupValidation)
     });
     const { errors } = formState;
     const [usrId, setUsrId] = useState<string>("");

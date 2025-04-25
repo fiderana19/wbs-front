@@ -7,26 +7,20 @@ import { usePostDetail } from '../../../hooks/usePostDetail';
 import { useGetAllProduct } from '../../../hooks/useGetAllProduct';
 import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
+import { AddDetailValidation } from '@/validation/create-detail.validation';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
   handleNext: ()=>void;
 }
 
-const detailSchema = yup.object({
-  transaction: yup.string().required("Veuillez selectionner la transaction !"),
-  product: yup.string().required("Veuillez selectionner le produit !"),
-  quantite: yup.string().required("Veuillez donner la quantité !"),
-  remise: yup.string().required("Veuillez ecrire la remise !")
-})
 const { Option } = Select;
 
 const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
   const { control, handleSubmit: submit, formState } = useForm<CreateDetailInterface>({
-    resolver: yupResolver(detailSchema)
+    resolver: yupResolver(AddDetailValidation)
   });
   const { errors } = formState;
   const { mutateAsync } = usePostDetail();

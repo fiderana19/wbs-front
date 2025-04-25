@@ -8,24 +8,17 @@ import { useGetAllClient } from '../../../hooks/useGetAllClient';
 import { useDeleteClient } from '../../../hooks/useDeleteClient';
 import { usePatchClient } from '../../../hooks/usePatchClient';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { handleNumberKeyPress } from '../../../utils/keypress';
 import { useDark } from '../../../context/DarkThemeContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { EditClientValidation } from '@/validation/edit-client.validation';
 
-const ClientEditSchema = yup.object({
-  _id: yup.string().required("Le nom du client ne doit pas être vide !"),
-  nom_client: yup.string().required("Le nom du client ne doit pas être vide !"),
-  adresse_client: yup.string().required("L'adresse du client ne doit pas être vide !"),
-  mail_client: yup.string().email("Email invalide !").required("Le mail du client ne doit pas être vide !"),
-  telephone_client: yup.string().length(10, "Le numero de telephone doit comprendre 10 chiffres !").required("Le telephone du client ne doit pas être vide !"),
-})
 const ClientPage: FunctionComponent = () => {
   const { control, formState, handleSubmit: edit, register } = useForm<Client>({
-    resolver: yupResolver(ClientEditSchema)
+    resolver: yupResolver(EditClientValidation)
   });
   const { errors } = formState;
   const [isEditClientModalOpen, setIsEditClientModalOpen] = useState(false);

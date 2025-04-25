@@ -3,27 +3,20 @@ import React, { FunctionComponent } from 'react'
 import { CreateClientInterface } from '../../../interfaces/Client.interface';
 import { usePostClient } from '../../../hooks/usePostClient';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { LoadingOutlined } from '@ant-design/icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
+import { AddClientValidation } from '@/validation/create-client.validation';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
   handleNext: ()=>void;
 }
 
-const clientSchema = yup.object({
-  nom_client: yup.string().required("Le champ nom du client est requis! "),
-  adresse_client: yup.string().required("Le champ adresse du client est requis ! "),
-  mail_client: yup.string().email("Adresse email invalide !").required("Le champ email du client requis !"),
-  telephone_client: yup.string().length(9, "Le numero de telephone doit etre à 9 carateres !").required("Le champ telephone du client requis ! ")
-})
-
 const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
   const { mutateAsync, isError } = usePostClient();
   const { handleSubmit: submit, control, formState } = useForm<CreateClientInterface>({
-    resolver: yupResolver(clientSchema)
+    resolver: yupResolver(AddClientValidation)
   });
   const { errors, isSubmitting } = formState;
   const { isDark } = useDark();
