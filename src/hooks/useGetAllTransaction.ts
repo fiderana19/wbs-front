@@ -5,11 +5,10 @@ import { TOAST_TYPE } from "../constants/ToastType";
 import { showToast } from "../utils/Toast";
 
 export const useGetAllTransaction = () => {
-    const token = localStorage.getItem('token');
 
     const { data, isError, error, isLoading } = useQuery({
         queryKey: ['transactions'],
-        queryFn: () => getAllTransaction(token),
+        queryFn: () => getAllTransaction(),
     })
 
     useEffect(() => {

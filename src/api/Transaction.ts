@@ -1,26 +1,16 @@
 import axios from "axios";
+import axiosInstance from "./Config";
 
-const TransactionAPIURL = "http://localhost:3002/transaction";
+const TransactionAPIURL = `${import.meta.env.VITE_BASE_URL}/transaction`
+// const TransactionAPIURL = "http://localhost:3002/transaction";
 
-export const getLatestTransaction = async (token: string | null) => {
-    const response = await axios({
-        method: 'get',
-        url: `${TransactionAPIURL}/latest`,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+export const getLatestTransaction = async () => {
+    const response = axiosInstance.get(`${TransactionAPIURL}/latest`);
     return response;
 }
 
-export const getAllTransaction = async (token: string | null) => {
-    const response = await axios({
-        method: 'get',
-        url: `${TransactionAPIURL}`,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+export const getAllTransaction = async () => {
+    const response = axiosInstance.get(TransactionAPIURL);
     return response;
 }
 

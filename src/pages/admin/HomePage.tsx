@@ -10,6 +10,9 @@ import { Button } from '@/components/ui/button';
 const HomePage: FunctionComponent= () => {
     const { data: transactions, isError, isLoading } = useGetLastTransation();
     const { isDark } = useDark();
+
+
+    console.log(import.meta.env.VITE_BASE_URL)
     
     const text = 'BIENVENUE SUR NOTRE PLATEFORME DE GESTION DE CAISSE';
 

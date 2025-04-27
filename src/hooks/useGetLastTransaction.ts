@@ -5,11 +5,10 @@ import { TOAST_TYPE } from "../constants/ToastType";
 import { showToast } from "../utils/Toast";
 
 export const useGetLastTransation = () => {
-    const token  = localStorage.getItem("token");
 
     const { data, isError, isLoading, error } = useQuery({
         queryKey: ["last_transaction"],
-        queryFn: () => getLatestTransaction(token),
+        queryFn: () => getLatestTransaction(),
         staleTime: Infinity,
     })
 
