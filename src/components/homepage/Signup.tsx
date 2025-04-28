@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { SingupInterface } from '../../interfaces/Auth.interface';
 import { signupUser } from '../../api/Auth';
 import { HttpStatus } from '../../constants/Http_status';
-import { errorMessage } from '../../utils/AntdMessage';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
@@ -11,6 +10,8 @@ import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { SignupValidation } from '@/validation/signup.validation';
+import { showToast } from '@/utils/Toast';
+import { TOAST_TYPE } from '@/constants/ToastType';
 
 const Signup: React.FC = () => {
     const { handleSubmit: submit, formState, control } = useForm<SingupInterface>({
@@ -27,7 +28,12 @@ const Signup: React.FC = () => {
             setUsrId(response.data)
             setIsSignupSuccessModalOpen(true);
         } else {
-            errorMessage("Erreur lors de l'inscription !");
+            showToast({
+                toastProps: {
+                    type: TOAST_TYPE.ERROR,
+                    message: "Erreur lors de l'inscription !"
+                }
+            })
         }
     }
 
@@ -47,7 +53,7 @@ const Signup: React.FC = () => {
                         render={({
                             field: { value, onChange, onBlur }
                         }) => (
-                            <Input type='text' value={value} onChange={onChange} onBlur={onBlur} className={errors.username ? "w-64 rounded bg-transparent border border-red-500" : "w-64 rounded bg-transparent border"} />
+                            <Input type='text' value={value} onChange={onChange} onBlur={onBlur} className={`w-64 rounded bg-transparent border ${errors.username ? "border-red-500" : ""}`} />
                         )}
                     />
                     {errors.username && <div className='text-xs text-red-500 text-left w-64'>{ errors.username.message }</div>}
@@ -60,7 +66,7 @@ const Signup: React.FC = () => {
                         render={({
                             field: { value, onChange, onBlur }
                         }) => (
-                            <Input type='password' value={value} onChange={onChange} onBlur={onBlur} className={errors.password ? "w-64 rounded bg-transparent border border-red-500 text-red-500" : "w-64 rounded bg-transparent border"} />
+                            <Input type='password' value={value} onChange={onChange} onBlur={onBlur} className={`w-64 rounded bg-transparent border ${errors.password ? "border-red-500 text-red-500" : ""}`} />
                         )}
                     />
                     {errors.password && <div className='text-xs text-red-500 text-left w-64'>{ errors.password.message }</div>}

@@ -12,8 +12,8 @@ const MainPage: React.FC = () => {
     const [isLoginSlide, setIsLoginSlide] = useState<boolean>(true);
 
     return (
-        <div className={isLoginSlide ? 'h-screen flex overflow-hidden relative max-w-screen' : 'h-screen flex overflow-hidden relative max-w-screen' }>
-            <div className={isLoginSlide ? "w-1/2 bg-primary-custom h-full absolute top-0 z-50 transition-all duration-500" : "w-1/2 bg-primary-custom h-full absolute top-0 animate-wrapper translate-x-full transition-all duration-500 z-10" }>
+        <div className={`h-screen flex overflow-hidden relative max-w-screen`}>
+            <div className={`w-1/2 bg-primary-custom h-full absolute top-0  transition-all duration-500 z-10 animate-wrapper ${isLoginSlide ? "z-50" : " translate-x-full z-10"}`}>
                <img src={WbsLogo} alt="Logo" className="h-14 object-cover absolute top-5 left-5" />
                <div className="flex flex-col justify-center h-full">
                     <Suspense fallback={<div className='text-center my-10'>
@@ -24,7 +24,7 @@ const MainPage: React.FC = () => {
                     </Suspense>
                </div>
             </div>
-            <div className={isLoginSlide ? "w-1/2 bg-primary-custom absolute h-full top-0 right-0 z-10 -translate-x-full transition-all duration-500 animate-wrapper" : "w-1/2 bg-primary-custom h-full absolute top-0 right-0 z-50 transition-all duration-500 animate-wrapper" }>
+            <div className={`w-1/2 bg-primary-custom h-full absolute top-0 right-0 transition-all duration-500 animate-wrapper ${isLoginSlide ? "z-10 -translate-x-full" : "z-50"}`}>
                 <img src={WbsLogo} alt="Logo" className="h-14 object-cover absolute top-5 left-5" />
                 <div className="flex flex-col justify-center h-full">
                     <Suspense fallback={<div className='text-center my-10'>
@@ -35,7 +35,7 @@ const MainPage: React.FC = () => {
                     </Suspense>
                 </div>
             </div>
-            <div className={isDark ? "w-full absolute h-screen flex justify-between dark-container" : "w-full absolute h-screen flex justify-between"}>
+            <div className={`w-full absolute h-screen flex justify-between ${isDark ? "dark-container" : ""}`}>
                 <div className='w-1/2 flex flex-col justify-center relative p-6'>
                     <div className={isLoginSlide ? "hidden" : "block" }>
                             <div className="absolute h-12 object-cover top-5 right-5 flex gap-4 items-center">

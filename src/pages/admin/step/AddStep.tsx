@@ -26,7 +26,7 @@ const AddForms: FunctionComponent = () => {
     
   return (
     <div className={isDark ? 'h-full' : '' }>
-        <div className={isDark ? ' w-full fixed bottom-7' : 'w-full fixed bottom-7'}>
+        <div>
           <div className='fixed top-5 right-10'>
             <Suspense fallback={
               <div className='text-xl'><LoadingOutlined /></div>
@@ -40,7 +40,7 @@ const AddForms: FunctionComponent = () => {
                 <HomeOutlined className='fixed top-4 right-28 p-2 rounded-full text-white text-xl  hover:scale-105 hover:text-opacity-100  transition duration-300' style={{ backgroundColor: 'rgba(0,0,0,.25)' }} />
             </button>
           </Link>
-          <div className={isDark ? 'mx-10' : 'mx-10'}>
+          <div>
             <Steps current={currentStep}>
               <Step title="Client" status={currentStep > 0 ? 'finish' : 'process'} />
               <Step title="Transaction" status={currentStep > 1 ? 'finish' : currentStep === 1 ? 'process' : 'wait'} />
@@ -52,7 +52,7 @@ const AddForms: FunctionComponent = () => {
         </div>
           {/* Contenu de la page actuelle */}
           {currentStep === 0 && (
-            <div className={isDark ? ' h-full' : 'h-full'}>
+            <div>
               <Suspense fallback={<div className='text-center my-10'>
                   <LoadingOutlined className='text-5xl' />
                 </div>}

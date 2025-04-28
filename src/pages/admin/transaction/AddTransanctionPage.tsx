@@ -40,7 +40,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
   }
 
   return (
-        <div className={isDark ? 'dark-container py-16 flex justify-center min-h-screen h-full' : 'py-16 flex justify-center'}>
+        <div className={`py-16 flex justify-center ${isDark ? 'dark-container min-h-screen h-full' : ''}`}>
           <button onClick={handlePrev}
             className='fixed top-4 left-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
             >
@@ -61,7 +61,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
                         onChange={onChange}
                         onBlur={onBlur}
                         defaultValue={"Sélectionnez un client"}
-                        className={errors?.client ? 'w-full my-1 text-red-500 border border-red-500 rounded' : 'w-full my-1'}
+                        className={`w-full my-1 ${errors?.client ? 'text-red-500 border border-red-500 rounded' : ''}`}
                         showSearch
                         optionFilterProp="children"
                         filterOption={(input: any, option: any) =>
@@ -89,7 +89,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
                       render={({
                         field: { value, onBlur, onChange }
                       }) => (
-                        <DatePicker onChange={(date) => onChange(date ? date.toISOString() : null)} value={value ? dayjs(value) : null} onBlur={onBlur} className={errors?.date_transaction ? 'w-full text-red-500 border border-red-500 rounded' : 'w-full'} showTime format="YYYY-MM-DD HH:mm:ss" />
+                        <DatePicker onChange={(date) => onChange(date ? date.toISOString() : null)} value={value ? dayjs(value) : null} onBlur={onBlur} className={`w-full ${errors?.date_transaction ? 'text-red-500 border border-red-500 rounded' : ''}`} showTime format="YYYY-MM-DD HH:mm:ss" />
                       )}
                     />
                     {errors?.date_transaction && <div className='text-xs text-red-500 text-left'>{ errors?.date_transaction.message?.toString() }</div>  }  

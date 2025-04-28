@@ -83,7 +83,7 @@ const ProductPage: FunctionComponent = () => {
   };
 
   return (
-    <div className={isDark ? 'dark-container pb-5 pt-24 min-h-screen' : 'pb-5 pt-24'}>
+    <div className={`pb-5 pt-24 ${isDark ? 'dark-container min-h-screen' : ''}`}>
       <div className='md:px-32 sm:px-10 px-4'>
         <div className='flex justify-between'>
           <div className='text-xl font-bold font-lato'>LISTE DES PRODUITS</div>
@@ -112,7 +112,7 @@ const ProductPage: FunctionComponent = () => {
                       <CardHeader>
                         <ShoppingCartOutlined className='text-7xl mx-auto' />
                       </CardHeader>
-                      <CardContent className={isDark ? 'py-3 text-white' : 'py-3'}>
+                      <CardContent className={`py-3 ${isDark ? 'text-white' : ''}`}>
                         <div className='text-base text-primary font-bold'>
                           { product.libelle }
                         </div>

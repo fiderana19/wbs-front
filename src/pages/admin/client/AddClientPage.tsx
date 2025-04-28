@@ -3,11 +3,11 @@ import React, { FunctionComponent } from 'react'
 import { CreateClientInterface } from '../../../interfaces/Client.interface';
 import { usePostClient } from '../../../hooks/usePostClient';
 import { Controller, useForm } from 'react-hook-form';
-import { LoadingOutlined } from '@ant-design/icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
 import { AddClientValidation } from '@/validation/create-client.validation';
 import { useGetAllClient } from '@/hooks/useGetAllClient';
+import { Button } from '@/components/ui/button';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -24,7 +24,7 @@ const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
   const { handleSubmit: submit, control, formState } = useForm<CreateClientInterface>({
     resolver: yupResolver(AddClientValidation)
   });
-  const { errors, isSubmitting } = formState;
+  const { errors } = formState;
   const { isDark } = useDark();
   const handleSubmit = async (data: CreateClientInterface) => {
     mutateAsync(data);
@@ -41,7 +41,7 @@ const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
   }
     
   return (
-    <div className={isDark ? 'dark-container py-16 flex justify-center min-h-screen h-full' : 'py-16  flex justify-center'}>
+    <div className={`py-16 flex justify-center ${isDark ? 'dark-container min-h-screen h-full' : ''}`}>
       <div className='text-center'>
         <div className='text-2xl font-bold'>CLIENT</div>
         <form className='my-7 w-60 text-left' onSubmit={submit(handleSubmit)}>
@@ -52,7 +52,7 @@ const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
             render={({
               field: { onChange, value, onBlur },
             }) => (
-              <Input className={errors.nom_client ? 'my-1 border-red-500 text-red-500 rounded' : 'my-1'} value={value} onChange={onChange} onBlur={onBlur} />
+              <Input className={`my-1 ${errors.nom_client ? 'border-red-500 text-red-500 rounded' : ''}`} value={value} onChange={onChange} onBlur={onBlur} />
             )}
           />
           { errors?.nom_client && <div className='text-left text-red-500 text-xs'>{ errors.nom_client.message }</div> }
@@ -63,7 +63,7 @@ const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
             render={({
               field: { value, onChange, onBlur }
             }) => (
-              <Input className={errors.adresse_client ? 'my-1 border-red-500 text-red-500 rounded' : 'my-1'} value={value} onChange={onChange} onBlur={onBlur} />
+              <Input className={`my-1 ${errors.adresse_client ? 'border-red-500 text-red-500 rounded' : ''}`} value={value} onChange={onChange} onBlur={onBlur} />
             )}
             />
           { errors?.adresse_client && <div className='text-left text-red-500 text-xs'>{ errors.adresse_client.message }</div> }
@@ -74,7 +74,7 @@ const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
             render={({
               field: { value, onBlur, onChange }
             }) => (
-              <Input className={errors.mail_client ? 'my-1 border-red-500 text-red-500 rounded' : 'my-1'} value={value} onChange={onChange} onBeforeInput={onBlur} />
+              <Input className={`my-1 ${errors.mail_client ? 'border-red-500 text-red-500 rounded' : ''}`} value={value} onChange={onChange} onBeforeInput={onBlur} />
             )}
           />
           { errors?.mail_client && <div className='text-left text-red-500 text-xs'>{ errors.mail_client.message }</div> }
@@ -85,17 +85,12 @@ const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
             render={({
               field: { value, onChange, onBlur }
             }) => (
-              <Input className={errors.telephone_client ? 'my-1 border-red-500 text-red-500 rounded' : 'my-1'} value={value} onChange={onChange} onBlur={onBlur} onKeyPress={handleKeyPress}  />
+              <Input className={`my-1 ${errors.telephone_client ? 'border-red-500 text-red-500 rounded' : ''}`} value={value} onChange={onChange} onBlur={onBlur} onKeyPress={handleKeyPress}  />
             )}
           />
           { errors?.telephone_client && <div className='text-left text-red-500 text-xs'>{ errors.telephone_client.message }</div> }
           <div className='flex justify-center my-3'>
-            <button className='bg-green-500 hover:bg-green-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-green-500' type='submit'>
-              {
-                isSubmitting && <LoadingOutlined />
-              }
-              AJOUTER
-            </button>
+            <Button variant={'success'} type='submit' >AJOUTER</Button>
           </div>
         </form>
       </div>

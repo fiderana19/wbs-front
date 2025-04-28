@@ -32,7 +32,7 @@ const Login: React.FC = () => {
                             render={({
                                 field: { value, onChange, onBlur }
                             }) => (
-                                <Input type='text' value={value} onChange={onChange} onBlur={onBlur} className={errors.usrid ? "w-64 rounded bg-transparent border border-red-500" : "w-64 rounded bg-transparent"} />
+                                <Input type='text' value={value} onChange={onChange} onBlur={onBlur} className={`w-64 rounded bg-transparent border ${errors.usrid ? "border-red-500" : ""}`} />
                             )}
                         />
                         {errors.usrid && <div className='text-xs text-red-500 text-left w-64'>{ errors.usrid.message }</div>}
@@ -45,7 +45,7 @@ const Login: React.FC = () => {
                             render={({
                                 field: { value, onChange, onBlur }
                             }) => (
-                                <Input type='text' value={value} onChange={onChange} onBlur={onBlur} className={errors.password ? "w-64 rounded bg-transparent border border-red-500" : "w-64 rounded bg-transparent"} />
+                                <Input type='text' value={value} onChange={onChange} onBlur={onBlur} className={`w-64 rounded bg-transparent border ${errors.password ? "border-red-500" : ""}`} />
                             )}
                         />
                         {errors.password && <div className='text-xs text-red-500 text-left'>{ errors.password.message }</div>}

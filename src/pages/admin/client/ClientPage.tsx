@@ -77,7 +77,7 @@ const ClientPage: FunctionComponent = () => {
   }
 
   return (
-    <div className={isDark ? 'dark-container pb-5 pt-24 min-h-screen' : 'pb-5 pt-24'}>
+    <div className={`pb-5 pt-24 ${isDark ? 'dark-container min-h-screen' : ''}`}>
       <div className='md:px-32 sm:px-10 px-4'>
         <div className='flex justify-between'>
           <div className='text-xl font-bold font-lato'>LISTE DES CLIENTS</div>
@@ -95,12 +95,12 @@ const ClientPage: FunctionComponent = () => {
             ) : (
               clients && clients.map((client: any) =>{
                 return(
-                  <Card key={client._id} className={isDark ? 'bg-gray-600 border-gray-800 h-52 overflow-hidden' : 'h-52 overflow-hidden'}>
+                  <Card key={client._id} className={`h-52 overflow-hidden ${isDark ? 'bg-gray-600 border-gray-800' : ''}`}>
                     <div className='w-40 text-center mx-auto transition-all duration-500 ease-in-out hover:transform hover:-translate-y-12'>
                       <CardHeader>                      
                         <UserOutlined className='text-7xl mx-auto' />
                       </CardHeader>
-                      <CardContent className={isDark ? 'py-3 text-white' : 'py-3'}>
+                      <CardContent className={`py-3 ${isDark ? 'text-white' : ''}`}>
                         <div className='text-base text-primary font-bold'>
                           { client.nom_client }
                         </div>
@@ -137,7 +137,7 @@ const ClientPage: FunctionComponent = () => {
                     render={({
                       field: { value, onChange, onBlur }
                     }) => (
-                      <Input value={value} className={errors.nom_client ? 'border border-red-500 rounded text-red-500' : ''} onChange={onChange} onBlur={onBlur} />
+                      <Input value={value} className={` ${errors.nom_client ? 'border border-red-500 rounded text-red-500' : ''}`} onChange={onChange} onBlur={onBlur} />
                     )}
                   />
                   { errors.nom_client && <div className='text-xs text-red-500 text-left'>{errors.nom_client.message}</div> }

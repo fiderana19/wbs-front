@@ -41,7 +41,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
   }
     
   return (
-    <div className={isDark ? 'dark-container py-16 flex justify-center min-h-screen h-full' : 'py-16 flex justify-center'}>
+    <div className={`py-16 flex justify-center ${isDark ? 'dark-container min-h-screen h-full' : ''}`}>
       <button onClick={handlePrev}
         className='fixed top-4 left-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
       >
@@ -119,7 +119,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
               render={({
                 field: { value, onBlur, onChange }
               }) => (
-                <Input onKeyPress={handleKeyPress} className={errors?.quantite ? 'border border-red-500 my-1' : 'my-1'} onChange={onChange} onBlur={onBlur} value={value} />
+                <Input onKeyPress={handleKeyPress} className={`my-1 ${errors?.quantite ? 'border border-red-500' : ''}`} onChange={onChange} onBlur={onBlur} value={value} />
               )}
             />
             {errors?.quantite && <div className="text-red-500 text-xs">{errors.quantite.message}</div>}

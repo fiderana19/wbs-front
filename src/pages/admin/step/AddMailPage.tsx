@@ -54,7 +54,7 @@ const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   };
 
   return (
-    <div className={isDark ? 'dark-container py-16 min-h-screen h-full' : 'py-16 '}>
+    <div className={`py-16 ${isDark ? 'dark-container min-h-screen h-full' : ''}`}>
       <button onClick={handlePrev}
         className='fixed top-4 left-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
       >

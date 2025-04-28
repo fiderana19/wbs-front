@@ -14,7 +14,7 @@ const HomePage: FunctionComponent= () => {
     const text = 'BIENVENUE SUR NOTRE PLATEFORME DE GESTION DE CAISSE';
 
   return (
-    <div className={isDark ? 'dark-container lg:px-32 sm:px-10 px-4 pb-5 pt-24 sm:h-screen h-full' : 'lg:px-32 sm:px-10 px-4 pb-5 pt-24 sm:h-screen h-full'}>
+    <div className={`lg:px-32 sm:px-10 px-4 pb-5 pt-24 sm:h-screen h-full ${isDark ? 'dark-container' : ''}`}>
         <div className='block sm:justify-between sm:flex h-full'>
             <div className='flex flex-col sm:py-0 py-32 justify-center w-full sm:w-1/2'>
                 <div className='sm:text-3xl text-2xl  font-bold font-lato'>
@@ -26,7 +26,7 @@ const HomePage: FunctionComponent= () => {
                     </Link>
                 </div>
             </div>
-            <div className={isDark ? 'bg-gray-600 h-max' : 'bg-gray-300 h-max'}>
+            <div className={`h-max ${isDark ? 'bg-gray-600' : 'bg-gray-300'}`}>
                 <div className='px-4 py-4 bg-gray-900 text-white font-bold font-lato'>
                     DERNIERES TRANSACTIONS
                 </div>
@@ -49,7 +49,7 @@ const HomePage: FunctionComponent= () => {
                     {
                         transactions?.map((transaction: any) => {
                             return(
-                                <div className={isDark ? 'my-1 px-2 py-1 dark-container' : 'bg-gray-100 my-1 px-2 py-1 text-black'}>
+                                <div className={`my-1 px-2 py-1 ${isDark ? 'dark-container' : 'bg-gray-100 text-black'}`}>
                                     <div className=' text-xs'>{ dayjs(transaction.date_transaction).format('DD-MM-YYYY HH:mm') }</div>
                                     <div className='text-xs'> Ref : { transaction.ref }</div>
                                     <div className='font-bold font-sans'>{ transaction.nom_client }</div>

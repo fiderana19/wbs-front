@@ -15,7 +15,7 @@ const DashboardPage: FunctionComponent = () => {
   const { data: totalClient } = useGetClientTotal();
 
   return (  
-        <div className={isDark ? 'dark-container md:px-32 lg: px sm:px-10 px-4 pb-5 pt-24' : 'md:px-32 lg: px sm:px-10 px-4 pb-5 pt-24'}>
+        <div className={`md:px-32 lg: px sm:px-10 px-4 pb-5 pt-24 ${isDark ? 'dark-container' : ''}`}>
           <div>
             <div className='text-xl font-bold font-lato'>Dashboard</div>
           </div>
@@ -32,7 +32,7 @@ const DashboardPage: FunctionComponent = () => {
               </DashboardCard>
             </div>
           <div className=''>
-            <Card  className={isDark ? 'bg-gray-600 border-gray-800 my-4 w-full p-2' : 'my-4 w-full bg-cyan-50 p-2'}>
+            <Card  className={`p-2 w-full my-4  ${isDark ? 'bg-gray-600 border-gray-800' : 'bg-cyan-50'}`}>
               <div>
                 <div className='text-center text-2xl font-bold font-lato'>STOCK DES PRODUITS</div>
                 <div className='w-full h-72 my-3'>

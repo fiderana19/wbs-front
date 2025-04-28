@@ -6,7 +6,7 @@ function NotFound() {
     const { isDark } = useDark();
 
     return(
-            <div className={isDark ? ' h-screen flex flex-col justify-center dark-container' : ' h-screen flex flex-col justify-center'}>
+            <div className={`h-screen flex flex-col justify-center ${isDark ? 'dark-container' : ' '}`}>
                 <div className='w-80 mx-auto'>
                     <div className='text-center'>
                         <img src={WbsLogo} className='h-36 w-36 object-cover mx-auto' alt="Logo du ministere" />

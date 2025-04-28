@@ -80,7 +80,7 @@ const TransactionPage: FunctionComponent = () => {
   }
 
   return (
-    <div className={isDark ? 'dark-container pb-5 pt-24 lg:px-32 sm:px-10 px-4' : 'pb-5 pt-24 lg:px-32 sm:px-10 px-4'}>
+    <div className={`pb-5 pt-24 lg:px-32 sm:px-10 px-4 ${isDark ? 'dark-container' : ''}`}>
       <div className='transaction-body'>
         <Suspense fallback={<div className='text-center my-10'>
             <LoadingOutlined className='text-5xl' />
@@ -112,7 +112,7 @@ const TransactionPage: FunctionComponent = () => {
               }
               return(
                 <div key={transaction._id}>
-                  <div className={isDark ? 'w-full relative sm:pr-4 block sm:flex justify-between bg-gray-600 mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all' : 'w-full relative sm:pr-4 block sm:flex justify-between bg-six mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all'} >
+                  <div className={`w-full relative sm:pr-4 block sm:flex justify-between mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all ${isDark ? 'bg-gray-600' : 'bg-six'}`} >
                     <div className='sm:w-11/12 w-full'  onClick={() => getDetail(transaction._id)}>
                       <div className='sm:flex text-xs'>
                         <div className='flex'>
