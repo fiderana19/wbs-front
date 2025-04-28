@@ -5,10 +5,9 @@ import { AxiosError } from "axios";
 import { getTransactionById } from "../api/Transaction";
 
 export const useGetTransactionById = () => {
-    const token = localStorage.getItem('token');
 
     const { mutateAsync, data } = useMutation({
-        mutationFn: (id: string) => getTransactionById(token, id),
+        mutationFn: (id: string) => getTransactionById(id),
         onError: (error: AxiosError) => {
             showToast({
                 toastProps: {

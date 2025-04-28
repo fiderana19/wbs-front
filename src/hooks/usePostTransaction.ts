@@ -6,11 +6,10 @@ import { HttpStatus } from "../constants/Http_status";
 import { postTransaction } from "../api/Transaction";
 
 export const usePostTransaction = () => {
-    const token  = localStorage.getItem("token");
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (mutateData: any) => postTransaction(token, mutateData),
+        mutationFn: (mutateData: any) => postTransaction(mutateData),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['transactions'],

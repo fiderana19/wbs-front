@@ -5,10 +5,9 @@ import { AxiosError } from "axios";
 import { getTransactionBetweenDates } from "../api/Transaction";
 
 export const useGetTransactionBetweenDates = () => {
-    const token = localStorage.getItem('token');
 
     const { mutateAsync, data } = useMutation({
-        mutationFn: (data: any) => getTransactionBetweenDates(token, data),
+        mutationFn: (data: any) => getTransactionBetweenDates(data),
         onError: (error: AxiosError) => {
             showToast({
                 toastProps: {

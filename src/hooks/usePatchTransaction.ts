@@ -6,11 +6,10 @@ import { HttpStatus } from "../constants/Http_status";
 import { patchTransaction } from "../api/Transaction";
 
 export const usePatchTransaction = () => {
-    const token  = localStorage.getItem("token");
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (data: any) => patchTransaction(token, data),
+        mutationFn: (data: any) => patchTransaction(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['transactions'],
