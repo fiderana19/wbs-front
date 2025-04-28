@@ -6,11 +6,10 @@ import { HttpStatus } from "../constants/Http_status";
 import { deleteClientById } from "../api/Client";
 
 export const useDeleteClient = () => {
-    const token  = localStorage.getItem("token");
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (id: string) => deleteClientById(token, id),
+        mutationFn: (id: string) => deleteClientById(id),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['clients'],

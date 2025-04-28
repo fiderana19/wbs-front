@@ -6,11 +6,10 @@ import { HttpStatus } from "../constants/Http_status";
 import { patchClientById } from "../api/Client";
 
 export const usePatchClient = () => {
-    const token  = localStorage.getItem("token");
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (data: any) => patchClientById(token, data),
+        mutationFn: (data: any) => patchClientById(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['clients'],

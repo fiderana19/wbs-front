@@ -1,49 +1,19 @@
-import axios from "axios";
+import axiosAuthInstance from "./Config";
 
-const ClientAPIURL = "http://localhost:3002/client";
+const ClientAPIURL = `${import.meta.env.VITE_BASE_URL}/client`;
 
-export const getAllClient = async (token: string | null) => {
-    const response = await axios({
-        method: 'get',
-        url: `${ClientAPIURL}`,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    return response;
+export const getAllClient = async () => {
+    return await axiosAuthInstance.get(ClientAPIURL);
 }
 
-export const postClient = async (token: string | null, data: any) => {
-    const response = await axios({
-        method: 'post',
-        url: `${ClientAPIURL}`,
-        data: data,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    return response;
+export const postClient = async (data: any) => {
+    return await axiosAuthInstance.post(ClientAPIURL, data);
 }
 
-export const deleteClientById = async (token: string | null, id: string) => {
-    const response = await axios({
-        method: 'delete',
-        url: `${ClientAPIURL}/${id}`,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    return response;
+export const deleteClientById = async (id: string) => {
+    return await axiosAuthInstance.delete(`${ClientAPIURL}/${id}`);
 }
 
-export const patchClientById = async (token: string | null, data: any) => {
-    const response = await axios({
-        method: 'patch',
-        url: `${ClientAPIURL}/${data?._id}`,
-        data: data,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    return response;
+export const patchClientById = async (data: any) => {
+    return await axiosAuthInstance.patch(`${ClientAPIURL}/${data?._id}`, data);
 }

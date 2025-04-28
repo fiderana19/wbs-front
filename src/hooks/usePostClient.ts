@@ -6,11 +6,10 @@ import { AxiosError } from "axios";
 import { HttpStatus } from "../constants/Http_status";
 
 export const usePostClient = () => {
-    const token  = localStorage.getItem("token");
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (mutateData: any) => postClient(token, mutateData),
+        mutationFn: (mutateData: any) => postClient(mutateData),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['clients'],

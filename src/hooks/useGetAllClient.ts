@@ -5,11 +5,9 @@ import { showToast } from "../utils/Toast";
 import { TOAST_TYPE } from "../constants/ToastType";
 
 export const useGetAllClient = () => {
-    const token  = localStorage.getItem("token");
-
     const { data, isError, isLoading, error } = useQuery({
         queryKey: ["clients"],
-        queryFn: () => getAllClient(token),
+        queryFn: () => getAllClient(),
         staleTime: Infinity,
     })
 
