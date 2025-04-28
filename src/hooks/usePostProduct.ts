@@ -6,10 +6,8 @@ import { HttpStatus } from "../constants/Http_status";
 import { postProduct } from "../api/Product";
 
 export const usePostProduct = ({action} : {action? : () => void}) => {
-    const token  = localStorage.getItem("token");
-
     const mutation = useMutation({
-        mutationFn: (mutateData: any) => postProduct(token, mutateData),
+        mutationFn: (mutateData: any) => postProduct(mutateData),
         onSuccess: () => {
             if(action){
                 action()

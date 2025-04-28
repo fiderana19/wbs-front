@@ -6,11 +6,10 @@ import { HttpStatus } from "../constants/Http_status";
 import { deleteProductById } from "../api/Product";
 
 export const useDeleteProduct = () => {
-    const token  = localStorage.getItem("token");
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (id: string) => deleteProductById(token, id),
+        mutationFn: (id: string) => deleteProductById(id),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['products'],

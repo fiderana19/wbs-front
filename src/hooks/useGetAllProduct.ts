@@ -6,11 +6,9 @@ import { showToast } from "../utils/Toast";
 import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetAllProduct = () => {
-    const token = localStorage.getItem('token');
-
     const { data, error, isError, isLoading , refetch} = useQuery({
         queryKey: [QueryCacheKey.GET_ALL_PRODUCTS],
-        queryFn: () => getAllProduct(token),
+        queryFn: () => getAllProduct(),
         staleTime: Infinity
     })
 

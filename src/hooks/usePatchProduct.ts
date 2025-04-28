@@ -6,11 +6,10 @@ import { HttpStatus } from "../constants/Http_status";
 import { patchProduct } from "../api/Product";
 
 export const usePatchProduct = () => {
-    const token  = localStorage.getItem("token");
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (data: any) => patchProduct(token, data),
+        mutationFn: (data: any) => patchProduct(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['products'],
