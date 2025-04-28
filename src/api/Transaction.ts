@@ -1,16 +1,16 @@
 import axios from "axios";
-import axiosInstance from "./Config";
+import axiosAuthInstance from "./Config";
 
 const TransactionAPIURL = `${import.meta.env.VITE_BASE_URL}/transaction`
 // const TransactionAPIURL = "http://localhost:3002/transaction";
 
 export const getLatestTransaction = async () => {
-    const response = axiosInstance.get(`${TransactionAPIURL}/latest`);
+    const response = axiosAuthInstance.get(`${TransactionAPIURL}/latest`);
     return response;
 }
 
 export const getAllTransaction = async () => {
-    const response = axiosInstance.get(TransactionAPIURL);
+    const response = axiosAuthInstance.get(TransactionAPIURL);
     return response;
 }
 
