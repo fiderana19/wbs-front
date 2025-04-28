@@ -1,26 +1,34 @@
-import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { showToast } from "../utils/Toast";
 import { TOAST_TYPE } from "../constants/ToastType";
-import { AxiosError } from "axios";
 import { getDetailByTransactionId } from "../api/Detail";
+import { useEffect } from "react";
+import { QueryCacheKey } from "@/api/queryCacheKey";
 
-export const useGetDetailByTransactionId = () => {
+export const useGetDetailByTransactionId = ({id} : {id : string}) => {
     const token = localStorage.getItem('token');
 
-    const { mutateAsync, data } = useMutation({
-        mutationFn: (id: string) => getDetailByTransactionId(token, id),
-        onError: (error: AxiosError) => {
+    const { data, isError, error, isLoading } = useQuery({
+        queryKey: [QueryCacheKey.GET_ALL_PRODUCTS , id],
+        queryFn: () => getDetailByTransactionId(token, id),
+        enabled : id !== ''
+    })
+
+    useEffect(() => {
+        if(error) {
             showToast({
                 toastProps: {
+                    message: "Erreur lors de la recuperation des transactions !",
                     type: TOAST_TYPE.ERROR,
-                    message: error?.message
                 }
             })
         }
-    })
+    },[error])
     
     return {
-        mutateAsync,
         data: data?.data,
-    };
+        isError,
+        error,
+        isLoading
+    }
 }

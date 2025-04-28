@@ -1,5 +1,5 @@
 import { FunctionComponent, useState } from 'react'
-import { Input, Button, Card, Modal } from 'antd'
+import { Modal } from 'antd'
 import { EditOutlined, DeleteOutlined, WarningOutlined, UserOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Client } from '../../../interfaces/Client.interface';
@@ -8,21 +8,17 @@ import { useGetAllClient } from '../../../hooks/useGetAllClient';
 import { useDeleteClient } from '../../../hooks/useDeleteClient';
 import { usePatchClient } from '../../../hooks/usePatchClient';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { handleNumberKeyPress } from '../../../utils/keypress';
 import { useDark } from '../../../context/DarkThemeContext';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { EditClientValidation } from '@/validation/edit-client.validation';
 
-const ClientEditSchema = yup.object({
-  _id: yup.string().required("Le nom du client ne doit pas être vide !"),
-  nom_client: yup.string().required("Le nom du client ne doit pas être vide !"),
-  adresse_client: yup.string().required("L'adresse du client ne doit pas être vide !"),
-  mail_client: yup.string().email("Email invalide !").required("Le mail du client ne doit pas être vide !"),
-  telephone_client: yup.string().length(10, "Le numero de telephone doit comprendre 10 chiffres !").required("Le telephone du client ne doit pas être vide !"),
-})
 const ClientPage: FunctionComponent = () => {
   const { control, formState, handleSubmit: edit, register } = useForm<Client>({
-    resolver: yupResolver(ClientEditSchema)
+    resolver: yupResolver(EditClientValidation)
   });
   const { errors } = formState;
   const [isEditClientModalOpen, setIsEditClientModalOpen] = useState(false);
@@ -78,7 +74,7 @@ const ClientPage: FunctionComponent = () => {
         <div className='flex justify-between'>
           <div className='text-xl font-bold font-lato'>LISTE DES CLIENTS</div>
           <Link to='/admin/addforms'>
-            <Button ><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden'> AJOUTER </div></Button>
+            <Button variant={'default'}><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden'> AJOUTER </div></Button>
           </Link>
         </div>
         <div className='my-7 grid gap-2 justify-center grid-cols-customized'>
@@ -91,10 +87,12 @@ const ClientPage: FunctionComponent = () => {
             ) : (
               clients && clients.map((client: any) =>{
                 return(
-                  <Card  key={client._id} className={isDark ? ' bg-gray-600 border-gray-800 hover:scale-105 duration-300' : 'hover:scale-105 duration-300'}>
-                    <div className='w-40 text-center mx-auto'>
-                      <UserOutlined className='text-5xl' />
-                      <div className={isDark ? 'py-3 text-white' : 'py-3'}>
+                  <Card key={client._id} className={isDark ? 'bg-gray-600 border-gray-800 h-52 overflow-hidden' : 'h-52 overflow-hidden'}>
+                    <div className='w-40 text-center mx-auto transition-all duration-500 ease-in-out hover:transform hover:-translate-y-12'>
+                      <CardHeader>                      
+                        <UserOutlined className='text-7xl mx-auto' />
+                      </CardHeader>
+                      <CardContent className={isDark ? 'py-3 text-white' : 'py-3'}>
                         <div className='text-base text-primary font-bold'>
                           { client.nom_client }
                         </div>
@@ -107,11 +105,11 @@ const ClientPage: FunctionComponent = () => {
                         <div className='text-sm'>
                           { client.telephone_client }
                         </div>
-                      </div>
-                      <div className='flex justify-center'>
-                        <Button className='mx-1 bg-blue-400 border-blue-500'  onClick={() => EditClient(client)} > <EditOutlined/> </Button>
-                        <Button className='mx-1 bg-red-700 border-red-800'  onClick={() => showDeleteConfirmation(client)}> <DeleteOutlined/> </Button>
-                      </div>
+                      </CardContent>
+                      <CardFooter className='flex justify-end gap-1'>
+                        <Button variant={'default'} size={'sm'} onClick={() => EditClient(client)} > <EditOutlined/> </Button>
+                        <Button variant={'destructive'} size={'sm'} onClick={() => showDeleteConfirmation(client)}> <DeleteOutlined/> </Button>
+                      </CardFooter>
                     </div>
                   </Card>
                 )
@@ -172,7 +170,7 @@ const ClientPage: FunctionComponent = () => {
                   />
                   { errors.telephone_client && <div className='text-xs text-red-500 text-left'>{errors.telephone_client.message}</div> }
                   <div className='flex justify-center my-3'>
-                    <button className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500' type='submit'>MODIFIER</button>
+                    <Button type='submit' variant={'primary'}>MODIFIER</Button>
                   </div>
                 </form>
               </div>

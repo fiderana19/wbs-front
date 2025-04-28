@@ -1,21 +1,25 @@
-import { Input  } from 'antd'
 import React, { FunctionComponent } from 'react'
 import { CreateProductInterface } from '../../../interfaces/Product.interface';
 import { usePostProduct } from '../../../hooks/usePostProduct';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { AddProductValidation } from '../../../validation/create-product.validation';
+import { useGetAllProduct } from '@/hooks/useGetAllProduct';
 
-const productSchema = yup.object({
-  libelle: yup.string().required("Le libelle est requis! "),
-  description: yup.string().required("La description du produit est requise !"),
-  pu: yup.number().required("Le prix unitaire est requis !"),
-  stock: yup.number().required("Le stock du produit est requis !")
-})
 const AddProductPage: FunctionComponent = () => {
-  const { mutateAsync } = usePostProduct();
+  
+  const { refetch } = useGetAllProduct();
+
+  const { mutateAsync } = usePostProduct({
+    action : ()=>{
+      refetch()
+    }
+  });
   const { control, handleSubmit: submit, formState } = useForm<CreateProductInterface>({
-    resolver: yupResolver(productSchema)
+    resolver: yupResolver(AddProductValidation)
   });
   const { errors } = formState;
 
@@ -34,7 +38,7 @@ const AddProductPage: FunctionComponent = () => {
   return (
     <div>
       <form className='w-2/3 my-7 mx-auto' onSubmit={submit(handleSubmit)}>
-        <label htmlFor='libelle' >Libelle : </label> <br />
+        <Label htmlFor='libelle' className='mt-2 mb-1'>Libelle</Label>
         <Controller 
           control={control}
           name='libelle'
@@ -45,7 +49,7 @@ const AddProductPage: FunctionComponent = () => {
           )}
         />
         { errors?.libelle && <div className='text-xs text-red-500 text-left'>{ errors.libelle.message }</div> }
-        <label htmlFor='description' >Description : </label> <br />
+        <Label htmlFor='description' className='mt-2 mb-1' >Description</Label>
         <Controller 
           control={control}
           name='description'
@@ -56,7 +60,7 @@ const AddProductPage: FunctionComponent = () => {
           )}
         />
         { errors?.description && <div className='text-xs text-red-500 text-left'>{ errors.description.message }</div> }
-        <label htmlFor='pu' >Prix unitaire : </label> <br />
+        <Label htmlFor='pu' className='mt-2 mb-1' >Prix unitaire</Label>
         <Controller 
           control={control}
           name='pu'
@@ -67,7 +71,7 @@ const AddProductPage: FunctionComponent = () => {
           )}
         />
         { errors?.pu && <div className='text-xs text-red-500 text-left'>{ errors.pu.message }</div> }
-        <label htmlFor='stock' >Stock : </label> <br />
+        <Label htmlFor='stock' className='mt-2 mb-1' >Stock</Label>
         <Controller 
           control={control}
           name='stock'
@@ -79,7 +83,7 @@ const AddProductPage: FunctionComponent = () => {
         />
         { errors?.stock && <div className='text-xs text-red-500 text-left'>{ errors.stock.message }</div> }
         <div className='flex justify-center my-3'>
-          <button className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500' type='submit'>AJOUTER</button>
+          <Button variant={'success'} type='submit' >AJOUTER</Button>
         </div>
       </form>
     </div>

@@ -6,25 +6,20 @@ import { CreateTransactionInterface } from '../../../interfaces/Transaction.inte
 import { usePostTransaction } from '../../../hooks/usePostTransaction';
 import { useGetAllClient } from '../../../hooks/useGetAllClient';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
+import { AddTransactionValidation } from '@/validation/create-transaction.validation';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
   handleNext: ()=>void;
 }
 
-const transactionSchema = yup.object({
-  client: yup.string().required("Veuillez selectionner un client !"),
-  date_transaction: yup.date().required("Veuillez entrer la date de la transaction ! ")
-})
-
 const { Option } = Select;
 
 const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNext}) => {
   const { control, formState, handleSubmit: submit } = useForm<CreateTransactionInterface>({
-    resolver: yupResolver(transactionSchema)
+    resolver: yupResolver(AddTransactionValidation)
   });
   const { errors } = formState;
   const { mutateAsync, isError } = usePostTransaction();

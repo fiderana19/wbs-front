@@ -5,17 +5,16 @@ import { HttpStatus } from '../../constants/Http_status';
 import { errorMessage } from '../../utils/AntdMessage';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup'
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Button } from '../ui/button';
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { SignupValidation } from '@/validation/signup.validation';
 
-const SignupSchema = yup.object({
-    username: yup.string().required("Username requis !"),
-    password: yup.string().min(6, "Le mot de passe doit comprendre au moins 6 caracteres !").required("Mot de passe requis !")
-})
 const Signup: React.FC = () => {
-    const { handleSubmit: submit, register, formState } = useForm<SingupInterface>({
-        resolver: yupResolver(SignupSchema)
+    const { handleSubmit: submit, formState, control } = useForm<SingupInterface>({
+        resolver: yupResolver(SignupValidation)
     });
     const { errors } = formState;
     const [usrId, setUsrId] = useState<string>("");
@@ -41,16 +40,32 @@ const Signup: React.FC = () => {
             <div className="mb-10 text-center font-latobold text-2xl">Inscription</div>
             <form onSubmit={submit(signupSubmit)} className="w-full">
                 <div className="mx-auto my-3">
-                    <div className="text-xs">Nom d'utilisateur</div>
-                    <input {...register("username")} type="text" className={errors.username ? "w-64 py-1.5 px-2 rounded bg-transparent border border-red-500" : "w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500"} />
-                    {errors.username && <div className='text-xs text-red-500 text-left'>{ errors.username.message }</div>}
+                    <Label htmlFor='username' className='mb-1'>Nom d'utilisateur</Label>
+                    <Controller
+                        control={control}
+                        name='username'
+                        render={({
+                            field: { value, onChange, onBlur }
+                        }) => (
+                            <Input type='text' value={value} onChange={onChange} onBlur={onBlur} className={errors.username ? "w-64 rounded bg-transparent border border-red-500" : "w-64 rounded bg-transparent border"} />
+                        )}
+                    />
+                    {errors.username && <div className='text-xs text-red-500 text-left w-64'>{ errors.username.message }</div>}
                 </div>
                 <div className="mx-auto my-3">
-                    <div className="text-xs">Mot de passe</div>
-                    <input {...register("password")} type="password" className={errors.password ? "w-64 py-1.5 px-2 rounded bg-transparent border border-red-500 text-red-500" : "w-64 py-1.5 px-2 rounded bg-transparent border border-gray-500"} />
-                    {errors.password && <div className='text-xs text-red-500 text-left'>{ errors.password.message }</div>}
+                    <Label htmlFor='password' className='mb-1'>Mot de passe</Label>
+                    <Controller
+                        control={control}
+                        name='password'
+                        render={({
+                            field: { value, onChange, onBlur }
+                        }) => (
+                            <Input type='password' value={value} onChange={onChange} onBlur={onBlur} className={errors.password ? "w-64 rounded bg-transparent border border-red-500 text-red-500" : "w-64 rounded bg-transparent border"} />
+                        )}
+                    />
+                    {errors.password && <div className='text-xs text-red-500 text-left w-64'>{ errors.password.message }</div>}
                 </div>
-                <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white mx-auto font-latobold py-2 px-4 my-1 rounded w-64">S'inscrire</button>
+                <Button variant={'success'} size={'lg'} className='w-64' type='submit'>S'INSCRIRE</Button>
             </form>
             <Modal title="Inscription réussie !" 
                 open={isSignupSuccessModalOpen}

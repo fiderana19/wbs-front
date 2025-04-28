@@ -11,18 +11,14 @@ import { useGetTransactionById } from '../../../hooks/useGetTransactionById';
 import { usePatchTransaction } from '../../../hooks/usePatchTransaction';
 import { Controller, useForm } from 'react-hook-form';
 import { handleNumberKeyPress } from '../../../utils/keypress';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
+import { EditTrnsactionValidation } from '@/validation/edit-transaction.validation';
 const TransactionSearch = lazy(() => import('./TransactionSearchPage'));
 
-const TransactionEditSchema = yup.object({
-  _id: yup.string().required(),
-  date_transaction: yup.string().required("Veuillez selectionner une date !")
-})
 const TransactionPage: FunctionComponent = () => {
-    const { control, handleSubmit: edit, formState, register } = useForm<TransactionForEdit>({
-      resolver: yupResolver(TransactionEditSchema)
+    const { control, handleSubmit: edit, formState, register , watch } = useForm<TransactionForEdit>({
+      resolver: yupResolver(EditTrnsactionValidation)
     });
     const { errors } = formState;
     const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
@@ -34,7 +30,7 @@ const TransactionPage: FunctionComponent = () => {
     const [selectedItemEdit, setSelectedItemEdit] = useState<TransactionItem | null>(null);
   const { data: transactions, isLoading } = useGetAllTransaction();
   const { mutateAsync: deleteTransaction } = useDeleteTransaction();
-  const { mutateAsync: getDetailByTransactionById, data: details } = useGetDetailByTransactionId();
+  const { data: details } = useGetDetailByTransactionId({id : watch('_id') || ''});
   const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
   const { mutateAsync: patchTransaction } = usePatchTransaction();
   const { isDark } = useDark();
@@ -57,7 +53,7 @@ const TransactionPage: FunctionComponent = () => {
 
   const getDetail = async (itemId: string) => {
     getTransactionById(itemId);
-    getDetailByTransactionById(itemId);
+    // getDetailByTransactionById(itemId);
     setIsModalDetailOpen(true);
   }
 
