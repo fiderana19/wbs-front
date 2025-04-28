@@ -6,11 +6,10 @@ import { HttpStatus } from "../constants/Http_status";
 import { postDetail } from "../api/Detail";
 
 export const usePostDetail = () => {
-    const token  = localStorage.getItem("token");
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (mutateData: any) => postDetail(token, mutateData),
+        mutationFn: (mutateData: any) => postDetail(mutateData),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['details'],

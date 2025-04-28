@@ -6,11 +6,9 @@ import { useEffect } from "react";
 import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetDetailByTransactionId = ({id} : {id : string}) => {
-    const token = localStorage.getItem('token');
-
     const { data, isError, error, isLoading } = useQuery({
         queryKey: [QueryCacheKey.GET_ALL_PRODUCTS , id],
-        queryFn: () => getDetailByTransactionId(token, id),
+        queryFn: () => getDetailByTransactionId(id),
         enabled : id !== ''
     })
 

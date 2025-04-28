@@ -1,26 +1,11 @@
-import axios from "axios";
+import axiosAuthInstance from "./Config";
 
-const DetailTransactionAPIURL = "http://localhost:3002/detailtransaction";
+const DetailTransactionAPIURL = `${import.meta.env.VITE_BASE_URL}/detailtransaction`;
 
-export const getDetailByTransactionId = async (token: string | null, id: string) => {
-    const response = await axios({
-        method: 'get',
-        url: `${DetailTransactionAPIURL}/trans/${id}`,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    return response;
+export const getDetailByTransactionId = async (id: string) => {
+    return await axiosAuthInstance.get(`${DetailTransactionAPIURL}/trans/${id}`);
 }
 
-export const postDetail = async (token: string | null, data: any) => {
-    const response = await axios({
-        method: 'post',
-        url: `${DetailTransactionAPIURL}`,
-        data: data,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    return response;
+export const postDetail = async (data: any) => {
+    return await axiosAuthInstance.post(`${DetailTransactionAPIURL}`, data);
 }
