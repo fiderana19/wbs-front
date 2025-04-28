@@ -28,11 +28,19 @@ const TransactionPage: FunctionComponent = () => {
     const [searchRef, setSearchRef] = useState('');
     const [editTransactionCredentials, setEditTransactionCredentials] = useState<TransactionForEdit>({ _id: '', date_transaction: '' })
     const [selectedItemEdit, setSelectedItemEdit] = useState<TransactionItem | null>(null);
-  const { data: transactions, isLoading } = useGetAllTransaction();
-  const { mutateAsync: deleteTransaction } = useDeleteTransaction();
+  const { data: transactions, isLoading, refetch } = useGetAllTransaction();
+  const { mutateAsync: deleteTransaction } = useDeleteTransaction({
+    action: () => {
+      refetch()
+    }
+  });
   const { data: details } = useGetDetailByTransactionId({id : watch('_id') || ''});
   const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
-  const { mutateAsync: patchTransaction } = usePatchTransaction();
+  const { mutateAsync: patchTransaction } = usePatchTransaction({
+    action: () => {
+      refetch()
+    }
+  });
   const { isDark } = useDark();
 
   async function handleDeleteTransaction(itemId: string) {

@@ -6,7 +6,7 @@ import { TOAST_TYPE } from "../constants/ToastType";
 import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetAllClient = () => {
-    const { data, isError, isLoading, error } = useQuery({
+    const { data, isError, isLoading, error, refetch } = useQuery({
         queryKey: [QueryCacheKey.CLIENTS],
         queryFn: () => getAllClient(),
         staleTime: Infinity,
@@ -27,6 +27,7 @@ export const useGetAllClient = () => {
         data: data?.data,
         isError,
         isLoading,
-        error
+        error,
+        refetch
     }
 }

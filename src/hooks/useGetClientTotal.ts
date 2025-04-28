@@ -6,7 +6,6 @@ import { getClientTotal } from "../api/Dashboard";
 import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetClientTotal = () => {
-
     const { data, isError, error, isLoading } = useQuery({
         queryKey: [QueryCacheKey.CLIENT_TOTAL],
         queryFn: () => getClientTotal(),

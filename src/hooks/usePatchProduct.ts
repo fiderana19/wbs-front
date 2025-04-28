@@ -1,20 +1,17 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { showToast } from "../utils/Toast";
 import { TOAST_TYPE } from "../constants/ToastType";
 import { AxiosError } from "axios";
 import { HttpStatus } from "../constants/Http_status";
 import { patchProduct } from "../api/Product";
 
-export const usePatchProduct = () => {
-    const queryClient = useQueryClient();
-
+export const usePatchProduct = ({action} : {action?: () => void}) => {
     const mutation = useMutation({
         mutationFn: (data: any) => patchProduct(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['products'],
-                exact: true,
-            });
+            if(action) {
+                action();
+            }
             showToast({toastProps: {
                 type: TOAST_TYPE.SUCCESS,
                 message: "Produit modifié !",

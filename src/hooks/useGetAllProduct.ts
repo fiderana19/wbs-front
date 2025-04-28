@@ -7,7 +7,7 @@ import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetAllProduct = () => {
     const { data, error, isError, isLoading , refetch} = useQuery({
-        queryKey: [QueryCacheKey.GET_ALL_PRODUCTS],
+        queryKey: [QueryCacheKey.PRODUCTS],
         queryFn: () => getAllProduct(),
         staleTime: Infinity
     })

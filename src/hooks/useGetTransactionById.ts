@@ -5,7 +5,6 @@ import { AxiosError } from "axios";
 import { getTransactionById } from "../api/Transaction";
 
 export const useGetTransactionById = () => {
-
     const { mutateAsync, data } = useMutation({
         mutationFn: (id: string) => getTransactionById(id),
         onError: (error: AxiosError) => {

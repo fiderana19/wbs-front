@@ -9,6 +9,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
 import { AddTransactionValidation } from '@/validation/create-transaction.validation';
+import { useGetAllTransaction } from '@/hooks/useGetAllTransaction';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -22,7 +23,12 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
     resolver: yupResolver(AddTransactionValidation)
   });
   const { errors } = formState;
-  const { mutateAsync, isError } = usePostTransaction();
+  const { refetch } = useGetAllTransaction();
+  const { mutateAsync, isError } = usePostTransaction({
+    action: () => {
+      refetch();
+    }
+  });
   const { data: clients } = useGetAllClient();
   const { isDark } = useDark();
 

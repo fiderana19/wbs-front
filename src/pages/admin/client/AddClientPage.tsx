@@ -7,6 +7,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
 import { AddClientValidation } from '@/validation/create-client.validation';
+import { useGetAllClient } from '@/hooks/useGetAllClient';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -14,7 +15,12 @@ interface StepsPropsType {
 }
 
 const AddClientPage: FunctionComponent<StepsPropsType> = ({handleNext}) => {
-  const { mutateAsync, isError } = usePostClient();
+  const { refetch } = useGetAllClient();
+  const { mutateAsync, isError } = usePostClient({
+    action: () => {
+      refetch()
+    }
+  });
   const { handleSubmit: submit, control, formState } = useForm<CreateClientInterface>({
     resolver: yupResolver(AddClientValidation)
   });

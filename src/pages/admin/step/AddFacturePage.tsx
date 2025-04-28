@@ -119,7 +119,7 @@ const footer = StyleSheet.create({
 });
 
 //generate pdf function
-const generatePDF = async (token: string | null,  selectedTransId: string ) => {
+const generatePDF = async (selectedTransId: string ) => {
   //getting all detail of the transaction
   // const response = await getDetailById(token, selectedTransId);
   // const data = response.data;
@@ -128,7 +128,7 @@ const generatePDF = async (token: string | null,  selectedTransId: string ) => {
   //   data.push({ quantite: '', product: '', montant_brut: '', remise: '', montant_total: '' });
   // }
 
-  const res = await getTransactionForFacture(token, selectedTransId);
+  const res = await getTransactionForFacture(selectedTransId);
   const transaction = res.data[0];
   //the pdf content 
   const pdfDocument = (
@@ -218,19 +218,16 @@ const generatePDF = async (token: string | null,  selectedTransId: string ) => {
 const { Option } = Select;
 
 const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  )
   const [selectedTransId, setSelectedTransId] = useState('');
   const { data: trans } = useGetAllTransaction();
-  const [pdfData, setPdfData] =  useState<null | JSX.Element>(null);
+  const [pdfData, setPdfData] =  useState<null | any>(null);
   const { isDark } = useDark();
   //handling the form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (selectedTransId) {
-      generatePDF(token,selectedTransId).then((pdf) => {
+      generatePDF(selectedTransId).then((pdf) => {
         setPdfData(pdf);
       })
     } else {

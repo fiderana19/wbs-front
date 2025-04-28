@@ -35,15 +35,21 @@ const ProductPage: FunctionComponent = () => {
     stock: 0,
   });
 
-  const { data: products, isLoading } = useGetAllProduct();
-  const { mutateAsync: deleteProduct } = useDeleteProduct();
-  const { mutateAsync: patchProduct } = usePatchProduct();
+  const { data: products, isLoading, refetch } = useGetAllProduct();
+  const { mutateAsync: deleteProduct } = useDeleteProduct({
+    action: () => {
+      refetch()
+    }
+  });
+  const { mutateAsync: patchProduct } = usePatchProduct({
+    action: () => {
+      refetch()
+    }
+  });
 
   const showDeleteConfirmation = (item: Product) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
-
-    console.log("efa izy mlay !!!!")
   };
 
   async function handleDelete(itemId: string) {

@@ -10,9 +10,7 @@ import { AddProductValidation } from '../../../validation/create-product.validat
 import { useGetAllProduct } from '@/hooks/useGetAllProduct';
 
 const AddProductPage: FunctionComponent = () => {
-  
   const { refetch } = useGetAllProduct();
-
   const { mutateAsync } = usePostProduct({
     action : ()=>{
       refetch()

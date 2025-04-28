@@ -1,20 +1,17 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { showToast } from "../utils/Toast";
 import { TOAST_TYPE } from "../constants/ToastType";
 import { AxiosError } from "axios";
 import { HttpStatus } from "../constants/Http_status";
 import { postTransaction } from "../api/Transaction";
 
-export const usePostTransaction = () => {
-    const queryClient = useQueryClient();
-
+export const usePostTransaction = ({action} : {action?: () => void}) => {
     const mutation = useMutation({
         mutationFn: (mutateData: any) => postTransaction(mutateData),
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['transactions'],
-                exact: true,
-            });
+            if(action) {
+                action();
+            }
             showToast({toastProps: {
                 type: TOAST_TYPE.SUCCESS,
                 message: "Transaction ajoutée avec succés !",

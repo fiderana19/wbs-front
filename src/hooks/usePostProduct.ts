@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { showToast } from "../utils/Toast";
 import { TOAST_TYPE } from "../constants/ToastType";
 import { AxiosError } from "axios";
@@ -9,8 +9,8 @@ export const usePostProduct = ({action} : {action? : () => void}) => {
     const mutation = useMutation({
         mutationFn: (mutateData: any) => postProduct(mutateData),
         onSuccess: () => {
-            if(action){
-                action()
+            if(action) {
+                action();
             }
             showToast({toastProps: {
                 type: TOAST_TYPE.SUCCESS,

@@ -6,7 +6,7 @@ import { showToast } from "../utils/Toast";
 import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetAllTransaction = () => {
-    const { data, isError, error, isLoading } = useQuery({
+    const { data, isError, error, isLoading, refetch } = useQuery({
         queryKey: [QueryCacheKey.TRANSACTIONS],
         queryFn: () => getAllTransaction(),
         staleTime: Infinity
@@ -27,6 +27,7 @@ export const useGetAllTransaction = () => {
         data: data?.data,
         isError,
         error,
-        isLoading
+        isLoading,
+        refetch
     }
 }

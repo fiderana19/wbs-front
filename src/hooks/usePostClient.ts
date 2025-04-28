@@ -1,20 +1,17 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { postClient } from "../api/Client";
 import { showToast } from "../utils/Toast";
 import { TOAST_TYPE } from "../constants/ToastType";
 import { AxiosError } from "axios";
 import { HttpStatus } from "../constants/Http_status";
 
-export const usePostClient = () => {
-    const queryClient = useQueryClient();
-
+export const usePostClient = ({action} : {action?: () => void}) => {
     const mutation = useMutation({
         mutationFn: (mutateData: any) => postClient(mutateData),
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['clients'],
-                exact: true,
-            });
+            if(action) {
+                action();
+            }
             showToast({toastProps: {
                 type: TOAST_TYPE.SUCCESS,
                 message: "Client ajouté avec succés !",

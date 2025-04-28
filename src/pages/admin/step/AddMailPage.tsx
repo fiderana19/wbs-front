@@ -16,9 +16,6 @@ const { Option } = Select;
 
 const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   const [selectedTransactionId, setSelectedTransactionId] = useState('');
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  )
   const { isDark } = useDark();
   const { data: transactions } = useGetAllTransaction();
 
@@ -26,7 +23,7 @@ const AddMailPage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
     e.preventDefault();
 
     if (selectedTransactionId) { 
-      const response = await getMailer(token, selectedTransactionId);
+      const response = await getMailer(selectedTransactionId);
       if(response?.status === HttpStatus.OK) {
         successMessage(response.data.message);
       }

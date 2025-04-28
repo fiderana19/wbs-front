@@ -10,6 +10,7 @@ import { useGetTransactionById } from '../../../hooks/useGetTransactionById';
 import { useGetTransactionBetweenDates } from '../../../hooks/useGetTransactionBetweenDates';
 import { usePatchTransaction } from '../../../hooks/usePatchTransaction';
 import { useDark } from '../../../context/DarkThemeContext';
+import { useGetAllTransaction } from '@/hooks/useGetAllTransaction';
 
 const TransactionSearchPage: FunctionComponent = () => {
     const [selectedDateDebut, setSelectedDateDebut] = useState<dayjs.Dayjs | null>(null);
@@ -28,11 +29,20 @@ const TransactionSearchPage: FunctionComponent = () => {
       ref: '',
       montant_transaction: 0,
     });
-  const { mutateAsync: deleteTransaction } = useDeleteTransaction();
   const { data: details } = useGetDetailByTransactionId({ id: ''});
   const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
   const { mutateAsync: searchTransactionBetweenDates, data: searchTransaction } = useGetTransactionBetweenDates();
-  const { mutateAsync: patchTransaction } = usePatchTransaction();
+  const { refetch } = useGetAllTransaction();
+  const { mutateAsync: patchTransaction } = usePatchTransaction({
+    action: () => {
+      refetch()
+    }
+  });
+  const { mutateAsync: deleteTransaction } = useDeleteTransaction({
+    action: () => {
+      refetch()
+    }
+  });
   const { isDark } = useDark();
 
   const handleDateDebutChange = (date: any) => {

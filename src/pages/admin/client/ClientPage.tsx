@@ -32,9 +32,17 @@ const ClientPage: FunctionComponent = () => {
     mail_client: '',
     telephone_client: '',
   });
-  const { data: clients, isLoading } = useGetAllClient();
-  const { mutateAsync: deleteClient } = useDeleteClient();
-  const { mutateAsync: patchClient } = usePatchClient();
+  const { data: clients, isLoading, refetch } = useGetAllClient();
+  const { mutateAsync: deleteClient } = useDeleteClient({
+    action: () => {
+      refetch()
+    }
+  });
+  const { mutateAsync: patchClient } = usePatchClient({
+    action: () => {
+      refetch()
+    }
+  });
   const { isDark } = useDark();
 
   const showDeleteConfirmation = async (item: Client) => {

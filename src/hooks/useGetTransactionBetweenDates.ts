@@ -5,7 +5,6 @@ import { AxiosError } from "axios";
 import { getTransactionBetweenDates } from "../api/Transaction";
 
 export const useGetTransactionBetweenDates = () => {
-
     const { mutateAsync, data } = useMutation({
         mutationFn: (data: any) => getTransactionBetweenDates(data),
         onError: (error: AxiosError) => {
