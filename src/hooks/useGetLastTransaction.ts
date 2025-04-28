@@ -3,11 +3,11 @@ import { getLatestTransaction } from "../api/Transaction";
 import { useEffect } from "react";
 import { TOAST_TYPE } from "../constants/ToastType";
 import { showToast } from "../utils/Toast";
+import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetLastTransation = () => {
-
     const { data, isError, isLoading, error } = useQuery({
-        queryKey: ["last_transaction"],
+        queryKey: [QueryCacheKey.LAST_TRANSACTIONS, QueryCacheKey.TRANSACTIONS],
         queryFn: () => getLatestTransaction(),
         staleTime: Infinity,
     })

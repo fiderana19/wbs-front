@@ -3,10 +3,11 @@ import { useEffect } from "react";
 import { TOAST_TYPE } from "../constants/ToastType";
 import { showToast } from "../utils/Toast";
 import { getTransactionTotal } from "../api/Dashboard";
+import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetTransactionTotal = () => {
     const { data, isError, error, isLoading } = useQuery({
-        queryKey: ['transaction_total'],
+        queryKey: [QueryCacheKey.TRANSACTION_TOTAL],
         queryFn: () => getTransactionTotal(),
         staleTime: Infinity
     })

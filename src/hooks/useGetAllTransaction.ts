@@ -3,12 +3,13 @@ import { getAllTransaction } from "../api/Transaction";
 import { useEffect } from "react";
 import { TOAST_TYPE } from "../constants/ToastType";
 import { showToast } from "../utils/Toast";
+import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetAllTransaction = () => {
-
     const { data, isError, error, isLoading } = useQuery({
-        queryKey: ['transactions'],
+        queryKey: [QueryCacheKey.TRANSACTIONS],
         queryFn: () => getAllTransaction(),
+        staleTime: Infinity
     })
 
     useEffect(() => {

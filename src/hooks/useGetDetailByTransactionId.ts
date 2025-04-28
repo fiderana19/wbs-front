@@ -7,7 +7,7 @@ import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetDetailByTransactionId = ({id} : {id : string}) => {
     const { data, isError, error, isLoading } = useQuery({
-        queryKey: [QueryCacheKey.GET_ALL_PRODUCTS , id],
+        queryKey: [QueryCacheKey.DETAILS , id],
         queryFn: () => getDetailByTransactionId(id),
         enabled : id !== ''
     })

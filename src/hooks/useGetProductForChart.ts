@@ -3,10 +3,11 @@ import { useEffect } from "react";
 import { TOAST_TYPE } from "../constants/ToastType";
 import { showToast } from "../utils/Toast";
 import { getProductForChart } from "../api/Dashboard";
+import { QueryCacheKey } from "@/api/queryCacheKey";
 
 export const useGetProductForChart = () => {
     const { data, isError, error, isLoading } = useQuery({
-        queryKey: ['products_chart'],
+        queryKey: [QueryCacheKey.PRODUCT_FOR_CHART],
         queryFn: () => getProductForChart(),
         staleTime: Infinity
     })
