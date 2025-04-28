@@ -5,11 +5,9 @@ import { showToast } from "../utils/Toast";
 import { getProductForChart } from "../api/Dashboard";
 
 export const useGetProductForChart = () => {
-    const token = localStorage.getItem('token');
-
     const { data, isError, error, isLoading } = useQuery({
         queryKey: ['products_chart'],
-        queryFn: () => getProductForChart(token),
+        queryFn: () => getProductForChart(),
         staleTime: Infinity
     })
 

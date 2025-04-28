@@ -5,11 +5,10 @@ import { showToast } from "../utils/Toast";
 import { getProductTotal } from "../api/Dashboard";
 
 export const useGetProductTotal = () => {
-    const token = localStorage.getItem('token');
 
     const { data, isError, error, isLoading } = useQuery({
         queryKey: ['product_total'],
-        queryFn: () => getProductTotal(token),
+        queryFn: () => getProductTotal(),
         staleTime: Infinity
     })
 

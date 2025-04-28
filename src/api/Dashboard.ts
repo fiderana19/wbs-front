@@ -1,49 +1,19 @@
-import axios from "axios";
+import axiosAuthInstance from "./Config";
 
-const ClientAPIURL = "http://localhost:3002/client";
-const ProductAPIURL = "http://localhost:3002/product";
-const TransactionAPIURL = "http://localhost:3002/transaction";
+const BaseAPIURL = `${import.meta.env.VITE_BASE_URL}`;
 
-export const getClientTotal = async (token: string | null) => {
-    const response = await axios({
-        method: 'get',
-        url: `${ClientAPIURL}/total`,
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    })
-    return response;
+export const getClientTotal = async () => {
+    return await axiosAuthInstance.get(`${BaseAPIURL}/client/total`);
 }
 
-export const getProductTotal = async (token: string | null) => {
-    const response = await axios({
-        method: 'get',
-        url: `${ProductAPIURL}/total`,
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    })
-    return response;
+export const getProductTotal = async () => {
+    return await axiosAuthInstance.get(`${BaseAPIURL}/product/total`);
 }
 
-export const getTransactionTotal = async (token: string | null) => {
-    const response = await axios({
-        method: 'get',
-        url: `${TransactionAPIURL}/total`,
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    })
-    return response;
+export const getTransactionTotal = async () => {
+    return await axiosAuthInstance.get(`${BaseAPIURL}/transaction/total`);
 }
 
-export const getProductForChart = async (token: string | null) => {
-    const response = await axios({
-        method: 'get',
-        url: `${ProductAPIURL}`,
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    })
-    return response;
+export const getProductForChart = async () => {
+    return await axiosAuthInstance.get(`${BaseAPIURL}/product`);
 }

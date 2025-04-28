@@ -5,11 +5,10 @@ import { showToast } from "../utils/Toast";
 import { getClientTotal } from "../api/Dashboard";
 
 export const useGetClientTotal = () => {
-    const token = localStorage.getItem('token');
 
     const { data, isError, error, isLoading } = useQuery({
         queryKey: ['client_total'],
-        queryFn: () => getClientTotal(token),
+        queryFn: () => getClientTotal(),
         staleTime: Infinity
     })
 
