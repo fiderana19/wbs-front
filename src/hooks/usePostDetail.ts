@@ -9,17 +9,17 @@ export const usePostDetail = () => {
     const mutation = useMutation({
         mutationFn: (mutateData: any) => postDetail(mutateData),
         onSuccess: () => {
-            showToast({toastProps: {
+            showToast({
                 type: TOAST_TYPE.SUCCESS,
                 message: "Detail de transaction ajouté avec succés !",
-            }});
+            });
         },
         onError: (error: AxiosError) => {
             if (error?.status === HttpStatus.FORBIDDEN) {
-                showToast({toastProps: {
+                showToast({
                     type: TOAST_TYPE.ERROR,
                     message: error.message
-                }})
+                })
             }
         },
     })

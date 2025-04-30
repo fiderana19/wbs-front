@@ -15,10 +15,8 @@ export const useGetDetailByTransactionId = ({id} : {id : string}) => {
     useEffect(() => {
         if(error) {
             showToast({
-                toastProps: {
-                    message: "Erreur lors de la recuperation des transactions !",
-                    type: TOAST_TYPE.ERROR,
-                }
+                message: "Erreur lors de la recuperation des transactions !",
+                type: TOAST_TYPE.ERROR,
             })
         }
     },[error])

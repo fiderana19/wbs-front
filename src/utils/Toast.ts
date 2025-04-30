@@ -1,3 +1,4 @@
+import { useDark } from "@/context/DarkThemeContext";
 import { Bounce, toast } from "react-toastify";
 
 type ToastProps = {
@@ -5,8 +6,8 @@ type ToastProps = {
     type?: any;
 }
 
-export const showToast = ({toastProps}: {toastProps: ToastProps}) => {
-    const {message, type} = toastProps;
+export const showToast = ({ message, type }: ToastProps) => {
+    const { isDark } = useDark();
 
     toast( message, {
         type: type,
@@ -17,7 +18,7 @@ export const showToast = ({toastProps}: {toastProps: ToastProps}) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: `${isDark ? "dark" : "light"}`,
         transition:  Bounce 
     });
 }

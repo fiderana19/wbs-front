@@ -9,10 +9,8 @@ export const useGetTransactionById = () => {
         mutationFn: (id: string) => getTransactionById(id),
         onError: (error: AxiosError) => {
             showToast({
-                toastProps: {
-                    type: TOAST_TYPE.ERROR,
-                    message: error?.message
-                }
+                type: TOAST_TYPE.ERROR,
+                message: error?.message
             })
         }
     })

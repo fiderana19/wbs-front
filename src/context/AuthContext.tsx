@@ -37,10 +37,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
             if(response?.status === 401 || response?.status === 403) {
                 showToast({
-                    toastProps: {
-                        type: TOAST_TYPE.ERROR,
-                        message: "Identifiant ou mot de passe invalide !"
-                    }
+                    type: TOAST_TYPE.ERROR,
+                    message: "Identifiant ou mot de passe invalide !"
                 })
                 return { status: 401, message: response?.response.data.message }
             }

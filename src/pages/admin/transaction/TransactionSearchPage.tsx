@@ -3,7 +3,6 @@ import { DatePicker, Modal , Input } from 'antd'
 import { SearchOutlined, EditOutlined, WarningOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem, TransactionSearch } from '../../../interfaces/Transaction.interface';
-import { errorMessage } from '../../../utils/AntdMessage';
 import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
 import { useGetDetailByTransactionId } from '../../../hooks/useGetDetailByTransactionId';
 import { useGetTransactionById } from '../../../hooks/useGetTransactionById';
@@ -11,6 +10,8 @@ import { useGetTransactionBetweenDates } from '../../../hooks/useGetTransactionB
 import { usePatchTransaction } from '../../../hooks/usePatchTransaction';
 import { useDark } from '../../../context/DarkThemeContext';
 import { useGetAllTransaction } from '@/hooks/useGetAllTransaction';
+import { showToast } from '@/utils/Toast';
+import { TOAST_TYPE } from '@/constants/ToastType';
 
 const TransactionSearchPage: FunctionComponent = () => {
     const [selectedDateDebut, setSelectedDateDebut] = useState<dayjs.Dayjs | null>(null);
@@ -80,7 +81,10 @@ const TransactionSearchPage: FunctionComponent = () => {
       const data : TransactionSearch = { start: selectedDateDebut.toISOString(), end: selectedDateEnd.toISOString() } 
       searchTransactionBetweenDates(data);
     }else{
-      errorMessage('Veuillez selectionner des dates !');
+      showToast({
+        type: TOAST_TYPE.ERROR,
+        message: 'Veuillez selectionner des dates !'
+      })
     }
   }
 
@@ -119,7 +123,10 @@ const TransactionSearchPage: FunctionComponent = () => {
       if (selectedDate) {
         patchTransaction(editTransactionCredentials)
       } else {
-        errorMessage('Veuillez selectionner des dates !')
+        showToast({
+          type: TOAST_TYPE.ERROR,
+          message: 'Veuillez selectionner des dates !'
+        })
       }
     }
   }

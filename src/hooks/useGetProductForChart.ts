@@ -15,10 +15,8 @@ export const useGetProductForChart = () => {
     useEffect(() => {
         if(error) {
             showToast({
-                toastProps: {
-                    message: "Erreur lors de la recuperation des produits pour la chart !",
-                    type: TOAST_TYPE.ERROR,
-                }
+                message: "Erreur lors de la recuperation des produits pour la chart !",
+                type: TOAST_TYPE.ERROR,
             })
         }
     },[error])

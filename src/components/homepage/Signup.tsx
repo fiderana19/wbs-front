@@ -29,10 +29,8 @@ const Signup: React.FC = () => {
             setIsSignupSuccessModalOpen(true);
         } else {
             showToast({
-                toastProps: {
-                    type: TOAST_TYPE.ERROR,
-                    message: "Erreur lors de l'inscription !"
-                }
+                type: TOAST_TYPE.ERROR,
+                message: "Erreur lors de l'inscription !"
             })
         }
     }

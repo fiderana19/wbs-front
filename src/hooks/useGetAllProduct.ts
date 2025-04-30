@@ -15,10 +15,8 @@ export const useGetAllProduct = () => {
     useEffect(() => {
         if(error) {
             showToast({
-                toastProps: {
-                    message: "Erreur lors de la recuperation des produits !",
-                    type: TOAST_TYPE.ERROR,
-                }
+                message: "Erreur lors de la recuperation des produits !",
+                type: TOAST_TYPE.ERROR,
             })
         }
     },[error])

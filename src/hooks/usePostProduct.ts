@@ -12,17 +12,17 @@ export const usePostProduct = ({action} : {action? : () => void}) => {
             if(action) {
                 action();
             }
-            showToast({toastProps: {
+            showToast({
                 type: TOAST_TYPE.SUCCESS,
                 message: "Produit ajouté avec succés !",
-            }});
+            });
         },
         onError: (error: AxiosError) => {
             if (error?.status === HttpStatus.FORBIDDEN) {
-                showToast({toastProps: {
+                showToast({
                     type: TOAST_TYPE.ERROR,
                     message: error.message
-                }})
+                })
             }
         },
     })

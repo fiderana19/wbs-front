@@ -9,10 +9,8 @@ export const useGetTransactionBetweenDates = () => {
         mutationFn: (data: any) => getTransactionBetweenDates(data),
         onError: (error: AxiosError) => {
             showToast({
-                toastProps: {
-                    type: TOAST_TYPE.ERROR,
-                    message: error?.message
-                }
+                type: TOAST_TYPE.ERROR,
+                message: error?.message
             })
         }
     })

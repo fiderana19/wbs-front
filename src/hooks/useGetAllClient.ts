@@ -15,10 +15,8 @@ export const useGetAllClient = () => {
     useEffect(() => {
         if(error) {
             showToast({
-                toastProps: {
-                    message: "Erreur lors de la recuperation des clients !",
-                    type: TOAST_TYPE.ERROR,
-                }
+                message: "Erreur lors de la recuperation des clients !",
+                type: TOAST_TYPE.ERROR,
             })
         }
     },[error])

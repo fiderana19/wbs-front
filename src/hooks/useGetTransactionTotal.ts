@@ -15,10 +15,8 @@ export const useGetTransactionTotal = () => {
     useEffect(() => {
         if(error) {
             showToast({
-                toastProps: {
-                    message: "Erreur lors de la recuperation de total des transactions pour la chart !",
-                    type: TOAST_TYPE.ERROR,
-                }
+                message: "Erreur lors de la recuperation de total des transactions pour la chart !",
+                type: TOAST_TYPE.ERROR,
             })
         }
     },[error])

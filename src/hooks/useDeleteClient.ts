@@ -12,17 +12,17 @@ export const useDeleteClient = ({action} : {action?: () => void}) => {
             if(action) {
                 action();
             }
-            showToast({toastProps: {
+            showToast({
                 type: TOAST_TYPE.SUCCESS,
                 message: "Client supprimé !",
-            }});
+            });
         },
         onError: (error: AxiosError) => {
             if (error?.status === HttpStatus.FORBIDDEN) {
-                showToast({toastProps: {
+                showToast({
                     type: TOAST_TYPE.ERROR,
                     message: error.message
-                }})
+                })
             }
         },
     })

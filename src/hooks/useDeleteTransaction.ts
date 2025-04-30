@@ -12,17 +12,17 @@ export const useDeleteTransaction = ({action} : {action?: () => void}) => {
             if(action) {
                 action();
             }
-            showToast({toastProps: {
+            showToast({
                 type: TOAST_TYPE.SUCCESS,
                 message: "Transaction supprimé !",
-            }});
+            });
         },
         onError: (error: AxiosError) => {
             if (error?.status === HttpStatus.FORBIDDEN) {
-                showToast({toastProps: {
+                showToast({
                     type: TOAST_TYPE.ERROR,
                     message: error.message
-                }})
+                })
             }
         },
     })
