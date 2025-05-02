@@ -17,10 +17,11 @@ import { EditTrnsactionValidation } from '@/validation/edit-transaction.validati
 const TransactionSearch = lazy(() => import('./TransactionSearchPage'));
 
 const TransactionPage: FunctionComponent = () => {
-    const { control, handleSubmit: edit, formState, register , watch } = useForm<TransactionForEdit>({
+    const { control, handleSubmit: edit, formState, register } = useForm<TransactionForEdit>({
       resolver: yupResolver(EditTrnsactionValidation)
     });
     const { errors } = formState;
+    const [transactionToGet, setTransactionToGet] = useState<string>('');
     const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -34,8 +35,8 @@ const TransactionPage: FunctionComponent = () => {
       refetch()
     }
   });
-  const { data: details } = useGetDetailByTransactionId({id : watch('_id') || ''});
-  const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
+  const { data: details, isLoading: loadingDetails } = useGetDetailByTransactionId({id : transactionToGet || ''});
+  const { data: selectTransaction, isLoading: loadingTransactions } = useGetTransactionById({id: transactionToGet || ''});
   const { mutateAsync: patchTransaction } = usePatchTransaction({
     action: () => {
       refetch()
@@ -60,8 +61,7 @@ const TransactionPage: FunctionComponent = () => {
   };
 
   const getDetail = async (itemId: string) => {
-    getTransactionById(itemId);
-    // getDetailByTransactionById(itemId);
+    setTransactionToGet(itemId);
     setIsModalDetailOpen(true);
   }
 
@@ -188,6 +188,12 @@ const TransactionPage: FunctionComponent = () => {
             title="Detail de la transaction"
             open={isModalDetailOpen} onCancel={() => setIsModalDetailOpen(false)} footer={null} 
           >
+            {
+              loadingTransactions &&  <div className='text-center my-10'>
+                  <LoadingOutlined className='text-3xl' />
+                  <div>Chargement...</div>
+              </div>
+            }
             {selectTransaction &&
               <div> 
                 {
@@ -219,6 +225,12 @@ const TransactionPage: FunctionComponent = () => {
               </div>
             }
             <div className='w-full bg-seven mb-1'>
+              {
+                loadingDetails &&  <div className='text-center my-10'>
+                    <LoadingOutlined className='text-3xl' />
+                    <div>Chargement...</div>
+                </div>
+              }
               {
                 details && details.map((detail: any) => {
                   return(

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from 'react'
 import { DatePicker, Modal , Input } from 'antd'
-import { SearchOutlined, EditOutlined, WarningOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
+import { SearchOutlined, EditOutlined, WarningOutlined, DeleteOutlined, CloseOutlined, LoadingOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { TransactionForDisplay, TransactionForEdit, TransactionItem, TransactionSearch } from '../../../interfaces/Transaction.interface';
 import { useDeleteTransaction } from '../../../hooks/useDeleteTransaction';
@@ -15,6 +15,8 @@ import { TOAST_TYPE } from '@/constants/ToastType';
 
 const TransactionSearchPage: FunctionComponent = () => {
     const [selectedDateDebut, setSelectedDateDebut] = useState<dayjs.Dayjs | null>(null);
+    const [dateToSearch, setDateToSearch] = useState<any>(null);
+    const [transactionToGet, setTransactionToGet] = useState<string>('');
     const [selectedDateEnd, setSelectedDateEnd] = useState<dayjs.Dayjs | null>(null);
     const [isEditTransactionModalOpen, setIsEditTransactionModalOpen] = useState(false);
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
@@ -30,9 +32,9 @@ const TransactionSearchPage: FunctionComponent = () => {
       ref: '',
       montant_transaction: 0,
     });
-  const { data: details } = useGetDetailByTransactionId({ id: ''});
-  const { mutateAsync: getTransactionById, data: selectTransaction } = useGetTransactionById();
-  const { mutateAsync: searchTransactionBetweenDates, data: searchTransaction } = useGetTransactionBetweenDates();
+  const { data: details, isLoading: loadingDetails } = useGetDetailByTransactionId({ id: transactionToGet || ''});
+  const { data: selectTransaction, isLoading: loadingTransactions } = useGetTransactionById({id: transactionToGet || ''});
+  const { data: searchTransaction } = useGetTransactionBetweenDates({dates: dateToSearch || null});
   const { refetch } = useGetAllTransaction();
   const { mutateAsync: patchTransaction } = usePatchTransaction({
     action: () => {
@@ -49,20 +51,16 @@ const TransactionSearchPage: FunctionComponent = () => {
   const handleDateDebutChange = (date: any) => {
     setSelectedDateDebut(date);
   };
-  //handle date end change
   const handleDateEndChange = (date: any) => {
     setSelectedDateEnd(date);
   };
-  //handle delete transaction confirmation
   async function handleDeleteTransaction(itemId: string) {
     deleteTransaction(itemId);
   }
-  //show delete transaction
   const showDeleteConfirmation = (item: TransactionForDisplay) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
   };
-  //handle delete confirm
   const handleDeleteConfirm = () => {
     if (itemToDelete) {
       handleDeleteTransaction(itemToDelete._id);
@@ -79,7 +77,7 @@ const TransactionSearchPage: FunctionComponent = () => {
 
     if(selectedDateDebut && selectedDateEnd){
       const data : TransactionSearch = { start: selectedDateDebut.toISOString(), end: selectedDateEnd.toISOString() } 
-      searchTransactionBetweenDates(data);
+      setDateToSearch(data);
     }else{
       showToast({
         type: TOAST_TYPE.ERROR,
@@ -94,8 +92,7 @@ const TransactionSearchPage: FunctionComponent = () => {
 
   //get detail function
   const getDetail = async (itemId: string) => {
-    getTransactionById(itemId);
-    // getDetailByTransactionById(itemId);
+    setTransactionToGet(itemId);
     setIsModalDetailOpen(true);
   }
 
@@ -235,6 +232,12 @@ const TransactionSearchPage: FunctionComponent = () => {
           title="Detail de la transaction"
           open={isModalDetailOpen} onCancel={handleCloseModalDetail} footer={null} 
         >
+          {
+            loadingTransactions &&  <div className='text-center my-10'>
+              <LoadingOutlined className='text-3xl' />
+              <div>Chargement...</div>
+            </div>
+          }
           {selectTransaction &&
             <div> 
               {
@@ -266,6 +269,12 @@ const TransactionSearchPage: FunctionComponent = () => {
             </div>
           }
            <div className='w-full bg-seven mb-1'>
+           {
+              loadingDetails &&  <div className='text-center my-10'>
+                <LoadingOutlined className='text-3xl' />
+                <div>Chargement...</div>
+              </div>
+            }
             {
               details && details.map((detail: any) => {
                 return(

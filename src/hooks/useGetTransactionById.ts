@@ -1,22 +1,28 @@
-import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { showToast } from "../utils/Toast";
 import { TOAST_TYPE } from "../constants/ToastType";
-import { AxiosError } from "axios";
 import { getTransactionById } from "../api/Transaction";
+import { useEffect } from "react";
+import { QueryCacheKey } from "@/api/queryCacheKey";
 
-export const useGetTransactionById = () => {
-    const { mutateAsync, data } = useMutation({
-        mutationFn: (id: string) => getTransactionById(id),
-        onError: (error: AxiosError) => {
+export const useGetTransactionById = ({id} : {id: string}) => {
+    const { data, isLoading, error, isError } = useQuery({
+        queryKey: [QueryCacheKey.TRANSACTIONS, id],
+        queryFn: () => getTransactionById(id),
+        enabled: id !== ''
+    })
+
+    useEffect(() => {
+        if(isError) {
             showToast({
                 type: TOAST_TYPE.ERROR,
-                message: error?.message
+                message: "Erreur lors de la récuperation de la transaction !"
             })
         }
-    })
-    
+    }, [error])
+
     return {
-        mutateAsync,
+        isLoading,
         data: data?.data,
-    };
+    }
 }
