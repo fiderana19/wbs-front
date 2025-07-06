@@ -10,6 +10,7 @@ import { useGetTransactionById } from '../../../hooks/useGetTransactionById';
 import { useGetTransactionBetweenDates } from '../../../hooks/useGetTransactionBetweenDates';
 import { usePatchTransaction } from '../../../hooks/usePatchTransaction';
 import { useDark } from '../../../context/DarkThemeContext';
+import { Button } from '@/components/ui/button';
 
 const TransactionSearchPage: FunctionComponent = () => {
     const [selectedDateDebut, setSelectedDateDebut] = useState<dayjs.Dayjs | null>(null);
@@ -128,11 +129,11 @@ const TransactionSearchPage: FunctionComponent = () => {
   return (
     <div>
       <div className='py-1 text-right'>
-        <form onSubmit={handleSearch}>
+        <form onSubmit={handleSearch} className='flex justify-end gap-1 items-center'>
           <DatePicker onChange={handleDateDebutChange}  showTime format="YYYY-MM-DD HH:mm:ss" name='datedebut'  className='sm:w-max w-1/3' />
           <span className='px-1'>-</span>
           <DatePicker onChange={handleDateEndChange}  showTime format="YYYY-MM-DD HH:mm:ss" name='dateend'  className='sm:w-max w-1/3'  />
-          <button type='submit' className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500 sm:ml-3 ml-1'><div className='flex'> <SearchOutlined /> <div className='sm:block hidden mx-2'>Rechercher</div> </div></button>
+          <Button type='submit' variant={'secondary'} ><div className='flex'> <SearchOutlined /> <div className='sm:block hidden mx-2'>Rechercher</div> </div></Button>
         </form>
       </div>
       {/* if there are a serach transction */}

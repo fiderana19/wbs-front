@@ -1,5 +1,5 @@
 import { FunctionComponent, lazy, Suspense, useState } from 'react'
-import { Button, DatePicker, Modal , Input } from 'antd'
+import { DatePicker, Modal} from 'antd'
 import { Link } from 'react-router-dom';
 import { EditOutlined, WarningOutlined, DeleteOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -14,6 +14,8 @@ import { handleNumberKeyPress } from '../../../utils/keypress';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
 import { EditTrnsactionValidation } from '@/validation/edit-transaction.validation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 const TransactionSearch = lazy(() => import('./TransactionSearchPage'));
 
 const TransactionPage: FunctionComponent = () => {
@@ -72,7 +74,7 @@ const TransactionPage: FunctionComponent = () => {
   }
 
   return (
-    <div className={isDark ? 'dark-container pb-5 pt-24 lg:px-32 sm:px-10 px-4' : 'pb-5 pt-24 lg:px-32 sm:px-10 px-4'}>
+    <div className={`pb-5 pt-24 lg:px-32 sm:px-10 px-4 ${isDark ? 'dark-container' : ''}`}>
       <div className='transaction-body'>
         <Suspense fallback={<div className='text-center my-10'>
             <LoadingOutlined className='text-5xl' />
@@ -124,8 +126,8 @@ const TransactionPage: FunctionComponent = () => {
                       </div>
                     </div>
                     <div className='flex sm:flex-col sm:justify-center sm:pr-0 sm:mt-0 mt-2 justify-end'>
-                      <button className='sm:my-1 p-1 rounded bg-blue-400 hover:bg-blue-500 flex'   onClick={() => EditTransaction(transaction)} > <EditOutlined/></button>
-                      <button className='p-1 sm:mx-0 mx-1 rounded bg-red-700 hover:bg-red-800 flex' onClick={ () => showDeleteConfirmation(transaction)}> <DeleteOutlined/> </button>
+                      <Button className='sm:my-1 flex' size={'icon'}  onClick={() => EditTransaction(transaction)} > <EditOutlined/></Button>
+                      <Button variant={'destructive'} className='sm:my-1 flex' size={'icon'} onClick={ () => showDeleteConfirmation(transaction)}> <DeleteOutlined/> </Button>
                     </div>
                   </div>
                 </div>
