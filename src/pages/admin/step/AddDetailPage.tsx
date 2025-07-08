@@ -1,4 +1,4 @@
-import { Button, Input, Select } from 'antd'
+import { Select } from 'antd'
 import React, { FunctionComponent } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs';
@@ -10,6 +10,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
 import { AddDetailValidation } from '@/validation/create-detail.validation';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -134,11 +136,11 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({handlePrev , handleNe
               )}
             />
             <div className='flex justify-center my-3'>
-              <button className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500' type='submit'>AJOUTER</button>
+              <Button className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500' type='submit'>AJOUTER</Button>
             </div>
           </form>
         <div className=''>
-          <Button onClick={handleNext} type='primary' className='bg- bg-green-600' >Valider la transaction</Button>
+          <Button onClick={handleNext} variant={'success'} >Valider la transaction</Button>
         </div>
       </div>
     </div>

@@ -83,7 +83,7 @@ const ProductPage: FunctionComponent = () => {
   };
 
   return (
-    <div className={`pb-5 pt-24 ${isDark ? 'dark-container min-h-screen' : ''}`}>
+    <div className={`pb-5 pt-24 ${isDark && 'dark-container min-h-screen'}`}>
       <div className='md:px-32 sm:px-10 px-4'>
         <div className='flex justify-between'>
           <div className='text-xl font-bold font-lato'>LISTE DES PRODUITS</div>

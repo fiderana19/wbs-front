@@ -9,6 +9,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDark } from '../../../context/DarkThemeContext';
 import { AddTransactionValidation } from '@/validation/create-transaction.validation';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { useGetAllTransaction } from '@/hooks/useGetAllTransaction';
 
 interface StepsPropsType {
@@ -49,7 +51,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
             <div className='text-center'>
                 <div className='text-2xl font-bold'>TRANSACTION</div>
                 <form className='w-60 mx-auto my-7 text-left' onSubmit={submit(handleSubmit)}> 
-                    <label htmlFor='idproduit'>Client : </label><br />
+                    <Label htmlFor='idproduit' className='mt-2 mb-1'>Client : </Label>
                     <Controller 
                       control={control}
                       name='client'
@@ -61,7 +63,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
                         onChange={onChange}
                         onBlur={onBlur}
                         defaultValue={"Sélectionnez un client"}
-                        className={`w-full my-1 ${errors?.client ? 'text-red-500 border border-red-500 rounded' : ''}`}
+                        className={`w-full ${errors?.client && ' text-red-500 border border-red-500 rounded'}`}
                         showSearch
                         optionFilterProp="children"
                         filterOption={(input: any, option: any) =>
@@ -82,19 +84,22 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({handlePrev , ha
                       )}
                     />
                     {errors.client && <div className='text-xs text-red-500 text-left'>{ errors.client.message }</div>  }  
-                    <label htmlFor='date_transaction'>Date du transaction : </label><br />
+                    <Label htmlFor='date_transaction' className='mt-2 mb-1'>Date du transaction : </Label>
                     <Controller
                       control={control}
                       name='date_transaction'
                       render={({
                         field: { value, onBlur, onChange }
                       }) => (
-                        <DatePicker onChange={(date) => onChange(date ? date.toISOString() : null)} value={value ? dayjs(value) : null} onBlur={onBlur} className={`w-full ${errors?.date_transaction ? 'text-red-500 border border-red-500 rounded' : ''}`} showTime format="YYYY-MM-DD HH:mm:ss" />
+                        <DatePicker onChange={(date) => onChange(date ? date.toISOString() : null)} value={value ? dayjs(value) : null} onBlur={onBlur} className={`w-full ${errors?.date_transaction && ' text-red-500 border border-red-500 rounded'}`} showTime format="YYYY-MM-DD HH:mm:ss" />
                       )}
                     />
                     {errors?.date_transaction && <div className='text-xs text-red-500 text-left'>{ errors?.date_transaction.message?.toString() }</div>  }  
                     <div className='flex justify-center my-3'>
-                        <button className='bg-green-500 hover:bg-green-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-green-500' type='submit'>AJOUTER</button>
+                        <Button 
+                          variant={'success'}
+                          type='submit'
+                        >AJOUTER</Button>
                     </div>
                 </form>
             </div>

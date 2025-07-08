@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 import { CreateProductInterface } from '../../../interfaces/Product.interface';
 import { usePostProduct } from '../../../hooks/usePostProduct';
 import { Controller, useForm } from 'react-hook-form';
@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { AddProductValidation } from '../../../validation/create-product.validation';
 import { useGetAllProduct } from '@/hooks/useGetAllProduct';
+import { handleNumberKeyPress } from '@/utils/keypress';
 
 const AddProductPage: FunctionComponent = () => {
   const { refetch } = useGetAllProduct();
@@ -24,14 +25,6 @@ const AddProductPage: FunctionComponent = () => {
   const handleSubmit = async (data: CreateProductInterface) => {
     mutateAsync(data);
   }
-
-  const handleKeyPress =async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const charCode = e.which || e.keyCode;
-
-    if (charCode < 48 || charCode > 57) {
-      e.preventDefault();
-    }
-  }
     
   return (
     <div>
@@ -43,7 +36,7 @@ const AddProductPage: FunctionComponent = () => {
           render={({
             field: {value, onBlur, onChange}
           }) => (
-            <Input className={errors?.libelle ? 'text-red-500 border-red-500 rounded' : '' } value={value} onChange={onChange} onBlur={onBlur}/>
+            <Input className={errors?.libelle && 'text-red-500 border-red-500 rounded' } value={value} onChange={onChange} onBlur={onBlur}/>
           )}
         />
         { errors?.libelle && <div className='text-xs text-red-500 text-left'>{ errors.libelle.message }</div> }
@@ -54,7 +47,7 @@ const AddProductPage: FunctionComponent = () => {
           render={({
             field: { value, onBlur, onChange }
           }) => (
-            <Input className={errors?.description ? 'text-red-500 border-red-500 rounded' : '' } value={value} onBlur={onBlur} onChange={onChange}/>
+            <Input className={errors?.description && 'text-red-500 border-red-500 rounded' } value={value} onBlur={onBlur} onChange={onChange}/>
           )}
         />
         { errors?.description && <div className='text-xs text-red-500 text-left'>{ errors.description.message }</div> }
@@ -65,7 +58,7 @@ const AddProductPage: FunctionComponent = () => {
           render={({
             field: { value, onBlur, onChange }
           }) => (
-            <Input className={errors?.pu ? 'text-red-500 border-red-500 rounded' : '' } onKeyPress={handleKeyPress} value={value} onBlur={onBlur} onChange={onChange}/>
+            <Input className={errors?.pu && 'text-red-500 border-red-500 rounded'} onKeyPress={handleNumberKeyPress} value={value} onBlur={onBlur} onChange={onChange}/>
           )}
         />
         { errors?.pu && <div className='text-xs text-red-500 text-left'>{ errors.pu.message }</div> }
@@ -76,7 +69,7 @@ const AddProductPage: FunctionComponent = () => {
           render={({
             field: { value, onBlur, onChange }
           }) => (
-            <Input className={errors?.stock ? 'text-red-500 border-red-500 rounded' : '' } onKeyPress={handleKeyPress} value={value} onChange={onChange} onBlur={onBlur}/>
+            <Input className={errors?.stock && 'text-red-500 border-red-500 rounded'} onKeyPress={handleNumberKeyPress} value={value} onChange={onChange} onBlur={onBlur}/>
           )}
         />
         { errors?.stock && <div className='text-xs text-red-500 text-left'>{ errors.stock.message }</div> }

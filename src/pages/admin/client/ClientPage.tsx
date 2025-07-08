@@ -77,7 +77,7 @@ const ClientPage: FunctionComponent = () => {
   }
 
   return (
-    <div className={`pb-5 pt-24 ${isDark ? 'dark-container min-h-screen' : ''}`}>
+    <div className={`pb-5 pt-24 ${isDark && 'dark-container min-h-screen'}`}>
       <div className='md:px-32 sm:px-10 px-4'>
         <div className='flex justify-between'>
           <div className='text-xl font-bold font-lato'>LISTE DES CLIENTS</div>
@@ -95,12 +95,12 @@ const ClientPage: FunctionComponent = () => {
             ) : (
               clients && clients.map((client: any) =>{
                 return(
-                  <Card key={client._id} className={`h-52 overflow-hidden ${isDark ? 'bg-gray-600 border-gray-800' : ''}`}>
+                  <Card key={client._id} className={`h-52 overflow-hidden ${isDark && 'bg-gray-600 border-gray-800'}`}>
                     <div className='w-40 text-center mx-auto transition-all duration-500 ease-in-out hover:transform hover:-translate-y-12'>
                       <CardHeader>                      
                         <UserOutlined className='text-7xl mx-auto' />
                       </CardHeader>
-                      <CardContent className={`py-3 ${isDark ? 'text-white' : ''}`}>
+                      <CardContent className={`py-3 ${isDark && 'text-white'}`}>
                         <div className='text-base text-primary font-bold'>
                           { client.nom_client }
                         </div>
@@ -137,7 +137,7 @@ const ClientPage: FunctionComponent = () => {
                     render={({
                       field: { value, onChange, onBlur }
                     }) => (
-                      <Input value={value} className={` ${errors.nom_client ? 'border border-red-500 rounded text-red-500' : ''}`} onChange={onChange} onBlur={onBlur} />
+                      <Input value={value} className={errors.nom_client && 'border border-red-500 rounded text-red-500'} onChange={onChange} onBlur={onBlur} />
                     )}
                   />
                   { errors.nom_client && <div className='text-xs text-red-500 text-left'>{errors.nom_client.message}</div> }
@@ -149,7 +149,7 @@ const ClientPage: FunctionComponent = () => {
                     render={({
                       field: { value, onBlur, onChange }
                     }) => (
-                      <Input value={value} onChange={onChange} onBlur={onBlur}  className={errors.adresse_client ? 'border border-red-500 rounded text-red-500' : ''}/>
+                      <Input value={value} onChange={onChange} onBlur={onBlur}  className={errors.adresse_client && 'border border-red-500 rounded text-red-500'}/>
                     )}
                   />
                   { errors.adresse_client && <div className='text-xs text-red-500 text-left'>{errors.adresse_client.message}</div> }
@@ -161,7 +161,7 @@ const ClientPage: FunctionComponent = () => {
                     render={({
                       field: { value, onBlur, onChange }
                     }) => (
-                      <Input value={value} onChange={onChange} onBlur={onBlur} className={errors.mail_client ? 'border border-red-500 rounded text-red-500' : ''}/>
+                      <Input value={value} onChange={onChange} onBlur={onBlur} className={errors.mail_client && 'border border-red-500 rounded text-red-500'}/>
                     )}
                   />
                   { errors.mail_client && <div className='text-xs text-red-500 text-left'>{errors.mail_client.message}</div> }
@@ -173,7 +173,7 @@ const ClientPage: FunctionComponent = () => {
                     render={({
                       field: { value, onBlur, onChange }
                     }) => (
-                      <Input value={value} onChange={onChange} onBlur={onBlur} onKeyPress={handleNumberKeyPress}  className={errors.telephone_client ? 'border border-red-500 rounded text-red-500' : ''}/>
+                      <Input value={value} onChange={onChange} onBlur={onBlur} onKeyPress={handleNumberKeyPress}  className={errors.telephone_client && 'border border-red-500 rounded text-red-500'}/>
                     )}
                   />
                   { errors.telephone_client && <div className='text-xs text-red-500 text-left'>{errors.telephone_client.message}</div> }
