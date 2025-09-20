@@ -1,8 +1,7 @@
 import { FunctionComponent, lazy, Suspense, useState } from 'react'
 import { Modal } from 'antd'
-import { EditOutlined, DeleteOutlined, WarningOutlined, ShoppingCartOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ShoppingCartOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { Product } from '../../../interfaces/Product.interface';
-import { okDeleteStyle } from '../../../constants/ModalStyle';
 import { useGetAllProduct } from '../../../hooks/useGetAllProduct';
 import { useDeleteProduct } from '../../../hooks/useDeleteProduct';
 import { usePatchProduct } from '../../../hooks/usePatchProduct';
@@ -14,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { EditProductValidation } from '@/validation/edit-product.validation';
+import { AlertDialogHeader, AlertDialogFooter, AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel } from '@/components/ui/alert-dialog';
 const AddProduct = lazy(() => import('./AddProductPage'));
 
 const ProductPage: FunctionComponent = () => {
@@ -24,8 +24,6 @@ const ProductPage: FunctionComponent = () => {
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState<Product | null>(null);
   const { isDark } = useDark();
   const [editedItem, setEditedItem] = useState<Product>({   
     _id: '',
@@ -47,15 +45,6 @@ const ProductPage: FunctionComponent = () => {
     }
   });
 
-  const showDeleteConfirmation = (item: Product) => {
-    setItemToDelete(item);
-    setIsDeleteModalVisible(true);
-  };
-
-  async function handleDelete(itemId: string) {
-    deleteProduct(itemId);
-  }
-
   function EditProduct(item: Product) {
     setSelectedItem(item);
     setIsEditProductModalOpen(true);
@@ -75,11 +64,8 @@ const ProductPage: FunctionComponent = () => {
     setIsEditProductModalOpen(false);
   }
 
-  const handleDeleteConfirm = () => {
-    if (itemToDelete) {
-      handleDelete(itemToDelete._id);
-      setIsDeleteModalVisible(false);
-    }
+  const handleDeleteConfirm = (item: Product) => {
+    deleteProduct(item._id);
   };
 
   return (
@@ -127,8 +113,25 @@ const ProductPage: FunctionComponent = () => {
                         </div>
                       </CardContent>
                       <CardFooter className='flex justify-end gap-1'>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant={'destructive'} size={'sm'}> <DeleteOutlined/> </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Suppression d'un produit</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Voulez-vous vraiment supprimer le produit { product.libelle } ?
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <Button variant={'destructive'} onClick={() => handleDeleteConfirm(product)}>Confirmer</Button>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+
                         <Button variant={'default'} size={'sm'} onClick={() => EditProduct(product)} > <EditOutlined/> </Button>
-                        <Button variant={'destructive'} size={'sm'} onClick={() => showDeleteConfirmation(product)}> <DeleteOutlined/> </Button>
                       </CardFooter>
                     </div>
                   </Card>
@@ -196,21 +199,6 @@ const ProductPage: FunctionComponent = () => {
               </form>
             </div>
           }
-        </Modal>
-        <Modal
-          title="Suppression"
-          open={isDeleteModalVisible}
-          onOk={handleDeleteConfirm}
-          onCancel={() => setIsDeleteModalVisible(false)}
-          okText="Supprimer"
-          cancelText="Annuler"
-          okButtonProps={{style: okDeleteStyle}}
-        >
-          <div className='text-red-900'>
-            <WarningOutlined className='mr-2' />  
-            Êtes-vous sûr de vouloir supprimer ce produit ?
-            Cela pourrait entraînner des incohérences de données
-          </div>
         </Modal>
       </div>
     </div>
