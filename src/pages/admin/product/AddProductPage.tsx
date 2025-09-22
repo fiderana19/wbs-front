@@ -9,21 +9,21 @@ import { Label } from '@/components/ui/label';
 import { AddProductValidation } from '../../../validation/create-product.validation';
 import { useGetAllProduct } from '@/hooks/useGetAllProduct';
 import { handleNumberKeyPress } from '@/utils/keypress';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const AddProductPage: FunctionComponent = () => {
   const { refetch } = useGetAllProduct();
-  const { mutateAsync } = usePostProduct({
+  const { mutateAsync: createProduct, isPending: createLoading } = usePostProduct({
     action : ()=>{
       refetch()
     }
   });
-  const { control, handleSubmit: submit, formState } = useForm<CreateProductInterface>({
+  const { control, handleSubmit: submit, formState: { errors } } = useForm<CreateProductInterface>({
     resolver: yupResolver(AddProductValidation)
   });
-  const { errors } = formState;
 
   const handleSubmit = async (data: CreateProductInterface) => {
-    await mutateAsync(data);
+    await createProduct(data);
   }
     
   return (
@@ -63,7 +63,10 @@ const AddProductPage: FunctionComponent = () => {
         />
         { errors?.pu && <div className='text-xs text-red-500 text-left'>{ errors.pu.message }</div> }
         <div className='flex justify-center my-3'>
-          <Button variant={'success'} type='submit' >AJOUTER</Button>
+          <Button variant={'success'} type='submit' >
+            { createLoading && <LoadingOutlined /> }
+            AJOUTER
+          </Button>
         </div>
       </form>
     </div>

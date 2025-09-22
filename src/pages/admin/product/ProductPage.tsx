@@ -19,19 +19,13 @@ import { AddProductValidation } from '@/validation/create-product.validation';
 import { usePostProduct } from '@/hooks/usePostProduct';
 
 const ProductPage: FunctionComponent = () => {
-  const { control, handleSubmit: edit, formState: { errors }, register } = useForm<Product>({
+  const { control, handleSubmit: edit, formState: { errors }, register, reset: resetEditFields } = useForm<Product>({
     resolver: yupResolver(EditProductValidation)
   });
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState<boolean>(false);
   const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
   const { isDark } = useDark();
-  const [editedItem, setEditedItem] = useState<Product>({   
-    _id: '',
-    libelle: '',
-    description: '',
-    pu: 0,
-  });
   const { control: create_control, handleSubmit: submit, formState: { errors: create_errors } } = useForm<CreateProductInterface>({
     resolver: yupResolver(AddProductValidation)
   });
@@ -59,20 +53,13 @@ const ProductPage: FunctionComponent = () => {
 
   function EditProduct(item: Product) {
     setSelectedItem(item);
-    setIsEditProductModalOpen(true);
-  
-    setEditedItem({
-      _id: item._id,
-      libelle: item.libelle,
-      description: item.description,
-      pu: item.pu,
-    });    
+    setIsEditProductModalOpen(true);  
   }
 
   const handleSubmitEdit = async (data: Product) => {
-    patchProduct(data);
-    setEditedItem({ _id: '', libelle: '' , description: '', pu: 0 });
+    await patchProduct(data);
     setIsEditProductModalOpen(false);
+    resetEditFields();
   }
 
   const handleDeleteConfirm = (item: Product) => {
@@ -180,16 +167,16 @@ const ProductPage: FunctionComponent = () => {
             ) 
           }
         </div>
-        <Modal title="MODIFIER PRODUIT" open={isEditProductModalOpen} onCancel={() => setIsEditProductModalOpen(false)} footer={null} >
+        <Modal title="MODIFIER PRODUIT" open={isEditProductModalOpen} onCancel={() => {setIsEditProductModalOpen(false); resetEditFields() }} footer={null} >
           {selectedItem && 
             <div>
               <form className='w-2/3 my-7 mx-auto' onSubmit={edit(handleSubmitEdit)}>
-                <input className='hidden' defaultValue={editedItem._id} {...register('_id')} />
+                <input className='hidden' defaultValue={selectedItem._id} {...register('_id')} />
                 <label htmlFor='libelle' >Libelle : </label> <br />
                 <Controller 
                   control={control}
                   name='libelle'
-                  defaultValue={editedItem.libelle}
+                  defaultValue={selectedItem?.libelle}
                   render={({
                     field: { value, onBlur, onChange }
                   }) => (
@@ -201,7 +188,7 @@ const ProductPage: FunctionComponent = () => {
                 <Controller 
                   control={control}
                   name='description'
-                  defaultValue={editedItem.description}
+                  defaultValue={selectedItem.description}
                   render={({
                     field: { value, onBlur, onChange }
                   }) => (
@@ -213,7 +200,7 @@ const ProductPage: FunctionComponent = () => {
                 <Controller 
                   control={control}
                   name='pu'
-                  defaultValue={editedItem.pu}
+                  defaultValue={selectedItem.pu}
                   render={({
                     field: { value, onBlur, onChange }
                   }) => (
