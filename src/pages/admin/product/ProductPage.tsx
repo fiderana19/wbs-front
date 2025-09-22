@@ -1,7 +1,7 @@
-import { FunctionComponent, lazy, Suspense, useState } from 'react'
+import { FunctionComponent, useState } from 'react'
 import { Modal } from 'antd'
 import { EditOutlined, DeleteOutlined, ShoppingCartOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { Product } from '../../../interfaces/Product.interface';
+import { CreateProductInterface, Product } from '../../../interfaces/Product.interface';
 import { useGetAllProduct } from '../../../hooks/useGetAllProduct';
 import { useDeleteProduct } from '../../../hooks/useDeleteProduct';
 import { usePatchProduct } from '../../../hooks/usePatchProduct';
@@ -14,14 +14,15 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input';
 import { EditProductValidation } from '@/validation/edit-product.validation';
 import { AlertDialogHeader, AlertDialogFooter, AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel } from '@/components/ui/alert-dialog';
-const AddProduct = lazy(() => import('./AddProductPage'));
+import { Label } from '@/components/ui/label';
+import { AddProductValidation } from '@/validation/create-product.validation';
+import { usePostProduct } from '@/hooks/usePostProduct';
 
 const ProductPage: FunctionComponent = () => {
-  const { control, handleSubmit: edit, formState, register } = useForm<Product>({
+  const { control, handleSubmit: edit, formState: { errors }, register } = useForm<Product>({
     resolver: yupResolver(EditProductValidation)
   });
-  const { errors } = formState;
-  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState<boolean>(false);
   const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Product | null>(null);
   const { isDark } = useDark();
@@ -30,9 +31,10 @@ const ProductPage: FunctionComponent = () => {
     libelle: '',
     description: '',
     pu: 0,
-    stock: 0,
   });
-
+  const { control: create_control, handleSubmit: submit, formState: { errors: create_errors } } = useForm<CreateProductInterface>({
+    resolver: yupResolver(AddProductValidation)
+  });
   const { data: products, isLoading, refetch } = useGetAllProduct();
   const { mutateAsync: deleteProduct } = useDeleteProduct({
     action: () => {
@@ -44,6 +46,16 @@ const ProductPage: FunctionComponent = () => {
       refetch()
     }
   });
+  const { mutateAsync: createProduct } = usePostProduct({
+      action : ()=>{
+        refetch()
+      }
+  });
+
+  const handleSubmit = async (data: CreateProductInterface) => {
+      await createProduct(data);
+      setIsAddProductModalOpen(false);
+  }
 
   function EditProduct(item: Product) {
     setSelectedItem(item);
@@ -54,13 +66,12 @@ const ProductPage: FunctionComponent = () => {
       libelle: item.libelle,
       description: item.description,
       pu: item.pu,
-      stock: item.stock,
     });    
   }
 
   const handleSubmitEdit = async (data: Product) => {
     patchProduct(data);
-    setEditedItem({ _id: '', libelle: '' , description: '', pu: 0, stock: 0, });
+    setEditedItem({ _id: '', libelle: '' , description: '', pu: 0 });
     setIsEditProductModalOpen(false);
   }
 
@@ -76,12 +87,44 @@ const ProductPage: FunctionComponent = () => {
           <Button onClick={() => setIsAddProductModalOpen(true)} ><div className='sm:hidden block'><PlusOutlined /></div><div className='sm:block hidden'> AJOUTER </div></Button>
         </div>
         <Modal title="AJOUTER UN PRODUIT" open={isAddProductModalOpen} onCancel={() => setIsAddProductModalOpen(false)} footer={null} >
-          <Suspense fallback={<div className='text-center my-10'>
-              <LoadingOutlined className='text-5xl' />
-            </div>}
-          >
-            <AddProduct />          
-          </Suspense>
+          <form className='w-2/3 my-7 mx-auto' onSubmit={submit(handleSubmit)}>
+            <Label htmlFor='libelle' className='mt-2 mb-1'>Libelle</Label>
+            <Controller 
+              control={create_control}
+              name='libelle'
+              render={({
+                field: {value, onBlur, onChange}
+              }) => (
+                <Input className={create_errors?.libelle && 'text-red-500 border-red-500 rounded' } value={value} onChange={onChange} onBlur={onBlur}/>
+              )}
+            />
+            { create_errors?.libelle && <div className='text-xs text-red-500 text-left'>{ create_errors.libelle.message }</div> }
+            <Label htmlFor='description' className='mt-2 mb-1' >Description</Label>
+            <Controller 
+              control={create_control}
+              name='description'
+              render={({
+                field: { value, onBlur, onChange }
+              }) => (
+                <Input className={create_errors?.description && 'text-red-500 border-red-500 rounded' } value={value} onBlur={onBlur} onChange={onChange}/>
+              )}
+            />
+            { create_errors?.description && <div className='text-xs text-red-500 text-left'>{ create_errors.description.message }</div> }
+            <Label htmlFor='pu' className='mt-2 mb-1' >Prix unitaire</Label>
+            <Controller 
+              control={create_control}
+              name='pu'
+              render={({
+                field: { value, onBlur, onChange }
+              }) => (
+                <Input className={create_errors?.pu && 'text-red-500 border-red-500 rounded'} onKeyPress={handleNumberKeyPress} value={value} onBlur={onBlur} onChange={onChange}/>
+              )}
+            />
+            { create_errors?.pu && <div className='text-xs text-red-500 text-left'>{ create_errors.pu.message }</div> }
+            <div className='flex justify-center my-3'>
+              <Button variant={'success'} type='submit' >AJOUTER</Button>
+            </div>
+          </form>
         </Modal>
         <div className='my-7 grid gap-2 justify-center grid-cols-customized'>
           {
@@ -107,9 +150,6 @@ const ProductPage: FunctionComponent = () => {
                         </div>
                         <div className='text-sm'>
                           <span className={isDark ? 'text-gray-100 font-latobold' : 'text-gray-500 font-semibold'}> Unité: </span>{ product.pu.toLocaleString('fr-FR') } <span className='text-xs'>MGA</span>
-                        </div>
-                        <div className='text-sm'>
-                          <span className={isDark ? 'text-gray-100 font-latobold' : 'text-gray-500 font-semibold'}>Stock: </span> { product.stock }
                         </div>
                       </CardContent>
                       <CardFooter className='flex justify-end gap-1'>
@@ -181,18 +221,6 @@ const ProductPage: FunctionComponent = () => {
                   )}
                 />
                 {errors.pu && <div className='text-xs text-red-500 text-left'>{ errors.pu.message }</div>}
-                <label htmlFor='stock' >Stock : </label> <br />
-                <Controller 
-                  control={control}
-                  name='stock'
-                  defaultValue={editedItem.stock}
-                  render={({
-                    field: { value, onBlur, onChange }
-                  }) => (
-                    <Input value={value} onBlur={onBlur} onChange={onChange} onKeyPress={handleNumberKeyPress} className={errors.stock ? 'border border-red-500 rounded text-red-500' : ''}/>
-                  )}
-                />
-                {errors.stock && <div className='text-xs text-red-500 text-left'>{ errors.stock.message }</div>}
                 <div className='flex justify-center my-3'>
                   <Button variant={'primary'} type='submit'>MODIFIER</Button>
                 </div>

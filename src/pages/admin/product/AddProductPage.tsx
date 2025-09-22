@@ -23,7 +23,7 @@ const AddProductPage: FunctionComponent = () => {
   const { errors } = formState;
 
   const handleSubmit = async (data: CreateProductInterface) => {
-    mutateAsync(data);
+    await mutateAsync(data);
   }
     
   return (
@@ -62,17 +62,6 @@ const AddProductPage: FunctionComponent = () => {
           )}
         />
         { errors?.pu && <div className='text-xs text-red-500 text-left'>{ errors.pu.message }</div> }
-        <Label htmlFor='stock' className='mt-2 mb-1' >Stock</Label>
-        <Controller 
-          control={control}
-          name='stock'
-          render={({
-            field: { value, onBlur, onChange }
-          }) => (
-            <Input className={errors?.stock && 'text-red-500 border-red-500 rounded'} onKeyPress={handleNumberKeyPress} value={value} onChange={onChange} onBlur={onBlur}/>
-          )}
-        />
-        { errors?.stock && <div className='text-xs text-red-500 text-left'>{ errors.stock.message }</div> }
         <div className='flex justify-center my-3'>
           <Button variant={'success'} type='submit' >AJOUTER</Button>
         </div>

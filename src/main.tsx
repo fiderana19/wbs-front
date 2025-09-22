@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <AuthProvider>
           <DarkThemeProvider>
             <App />
-            {/* <ReactQueryDevtools /> */}
+            <ReactQueryDevtools />
           </DarkThemeProvider>
         </AuthProvider>
       </Router>

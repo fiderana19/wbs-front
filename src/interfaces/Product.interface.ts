@@ -2,7 +2,6 @@ export interface CreateProductInterface {
     libelle: string;
     description: string;
     pu: number;
-    stock: number;
 }
 
 export interface Product {
@@ -10,7 +9,6 @@ export interface Product {
     libelle: string;
     description: string;
     pu: number;
-    stock: number;
 }
 
 export interface ProductForDetail {

@@ -24,7 +24,6 @@ const Signup: React.FC = () => {
     const signupSubmit = async (data: SingupInterface) => {
         const response = await signupUser(data);
         if(response?.status === HttpStatus.CREATED) {
-            console.log(response);
             setUsrId(response.data)
             setIsSignupSuccessModalOpen(true);
         } else {

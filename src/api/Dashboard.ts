@@ -13,7 +13,3 @@ export const getProductTotal = async () => {
 export const getTransactionTotal = async () => {
     return await axiosAuthInstance.get(`${BaseAPIURL}/transaction/total`);
 }
-
-export const getProductForChart = async () => {
-    return await axiosAuthInstance.get(`${BaseAPIURL}/product`);
-}

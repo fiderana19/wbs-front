@@ -5,8 +5,7 @@ import { useGetProductTotal } from '../../../hooks/useGetProductTotal';
 import { useGetClientTotal } from '../../../hooks/useGetClientTotal';
 import { useDark } from '../../../context/DarkThemeContext';
 import { Card } from '@/components/ui/card';
-import DashboardCard from '@/components/dashboard/DashboardCard';
-const DashboardChart = lazy(() => import('../../../components/dashboard/DashboardChart'));
+const DashboardCard = lazy(() => import('../../../components/dashboard/DashboardCard'));
 
 const DashboardPage: FunctionComponent = () => {
   const { isDark } = useDark();
