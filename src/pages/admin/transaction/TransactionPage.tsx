@@ -1,8 +1,7 @@
-import { FunctionComponent, lazy, Suspense, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { DatePicker, Modal } from "antd";
 import { Link } from "react-router-dom";
 import {
-  EditOutlined,
   WarningOutlined,
   DeleteOutlined,
   LoadingOutlined,
@@ -26,10 +25,10 @@ import { Input } from "@/components/ui/input";
 import { useGetTransactionBetweenDates } from "@/hooks/useGetTransactionBetweenDates";
 import { showToast } from "@/utils/Toast";
 import { TOAST_TYPE } from "@/constants/ToastType";
-// const TransactionSearch = lazy(() => import('./TransactionSearchPage'));
 
 const TransactionPage: FunctionComponent = () => {
   const [transactionToGet, setTransactionToGet] = useState<string>("");
+  const [isSearching, setIsSearching] = useState<boolean>(false);
   const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] =
@@ -100,6 +99,7 @@ const TransactionPage: FunctionComponent = () => {
         end: selectedDateEnd.toISOString(),
       };
       setDateToSearch(data);
+      setIsSearching(true);
     } else {
       showToast({
         type: TOAST_TYPE.ERROR,
@@ -113,12 +113,6 @@ const TransactionPage: FunctionComponent = () => {
       className={`pb-5 pt-24 lg:px-32 sm:px-10 px-4 ${isDark ? "dark-container" : ""}`}
     >
       <div className="transaction-body">
-        {/* <Suspense fallback={<div className='text-center my-10'>
-            <LoadingOutlined className='text-5xl' />
-          </div>}
-        >
-          <TransactionSearch />        
-        </Suspense> */}
         <form
           onSubmit={handleSearch}
           className="flex justify-end gap-1 items-center"
@@ -146,9 +140,17 @@ const TransactionPage: FunctionComponent = () => {
             </div>
           </Button>
         </form>
-        {searchTransaction && (
+        {isSearching && searchTransaction && (
           <div>
-            <div className="text-xl font-lato">RESULTATS RECHERCHE</div>
+            <div className="flex justify-between items-center my-4">
+              <div className="text-xl font-lato">RESULTATS RECHERCHE</div>
+              <Button className="mt-1" onClick={() => setIsSearching(false)}>
+                <div className=" block">
+                  <CloseOutlined />
+                </div>
+                <div className="sm:block hidden"> Fin du recherche</div>
+              </Button>
+            </div>
             {searchTransaction.length < 1 ? (
               <div className="text-center my-10">
                 <CloseOutlined className="text-3xl" />
@@ -156,57 +158,56 @@ const TransactionPage: FunctionComponent = () => {
               </div>
             ) : (
               searchTransaction &&
-              searchTransaction.map((searchtransaction: any) => {
+              searchTransaction.map((transaction: any) => {
                 return (
-                  <div key={searchTransaction._id}>
+                  <div key={transaction._id}>
                     <div
-                      className={`w-full relative sm:pr-4 z-10 block sm:flex justify-between mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all ${isDark ? "bg-gray-600" : " bg-six"}`}
+                      className={`w-full border-l-4 border-l-gray-700 relative sm:pr-4 block sm:flex justify-between mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all ${isDark ? "bg-gray-600" : "bg-gray-100"}`}
                     >
                       <div
                         className="sm:w-11/12 w-full"
-                        onClick={() => getDetail(searchtransaction._id)}
+                        onClick={() => getDetail(transaction._id)}
                       >
                         <div className="sm:flex text-xs">
                           <div className="flex">
                             <div className=""> Date :</div>
                             <div className="sm:ml-2">
-                              {dayjs(searchtransaction.date_transaction).format(
+                              {dayjs(transaction.date_transaction).format(
                                 "DD-MM-YYYY HH:mm",
                               )}{" "}
                             </div>
                           </div>
                           <div className="mx-1 sm:block hidden"> - </div>
-                          <div className=""> Ref : {searchtransaction.ref}</div>
+                          <div className=""> Ref : {transaction.ref}</div>
                         </div>
-                        <div className="flex">
+                        <div className="flex items-center">
                           <div className="text-sm"> Nom du client : </div>
-                          <div className="ml-2">
+                          <div className="ml-2 font-semibold">
                             {" "}
-                            {searchtransaction.nom_client}
+                            {transaction.nom_client}
                           </div>
                         </div>
-                        <div className="flex justify-between">
+                        <div className="flex justify-between items-center">
                           <div className="text-sm"> Montant : </div>
                           <div className="ml-2">
                             {" "}
-                            {searchtransaction.montant_transaction.toLocaleString(
+                            {transaction.montant_transaction.toLocaleString(
                               "fr-FR",
                             )}{" "}
                             <span className="text-xs">MGA</span>
                           </div>
                         </div>
                       </div>
-                      <div className="flex sm:flex-col sm:justify-center sm:pr-0 pr-8 sm:mt-0 mt-2 justify-end z-50">
-                        <button
-                          className="p-1 sm:mx-0 mx-1 rounded bg-red-700 hover:bg-red-800 flex"
-                          onClick={() => {
-                            setIsModalDetailOpen(false);
-                            showDeleteConfirmation(searchtransaction);
-                          }}
+                      <div className="flex sm:flex-col sm:justify-center sm:pr-0 sm:mt-0 mt-2 justify-end">
+                        <Button
+                          variant={"destructive"}
+                          className="sm:my-1 flex"
+                          size={"icon"}
+                          onClick={() => showDeleteConfirmation(transaction)}
                         >
                           {" "}
                           <DeleteOutlined />{" "}
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   </div>
@@ -218,166 +219,50 @@ const TransactionPage: FunctionComponent = () => {
             </div>
           </div>
         )}
-        <div className="my-4 font-bold text-2xl text-center font-lato">
-          TRANSACTIONS
-        </div>
-        <div className="flex justify-between my-4">
-          <Link to="/admin/addforms">
-            <Button className="mt-1">
-              <div className="sm:hidden block">
-                <PlusOutlined />
-              </div>
-              <div className="sm:block hidden"> AJOUTER</div>
-            </Button>
-          </Link>
-          <Input
-            className="my-1 ml-1 w-52"
-            placeholder="Saisir la ref..."
-            value={searchRef}
-            onChange={(e) => setSearchRef(e.target.value)}
-            onKeyPress={handleNumberKeyPress}
-          />
-        </div>
-        {isLoading && (
-          <div className="text-center my-10">
-            <LoadingOutlined className="text-3xl" />
-            <div>Chargement...</div>
-          </div>
-        )}
-        <div className="bg-transparent">
-          {transactions &&
-            transactions.map((transaction: any) => {
-              if (searchRef && !transaction.ref.includes(searchRef)) {
-                return null;
-              }
-              return (
-                <div key={transaction._id}>
-                  <div
-                    className={`w-full border-l-4 border-l-gray-700 relative sm:pr-4 block sm:flex justify-between mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all ${isDark ? "bg-gray-600" : "bg-gray-100"}`}
-                  >
-                    <div
-                      className="sm:w-11/12 w-full"
-                      onClick={() => getDetail(transaction._id)}
-                    >
-                      <div className="sm:flex text-xs">
-                        <div className="flex">
-                          <div className=""> Date :</div>
-                          <div className="sm:ml-2">
-                            {dayjs(transaction.date_transaction).format(
-                              "DD-MM-YYYY HH:mm",
-                            )}{" "}
-                          </div>
-                        </div>
-                        <div className="mx-1 sm:block hidden"> - </div>
-                        <div className=""> Ref : {transaction.ref}</div>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="text-sm"> Nom du client : </div>
-                        <div className="ml-2 font-semibold">
-                          {" "}
-                          {transaction.nom_client}
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <div className="text-sm"> Montant : </div>
-                        <div className="ml-2">
-                          {" "}
-                          {transaction.montant_transaction.toLocaleString(
-                            "fr-FR",
-                          )}{" "}
-                          <span className="text-xs">MGA</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex sm:flex-col sm:justify-center sm:pr-0 sm:mt-0 mt-2 justify-end">
-                      <Button
-                        variant={"destructive"}
-                        className="sm:my-1 flex"
-                        size={"icon"}
-                        onClick={() => showDeleteConfirmation(transaction)}
-                      >
-                        {" "}
-                        <DeleteOutlined />{" "}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          <Modal
-            title="Confirmation de suppression"
-            open={isDeleteModalVisible}
-            onOk={handleDeleteConfirm}
-            onCancel={() => setIsDeleteModalVisible(false)}
-            okText="Confirmer"
-            cancelText="Annuler"
-            okButtonProps={{ style: { background: "red" } }}
-          >
-            <div>
-              {itemToDelete && (
-                <div className="mb-4">
-                  <div
-                    className={`w-full border-l-4 border-l-gray-700 relative sm:pr-4 block justify-between mt-1 sm:p-3 p-2 ${isDark ? "bg-gray-600" : "bg-gray-100"}`}
-                  >
-                    <div className="flex text-xs mb-2">
-                      <div className="flex">
-                        <div className=""> Date :</div>
-                        <div className="sm:ml-2">
-                          {dayjs(itemToDelete.date_transaction).format(
-                            "DD-MM-YYYY HH:mm",
-                          )}{" "}
-                        </div>
-                      </div>
-                      <div className="mx-1 sm:block hidden"> - </div>
-                      <div className=""> Ref : {itemToDelete.ref}</div>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="text-sm"> Nom du client : </div>
-                      <div className="ml-2 font-semibold">
-                        {" "}
-                        {itemToDelete.nom_client}
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <div className="text-sm"> Montant : </div>
-                      <div className="ml-2">
-                        {" "}
-                        {itemToDelete.montant_transaction}{" "}
-                        <span className="text-xs">MGA</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+        {!isSearching && (
+          <div>
+            <div className="my-4 font-bold text-2xl text-center font-lato">
+              TRANSACTIONS
             </div>
-            <div className="text-red-900">
-              <WarningOutlined className="mr-2" />
-              Êtes-vous sûr de vouloir supprimer cette transaction ?
+            <div className="flex justify-between my-4">
+              <Link to="/admin/addforms">
+                <Button className="mt-1">
+                  <div className="sm:hidden block">
+                    <PlusOutlined />
+                  </div>
+                  <div className="sm:block hidden"> AJOUTER</div>
+                </Button>
+              </Link>
+              <Input
+                className="my-1 ml-1 w-52"
+                placeholder="Saisir la ref..."
+                value={searchRef}
+                onChange={(e) => setSearchRef(e.target.value)}
+                onKeyPress={handleNumberKeyPress}
+              />
             </div>
-          </Modal>
-          {/* //Modal du detail transaction */}
-          <Modal
-            title="Detail de la transaction"
-            open={isModalDetailOpen}
-            onCancel={() => setIsModalDetailOpen(false)}
-            footer={null}
-          >
-            {loadingTransactions && (
+            {isLoading && (
               <div className="text-center my-10">
                 <LoadingOutlined className="text-3xl" />
                 <div>Chargement...</div>
               </div>
             )}
-            {selectTransaction && (
-              <div>
-                {selectTransaction &&
-                  selectTransaction.map((transaction: any) => {
-                    return (
-                      <div className="mb-4">
+            <div className="bg-transparent">
+              {transactions &&
+                transactions.map((transaction: any) => {
+                  if (searchRef && !transaction.ref.includes(searchRef)) {
+                    return null;
+                  }
+                  return (
+                    <div key={transaction._id}>
+                      <div
+                        className={`w-full border-l-4 border-l-gray-700 relative sm:pr-4 block sm:flex justify-between mt-1 sm:p-3 p-2 cursor-pointer hover:scale-[1.01] transition-all ${isDark ? "bg-gray-600" : "bg-gray-100"}`}
+                      >
                         <div
-                          className={`w-full border-l-4 border-l-gray-700 relative sm:pr-4 block justify-between mt-1 sm:p-3 p-2 ${isDark ? "bg-gray-600" : "bg-gray-100"}`}
+                          className="sm:w-11/12 w-full"
+                          onClick={() => getDetail(transaction._id)}
                         >
-                          <div className="flex text-xs mb-2">
+                          <div className="sm:flex text-xs">
                             <div className="flex">
                               <div className=""> Date :</div>
                               <div className="sm:ml-2">
@@ -400,53 +285,128 @@ const TransactionPage: FunctionComponent = () => {
                             <div className="text-sm"> Montant : </div>
                             <div className="ml-2">
                               {" "}
-                              {transaction.montant_transaction}{" "}
+                              {transaction.montant_transaction.toLocaleString(
+                                "fr-FR",
+                              )}{" "}
                               <span className="text-xs">MGA</span>
                             </div>
                           </div>
                         </div>
+                        <div className="flex sm:flex-col sm:justify-center sm:pr-0 sm:mt-0 mt-2 justify-end">
+                          <Button
+                            variant={"destructive"}
+                            className="sm:my-1 flex"
+                            size={"icon"}
+                            onClick={() => showDeleteConfirmation(transaction)}
+                          >
+                            {" "}
+                            <DeleteOutlined />{" "}
+                          </Button>
+                        </div>
                       </div>
-                    );
-                  })}
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        )}
+        <Modal
+          title="Confirmation de suppression"
+          open={isDeleteModalVisible}
+          onOk={handleDeleteConfirm}
+          onCancel={() => setIsDeleteModalVisible(false)}
+          okText="Confirmer"
+          cancelText="Annuler"
+          okButtonProps={{ style: { background: "red" } }}
+        >
+          <div>
+            {itemToDelete && (
+              <div className="mb-4">
+                <div
+                  className={`w-full border-l-4 border-l-gray-700 relative sm:pr-4 block justify-between mt-1 sm:p-3 p-2 ${isDark ? "bg-gray-600" : "bg-gray-100"}`}
+                >
+                  <div className="flex text-xs mb-2">
+                    <div className="flex">
+                      <div className=""> Date :</div>
+                      <div className="sm:ml-2">
+                        {dayjs(itemToDelete.date_transaction).format(
+                          "DD-MM-YYYY HH:mm",
+                        )}{" "}
+                      </div>
+                    </div>
+                    <div className="mx-1 sm:block hidden"> - </div>
+                    <div className=""> Ref : {itemToDelete.ref}</div>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="text-sm"> Nom du client : </div>
+                    <div className="ml-2 font-semibold">
+                      {" "}
+                      {itemToDelete.nom_client}
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div className="text-sm"> Montant : </div>
+                    <div className="ml-2">
+                      {" "}
+                      {itemToDelete.montant_transaction}{" "}
+                      <span className="text-xs">MGA</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
-            <div className="w-full bg-seven mb-1">
-              {loadingDetails && (
-                <div className="text-center my-10">
-                  <LoadingOutlined className="text-3xl" />
-                  <div>Chargement...</div>
-                </div>
-              )}
-              {details &&
-                details.map((detail: any) => {
+          </div>
+          <div className="text-red-900">
+            <WarningOutlined className="mr-2" />
+            Êtes-vous sûr de vouloir supprimer cette transaction ?
+          </div>
+        </Modal>
+        {/* //Modal du detail transaction */}
+        <Modal
+          title="Detail de la transaction"
+          open={isModalDetailOpen}
+          onCancel={() => setIsModalDetailOpen(false)}
+          footer={null}
+        >
+          {loadingTransactions && (
+            <div className="text-center my-10">
+              <LoadingOutlined className="text-3xl" />
+              <div>Chargement...</div>
+            </div>
+          )}
+          {selectTransaction && (
+            <div>
+              {selectTransaction &&
+                selectTransaction.map((transaction: any) => {
                   return (
-                    <div key={detail._id}>
-                      <div className="px-5 py-1 border-b-2 border-gray-200">
-                        <div className="flex text-xs">
-                          <div className=""> Produit :</div>
-                          <div className="ml-2"> {detail.product}</div>
+                    <div className="mb-4">
+                      <div
+                        className={`w-full border-l-4 border-l-gray-700 relative sm:pr-4 block justify-between mt-1 sm:p-3 p-2 ${isDark ? "bg-gray-600" : "bg-gray-100"}`}
+                      >
+                        <div className="flex text-xs mb-2">
+                          <div className="flex">
+                            <div className=""> Date :</div>
+                            <div className="sm:ml-2">
+                              {dayjs(transaction.date_transaction).format(
+                                "DD-MM-YYYY HH:mm",
+                              )}{" "}
+                            </div>
+                          </div>
+                          <div className="mx-1 sm:block hidden"> - </div>
+                          <div className=""> Ref : {transaction.ref}</div>
                         </div>
-                        <div className="flex">
-                          <div className="text-sm"> Quantite: </div>
-                          <div className="ml-2"> {detail.quantite}</div>
-                        </div>
-                        <div className="flex justify-between">
-                          <div className="text-sm"> Montant brut : </div>
-                          <div className="ml-2">
+                        <div className="flex items-center">
+                          <div className="text-sm"> Nom du client : </div>
+                          <div className="ml-2 font-semibold">
                             {" "}
-                            {detail.montant_brut.toLocaleString("fr-FR")}{" "}
-                            <span className="text-xs">MGA</span>
+                            {transaction.nom_client}
                           </div>
                         </div>
-                        <div className="flex justify-between">
-                          <div className="text-sm"> Remise </div>
-                          <div className="ml-2"> {detail.remise} % </div>
-                        </div>
-                        <div className="flex justify-between">
-                          <div className="text-sm"> Montant total : </div>
+                        <div className="flex justify-between items-center">
+                          <div className="text-sm"> Montant : </div>
                           <div className="ml-2">
                             {" "}
-                            {detail.montant_total.toLocaleString("fr-FR")}{" "}
+                            {transaction.montant_transaction}{" "}
                             <span className="text-xs">MGA</span>
                           </div>
                         </div>
@@ -455,8 +415,53 @@ const TransactionPage: FunctionComponent = () => {
                   );
                 })}
             </div>
-          </Modal>
-        </div>
+          )}
+          <div className="w-full bg-seven mb-1">
+            {loadingDetails && (
+              <div className="text-center my-10">
+                <LoadingOutlined className="text-3xl" />
+                <div>Chargement...</div>
+              </div>
+            )}
+            {details &&
+              details.map((detail: any) => {
+                return (
+                  <div key={detail._id}>
+                    <div className="px-5 py-1 border-b-2 border-gray-200">
+                      <div className="flex text-xs">
+                        <div className=""> Produit :</div>
+                        <div className="ml-2"> {detail.product}</div>
+                      </div>
+                      <div className="flex">
+                        <div className="text-sm"> Quantite: </div>
+                        <div className="ml-2"> {detail.quantite}</div>
+                      </div>
+                      <div className="flex justify-between">
+                        <div className="text-sm"> Montant brut : </div>
+                        <div className="ml-2">
+                          {" "}
+                          {detail.montant_brut.toLocaleString("fr-FR")}{" "}
+                          <span className="text-xs">MGA</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between">
+                        <div className="text-sm"> Remise </div>
+                        <div className="ml-2"> {detail.remise} % </div>
+                      </div>
+                      <div className="flex justify-between">
+                        <div className="text-sm"> Montant total : </div>
+                        <div className="ml-2">
+                          {" "}
+                          {detail.montant_total.toLocaleString("fr-FR")}{" "}
+                          <span className="text-xs">MGA</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </Modal>
       </div>
     </div>
   );
