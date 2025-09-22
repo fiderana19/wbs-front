@@ -5,32 +5,35 @@ import { AxiosError } from "axios";
 import { HttpStatus } from "../constants/Http_status";
 import { postTransaction } from "../api/Transaction";
 
-export const usePostTransaction = ({action} : {action?: () => void}) => {
-    const mutation = useMutation({
-        mutationFn: (mutateData: any) => postTransaction(mutateData),
-        onSuccess: () => {
-            if(action) {
-                action();
-            }
-            showToast({
-                type: TOAST_TYPE.SUCCESS,
-                message: "Transaction ajoutée avec succés !",
-            });
-        },
-        onError: (error: AxiosError) => {
-            if (error?.status === HttpStatus.FORBIDDEN || error?.status === HttpStatus.UNAUTHORIZED) {
-                showToast({
-                    type: TOAST_TYPE.ERROR,
-                    message: error.message
-                })
-            } else {
-                showToast({
-                    type: TOAST_TYPE.ERROR,
-                    message: "Erreur"
-                })
-            }
-        },
-    })
+export const usePostTransaction = ({ action }: { action?: () => void }) => {
+  const mutation = useMutation({
+    mutationFn: (mutateData: any) => postTransaction(mutateData),
+    onSuccess: () => {
+      if (action) {
+        action();
+      }
+      showToast({
+        type: TOAST_TYPE.SUCCESS,
+        message: "Transaction ajoutée avec succés !",
+      });
+    },
+    onError: (error: AxiosError) => {
+      if (
+        error?.status === HttpStatus.FORBIDDEN ||
+        error?.status === HttpStatus.UNAUTHORIZED
+      ) {
+        showToast({
+          type: TOAST_TYPE.ERROR,
+          message: error.message,
+        });
+      } else {
+        showToast({
+          type: TOAST_TYPE.ERROR,
+          message: "Erreur",
+        });
+      }
+    },
+  });
 
-    return mutation;
-}
+  return mutation;
+};

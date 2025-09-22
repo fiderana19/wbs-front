@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import Typed from 'typed.js';
+import React, { useEffect, useRef } from "react";
+import Typed from "typed.js";
 
 interface TypewriterProps {
   text: string;

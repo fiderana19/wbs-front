@@ -5,24 +5,24 @@ import { getTransactionById } from "../api/Transaction";
 import { useEffect } from "react";
 import { QueryCacheKey } from "@/api/queryCacheKey";
 
-export const useGetTransactionById = ({id} : {id: string}) => {
-    const { data, isLoading, error, isError } = useQuery({
-        queryKey: [QueryCacheKey.TRANSACTIONS, id],
-        queryFn: () => getTransactionById(id),
-        enabled: id !== ''
-    })
+export const useGetTransactionById = ({ id }: { id: string }) => {
+  const { data, isLoading, error, isError } = useQuery({
+    queryKey: [QueryCacheKey.TRANSACTIONS, id],
+    queryFn: () => getTransactionById(id),
+    enabled: id !== "",
+  });
 
-    useEffect(() => {
-        if(isError) {
-            showToast({
-                type: TOAST_TYPE.ERROR,
-                message: "Erreur lors de la récuperation de la transaction !"
-            })
-        }
-    }, [error])
-
-    return {
-        isLoading,
-        data: data?.data,
+  useEffect(() => {
+    if (isError) {
+      showToast({
+        type: TOAST_TYPE.ERROR,
+        message: "Erreur lors de la récuperation de la transaction !",
+      });
     }
-}
+  }, [error]);
+
+  return {
+    isLoading,
+    data: data?.data,
+  };
+};

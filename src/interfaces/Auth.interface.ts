@@ -1,9 +1,9 @@
 export interface LoginInterface {
-    usrid: string;
-    password: string;
+  usrid: string;
+  password: string;
 }
 
 export interface SingupInterface {
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 }

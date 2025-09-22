@@ -1,35 +1,31 @@
 import axiosAuthInstance from "./Config";
 
-const TransactionAPIURL = `${import.meta.env.VITE_BASE_URL}/transaction`
+const TransactionAPIURL = `${import.meta.env.VITE_BASE_URL}/transaction`;
 
 export const getLatestTransaction = async () => {
-    return await axiosAuthInstance.get(`${TransactionAPIURL}/latest`);
-}
+  return await axiosAuthInstance.get(`${TransactionAPIURL}/latest`);
+};
 
 export const getAllTransaction = async () => {
-    return await axiosAuthInstance.get(TransactionAPIURL);
-}
+  return await axiosAuthInstance.get(TransactionAPIURL);
+};
 
 export const postTransaction = async (data: any) => {
-    return await axiosAuthInstance.post(TransactionAPIURL, data);
-}
+  return await axiosAuthInstance.post(TransactionAPIURL, data);
+};
 
 export const deleteTransactionById = async (id: string) => {
-    return await axiosAuthInstance.delete(`${TransactionAPIURL}/${id}`);
-}
-
-export const patchTransaction = async (data: any) => {
-    return await axiosAuthInstance.patch(`${TransactionAPIURL}/${data?._id}`, data);
-}
+  return await axiosAuthInstance.delete(`${TransactionAPIURL}/${id}`);
+};
 
 export const getTransactionById = async (id: string) => {
-    return await axiosAuthInstance.get(`${TransactionAPIURL}/find/${id}`);
-}
+  return await axiosAuthInstance.get(`${TransactionAPIURL}/find/${id}`);
+};
 
 export const getTransactionBetweenDates = async (data: any) => {
-    return await axiosAuthInstance.post(`${TransactionAPIURL}/search`, data);
-}
+  return await axiosAuthInstance.post(`${TransactionAPIURL}/search`, data);
+};
 
 export const getTransactionForFacture = async (id: string) => {
-    return await axiosAuthInstance.get(`${TransactionAPIURL}/findfacture/${id}`);
-}
+  return await axiosAuthInstance.get(`${TransactionAPIURL}/findfacture/${id}`);
+};

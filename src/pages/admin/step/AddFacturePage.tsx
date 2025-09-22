@@ -1,23 +1,30 @@
-import { message, Select  } from 'antd'
-import React, { FunctionComponent, useState } from 'react'
-import dayjs from 'dayjs';
-import { FileZipOutlined, ArrowLeftOutlined } from '@ant-design/icons'
-import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer';
-import { getTransactionForFacture } from '../../../api/Transaction';
-import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
-import { useDark } from '../../../context/DarkThemeContext';
-import { useGetDetailByTransactionId } from '@/hooks/useGetDetailByTransactionId';
+import { message, Select } from "antd";
+import React, { FunctionComponent, useState } from "react";
+import dayjs from "dayjs";
+import { FileZipOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  PDFViewer,
+} from "@react-pdf/renderer";
+import { getTransactionForFacture } from "../../../api/Transaction";
+import { useGetAllTransaction } from "../../../hooks/useGetAllTransaction";
+import { useDark } from "../../../context/DarkThemeContext";
+import { useGetDetailByTransactionId } from "@/hooks/useGetDetailByTransactionId";
 
 interface StepsPropsType {
-  handlePrev: ()=>void;
-  handleNext: ()=>void;
+  handlePrev: () => void;
+  handleNext: () => void;
 }
 //the pdf style
 const styles = StyleSheet.create({
   page: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    padding: '25 10',
+    flexDirection: "row",
+    backgroundColor: "white",
+    padding: "25 10",
   },
   section: {
     margin: 10,
@@ -32,67 +39,66 @@ const styles = StyleSheet.create({
   },
   table: {
     // display: 'table',
-    width: '100%',
-    borderStyle: 'solid',
-    borderWidth: .5,
-    borderCollapse: 'collapse',
+    width: "100%",
+    borderStyle: "solid",
+    borderWidth: 0.5,
+    borderCollapse: "collapse",
     fontSize: 12,
   },
   row: {
-    flexDirection: 'row',
-    textAlign: 'center',
+    flexDirection: "row",
+    textAlign: "center",
   },
 
   rowhead: {
-    flexDirection: 'row',
-    backgroundColor: 'grey',
-    textAlign: 'center',
+    flexDirection: "row",
+    backgroundColor: "grey",
+    textAlign: "center",
   },
   cell: {
     flex: 1,
-    borderStyle: 'solid',
-    borderWidth: .5,
+    borderStyle: "solid",
+    borderWidth: 0.5,
     padding: 5,
   },
   unit: {
     fontSize: 7,
-  }  
-  ,
+  },
   head: {
-    flexDirection: 'row',
-    display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    display: "flex",
+    justifyContent: "space-between",
   },
   hr: {
-    backgroundColor: 'grey',
+    backgroundColor: "grey",
     height: 1,
-    width: '100%',
+    width: "100%",
   },
   totalchamp: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    margin: '5 0',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    margin: "5 0",
     fontSize: 12,
   },
   totalchampamount: {
     padding: 5,
-    border: '1px solid gray',
-    width: '110px',
-    height: '25px',
-    textAlign: 'center',
+    border: "1px solid gray",
+    width: "110px",
+    height: "25px",
+    textAlign: "center",
   },
   totaltext: {
     fontSize: 12,
     marginTop: 5,
     marginRight: 5,
-  }
+  },
 });
 //another pdf style
 const logo = StyleSheet.create({
   logo: {
     fontSize: 35,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   abrev: {
     fontSize: 7,
@@ -110,9 +116,9 @@ const logo = StyleSheet.create({
 //pdf footer style
 const footer = StyleSheet.create({
   contain: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
     fontSize: 12,
     paddingBottom: 55,
     marginTop: 30,
@@ -120,10 +126,10 @@ const footer = StyleSheet.create({
 });
 
 //generate pdf function
-const generatePDF = async (selectedTransId: string , details: any) => {
+const generatePDF = async (selectedTransId: string, details: any) => {
   const res = await getTransactionForFacture(selectedTransId);
   const transaction = res.data[0];
-  //the pdf content 
+  //the pdf content
   const pdfDocument = (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -136,18 +142,25 @@ const generatePDF = async (selectedTransId: string , details: any) => {
             </View>
             <View>
               <Text style={styles.header}>FACTURE </Text>
-              <Text style={styles.ref}>Ref : { transaction.ref }</Text>
-              <Text style={styles.ref}>Tulear , le { dayjs(transaction.date_transaction).format('DD-MM-YYYY HH:mm')}</Text>
+              <Text style={styles.ref}>Ref : {transaction.ref}</Text>
+              <Text style={styles.ref}>
+                Tulear , le{" "}
+                {dayjs(transaction.date_transaction).format("DD-MM-YYYY HH:mm")}
+              </Text>
             </View>
           </View>
 
           <Text style={styles.hr}></Text>
-            <View style={logo.client}>
-              <Text style={styles.header}>Doit : { transaction.nom_client }</Text>
-              <Text style={styles.header}>Adresse : { transaction.adresse_client }</Text>
-              <Text style={styles.header}>Mail : { transaction.mail_client }</Text>
-              <Text style={styles.header}>Telephone : { transaction.telephone_client }</Text>
-            </View>
+          <View style={logo.client}>
+            <Text style={styles.header}>Doit : {transaction.nom_client}</Text>
+            <Text style={styles.header}>
+              Adresse : {transaction.adresse_client}
+            </Text>
+            <Text style={styles.header}>Mail : {transaction.mail_client}</Text>
+            <Text style={styles.header}>
+              Telephone : {transaction.telephone_client}
+            </Text>
+          </View>
           <View style={styles.table}>
             <View style={styles.rowhead}>
               <View style={styles.cell}>
@@ -175,31 +188,43 @@ const generatePDF = async (selectedTransId: string , details: any) => {
                   <Text>{detail.product}</Text>
                 </View>
                 <View style={styles.cell}>
-                  <Text>{detail.montant_brut} <Text style={styles.unit}>MGA</Text></Text>
+                  <Text>
+                    {detail.montant_brut} <Text style={styles.unit}>MGA</Text>
+                  </Text>
                 </View>
                 <View style={styles.cell}>
-                  <Text>{detail.remise} <Text style={styles.unit}>%</Text></Text>
+                  <Text>
+                    {detail.remise} <Text style={styles.unit}>%</Text>
+                  </Text>
                 </View>
                 <View style={styles.cell}>
-                  <Text>{detail.montant_total} <Text style={styles.unit}>MGA</Text></Text>
+                  <Text>
+                    {detail.montant_total} <Text style={styles.unit}>MGA</Text>
+                  </Text>
                 </View>
               </View>
             ))}
           </View>
           <View style={styles.totalchamp}>
             <Text style={styles.totaltext}>Total</Text>
-            <Text style={styles.totalchampamount}>{ transaction.montant_transaction } <Text style={styles.unit}>MGA</Text></Text>
+            <Text style={styles.totalchampamount}>
+              {transaction.montant_transaction}{" "}
+              <Text style={styles.unit}>MGA</Text>
+            </Text>
           </View>
           <View style={footer.contain}>
-              <View>
-                <Text>Le client reçu conforme</Text>
-              </View>
-              <View>
-                <Text>Le vendeur</Text>
-              </View>
+            <View>
+              <Text>Le client reçu conforme</Text>
             </View>
-            <Text style={styles.hr}></Text>
-            <Text style={logo.nb}>NB: Les marchandises restent la propriété du vendeur jusqu'au paiement intégral de leur prix</Text>
+            <View>
+              <Text>Le vendeur</Text>
+            </View>
+          </View>
+          <Text style={styles.hr}></Text>
+          <Text style={logo.nb}>
+            NB: Les marchandises restent la propriété du vendeur jusqu'au
+            paiement intégral de leur prix
+          </Text>
         </View>
       </Page>
     </Document>
@@ -210,28 +235,30 @@ const generatePDF = async (selectedTransId: string , details: any) => {
 
 const { Option } = Select;
 
-const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
-  const [selectedTransId, setSelectedTransId] = useState('');
+const AddFacturePage: FunctionComponent<StepsPropsType> = ({ handlePrev }) => {
+  const [selectedTransId, setSelectedTransId] = useState("");
   const { data: trans } = useGetAllTransaction();
-  const { data: details, refetch } = useGetDetailByTransactionId(selectedTransId ? selectedTransId  : '');
-  const [pdfData, setPdfData] =  useState<null | any>(null);
+  const { data: details, refetch } = useGetDetailByTransactionId(
+    selectedTransId ? selectedTransId : "",
+  );
+  const [pdfData, setPdfData] = useState<null | any>(null);
   const { isDark } = useDark();
   //handling the form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (selectedTransId) {
       refetch();
       generatePDF(selectedTransId, details).then((pdf) => {
         setPdfData(pdf);
-      })
+      });
     } else {
-      errorMessage()
+      errorMessage();
     }
-  }
+  };
   //error message
   const errorMessage = () => {
-    message.error('Veuillez remplir les champs !');
+    message.error("Veuillez remplir les champs !");
   };
   //handling the select transaction change
   const handleSelectTransChange = (value: any) => {
@@ -239,21 +266,25 @@ const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   };
 
   return (
-    <div className={isDark ? 'dark-container py-16 min-h-screen h-full' : 'py-16'}>
-      <button onClick={handlePrev}
-        className='fixed top-4 left-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
+    <div
+      className={isDark ? "dark-container py-16 min-h-screen h-full" : "py-16"}
+    >
+      <button
+        onClick={handlePrev}
+        className="fixed top-4 left-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        <ArrowLeftOutlined /> Retour 
+        <ArrowLeftOutlined /> Retour
       </button>
-      <div className='text-center flex justify-center'>
+      <div className="text-center flex justify-center">
         <div>
-          <div className='text-2xl font-bold'>FACTURE</div>
-          <form onSubmit={handleSubmit} className='my-7 w-60 text-left mx-auto'>
-            <label htmlFor='idproduit'>Transaction : </label><br />
+          <div className="text-2xl font-bold">FACTURE</div>
+          <form onSubmit={handleSubmit} className="my-7 w-60 text-left mx-auto">
+            <label htmlFor="idproduit">Transaction : </label>
+            <br />
             <Select
               value={selectedTransId}
               onChange={handleSelectTransChange}
-              className='w-full my-1'
+              className="w-full my-1"
               showSearch
               optionFilterProp="children"
               filterOption={(input: any, option: any) =>
@@ -261,25 +292,31 @@ const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
               }
             >
               <Option value="">Sélectionnez une transaction</Option>
-              {
-                trans && trans.map((tr: any) => {
-                  return(
+              {trans &&
+                trans.map((tr: any) => {
+                  return (
                     <Option key={trans._id} value={tr._id}>
-                      { `${tr.nom_client} ${dayjs(tr.date_transaction).format('DD-MM-YYYY HH:mm')}` }
+                      {`${tr.nom_client} ${dayjs(tr.date_transaction).format("DD-MM-YYYY HH:mm")}`}
                     </Option>
-                  )
-                })
-              }
+                  );
+                })}
             </Select>
-            {selectedTransId && <p>Transaction sélectionné : {selectedTransId}</p>}  
+            {selectedTransId && (
+              <p>Transaction sélectionné : {selectedTransId}</p>
+            )}
 
-            <div className='flex justify-center my-3'>
-              <button type='submit'  className='bg-green-500 hover:bg-green-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-green-500'><FileZipOutlined /> Generer la facture</button>
+            <div className="flex justify-center my-3">
+              <button
+                type="submit"
+                className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 text-sm  rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
+                <FileZipOutlined /> Generer la facture
+              </button>
             </div>
           </form>
         </div>
       </div>
-      <div className='my-10 mx-4 md:mx-auto md:w-1/2'>
+      <div className="my-10 mx-4 md:mx-auto md:w-1/2">
         {pdfData && (
           <PDFViewer width="100%" height="500">
             {pdfData}
@@ -287,7 +324,7 @@ const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddFacturePage
+export default AddFacturePage;

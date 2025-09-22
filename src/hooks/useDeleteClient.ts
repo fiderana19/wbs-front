@@ -5,32 +5,35 @@ import { AxiosError } from "axios";
 import { HttpStatus } from "../constants/Http_status";
 import { deleteClientById } from "../api/Client";
 
-export const useDeleteClient = ({action} : {action?: () => void}) => {
-    const mutation = useMutation({
-        mutationFn: (id: string) => deleteClientById(id),
-        onSuccess: () => {
-            if(action) {
-                action();
-            }
-            showToast({
-                type: TOAST_TYPE.SUCCESS,
-                message: "Client supprimé !",
-            });
-        },
-        onError: (error: AxiosError) => {
-            if (error?.status === HttpStatus.FORBIDDEN || error?.status === HttpStatus.UNAUTHORIZED) {
-                showToast({
-                    type: TOAST_TYPE.ERROR,
-                    message: error.message
-                })
-            } else {
-                showToast({
-                    type: TOAST_TYPE.ERROR,
-                    message: "Erreur"
-                })
-            }
-        },
-    })
+export const useDeleteClient = ({ action }: { action?: () => void }) => {
+  const mutation = useMutation({
+    mutationFn: (id: string) => deleteClientById(id),
+    onSuccess: () => {
+      if (action) {
+        action();
+      }
+      showToast({
+        type: TOAST_TYPE.SUCCESS,
+        message: "Client supprimé !",
+      });
+    },
+    onError: (error: AxiosError) => {
+      if (
+        error?.status === HttpStatus.FORBIDDEN ||
+        error?.status === HttpStatus.UNAUTHORIZED
+      ) {
+        showToast({
+          type: TOAST_TYPE.ERROR,
+          message: error.message,
+        });
+      } else {
+        showToast({
+          type: TOAST_TYPE.ERROR,
+          message: "Erreur",
+        });
+      }
+    },
+  });
 
-    return mutation;
-}
+  return mutation;
+};

@@ -1,3 +1,4 @@
 export const okDeleteStyle = {
-    background: 'red', color: 'white'
-}
+  background: "red",
+  color: "white",
+};

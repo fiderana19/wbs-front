@@ -1,10 +1,20 @@
 import { FunctionComponent } from "react";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 
 const AlertDialogDemo: FunctionComponent = () => {
-    return(
-      <AlertDialog>
+  return (
+    <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline">Show Dialog</Button>
       </AlertDialogTrigger>
@@ -22,7 +32,7 @@ const AlertDialogDemo: FunctionComponent = () => {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-    )
-}
+  );
+};
 
 export default AlertDialogDemo;
