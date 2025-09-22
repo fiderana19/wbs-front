@@ -9,6 +9,7 @@ import {
   MenuOutlined,
   UserOutlined,
   LoadingOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "../context/AuthContext";
 import WbsLogo from "../assets/image/wbs-logo.png";
@@ -23,7 +24,7 @@ const AppLayout: FunctionComponent = () => {
       label: (
         <Link to="/admin/page">
           <div
-            className={location.pathname === "/admin/page" ? "text-second" : ""}
+            className={location.pathname === "/admin/page" ? "text-gray-400 font-bold" : ""}
           >
             <HomeOutlined /> ACCUEIL
           </div>
@@ -37,7 +38,7 @@ const AppLayout: FunctionComponent = () => {
           <div
             className={
               location.pathname === "/admin/page/transaction"
-                ? "text-second"
+                ? "text-gray-400 font-bold"
                 : ""
             }
           >
@@ -52,7 +53,7 @@ const AppLayout: FunctionComponent = () => {
         <Link to="/admin/page/product">
           <div
             className={
-              location.pathname === "/admin/page/product" ? "text-second" : ""
+              location.pathname === "/admin/page/product" ? "text-gray-400 font-bold" : ""
             }
           >
             <ShoppingCartOutlined /> PRODUIT
@@ -66,7 +67,7 @@ const AppLayout: FunctionComponent = () => {
         <Link to="/admin/page/client">
           <div
             className={
-              location.pathname === "/admin/page/client" ? "text-second" : ""
+              location.pathname === "/admin/page/client" ? "text-gray-400 font-bold" : ""
             }
           >
             <UserOutlined /> CLIENT
@@ -74,6 +75,16 @@ const AppLayout: FunctionComponent = () => {
         </Link>
       ),
       key: "6",
+    },
+    {
+      label: (
+          <div
+            onClick={() => logout()}
+          >
+            <LogoutOutlined /> Deconnexion
+          </div>
+      ),
+      key: "7",
     },
   ];
 
