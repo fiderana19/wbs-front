@@ -18,10 +18,15 @@ export const usePostTransaction = ({action} : {action?: () => void}) => {
             });
         },
         onError: (error: AxiosError) => {
-            if (error?.status === HttpStatus.FORBIDDEN) {
+            if (error?.status === HttpStatus.FORBIDDEN || error?.status === HttpStatus.UNAUTHORIZED) {
                 showToast({
                     type: TOAST_TYPE.ERROR,
                     message: error.message
+                })
+            } else {
+                showToast({
+                    type: TOAST_TYPE.ERROR,
+                    message: "Erreur"
                 })
             }
         },
