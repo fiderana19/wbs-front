@@ -8,6 +8,7 @@ import {
   PlusOutlined,
   SearchOutlined,
   CloseOutlined,
+  FilePdfOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import {
@@ -25,11 +26,15 @@ import { Input } from "@/components/ui/input";
 import { useGetTransactionBetweenDates } from "@/hooks/useGetTransactionBetweenDates";
 import { showToast } from "@/utils/Toast";
 import { TOAST_TYPE } from "@/constants/ToastType";
+import { getTransactionForFacture } from "@/api/Transaction";
+import { Document, Page, PDFViewer, Text, View } from "@react-pdf/renderer";
+import { footer, logo, styles } from "@/utils/pdf_generation";
 
 const TransactionPage: FunctionComponent = () => {
   const [transactionToGet, setTransactionToGet] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
+  const [isModalFactureOpen, setIsModaFactureOpen] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] =
     useState<TransactionForDisplay | null>(null);
@@ -40,6 +45,13 @@ const TransactionPage: FunctionComponent = () => {
       refetch();
     },
   });
+  const [selectedTransId, setSelectedTransId] = useState("");
+  const {
+    data: details4pdf,
+    refetch: refetch4pdf,
+    isLoading: loading4pdf,
+  } = useGetDetailByTransactionId(selectedTransId ? selectedTransId : "");
+  const [pdfData, setPdfData] = useState<null | any>(null);
   const [dateToSearch, setDateToSearch] = useState<any>(null);
   const { data: searchTransaction } = useGetTransactionBetweenDates({
     dates: dateToSearch || null,
@@ -68,6 +80,12 @@ const TransactionPage: FunctionComponent = () => {
   const showDeleteConfirmation = (item: TransactionForDisplay) => {
     setItemToDelete(item);
     setIsDeleteModalVisible(true);
+  };
+
+  const showPdfGeneration = (item: string) => {
+    setSelectedTransId(item);
+    generateSubmit(item);
+    setIsModaFactureOpen(true);
   };
 
   const handleDeleteConfirm = () => {
@@ -106,6 +124,126 @@ const TransactionPage: FunctionComponent = () => {
         message: "Veuillez selectionner des dates !",
       });
     }
+  };
+
+  const generatePDF = async (selectedTransId: string, details: any) => {
+    refetch4pdf();
+    const res = await getTransactionForFacture(selectedTransId);
+    const transaction = res.data[0];
+    //the pdf content
+    const pdfDocument = (
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <View style={styles.section}>
+            <View style={styles.head}>
+              <View>
+                <Text style={logo.logo}>WBS</Text>
+                <Text style={logo.abrev}>World Business Solution</Text>
+                <Text style={logo.abrev}>Tulear 601</Text>
+              </View>
+              <View>
+                <Text style={styles.header}>FACTURE </Text>
+                <Text style={styles.ref}>Ref : {transaction.ref}</Text>
+                <Text style={styles.ref}>
+                  Tulear , le{" "}
+                  {dayjs(transaction.date_transaction).format(
+                    "DD-MM-YYYY HH:mm",
+                  )}
+                </Text>
+              </View>
+            </View>
+
+            <Text style={styles.hr}></Text>
+            <View style={logo.client}>
+              <Text style={styles.header}>Doit : {transaction.nom_client}</Text>
+              <Text style={styles.header}>
+                Adresse : {transaction.adresse_client}
+              </Text>
+              <Text style={styles.header}>
+                Mail : {transaction.mail_client}
+              </Text>
+              <Text style={styles.header}>
+                Telephone : {transaction.telephone_client}
+              </Text>
+            </View>
+            <View style={styles.table}>
+              <View style={styles.rowhead}>
+                <View style={styles.cell}>
+                  <Text>Quantite </Text>
+                </View>
+                <View style={styles.cell}>
+                  <Text>Produit</Text>
+                </View>
+                <View style={styles.cell}>
+                  <Text>Montant brut</Text>
+                </View>
+                <View style={styles.cell}>
+                  <Text>Remise</Text>
+                </View>
+                <View style={styles.cell}>
+                  <Text>Montant total</Text>
+                </View>
+              </View>
+              {details.map((detail: any, index: any) => (
+                <View style={styles.row} key={index}>
+                  <View style={styles.cell}>
+                    <Text>{detail.quantite}</Text>
+                  </View>
+                  <View style={styles.cell}>
+                    <Text>{detail.product}</Text>
+                  </View>
+                  <View style={styles.cell}>
+                    <Text>
+                      {detail.montant_brut} <Text style={styles.unit}>MGA</Text>
+                    </Text>
+                  </View>
+                  <View style={styles.cell}>
+                    <Text>
+                      {detail.remise} <Text style={styles.unit}>%</Text>
+                    </Text>
+                  </View>
+                  <View style={styles.cell}>
+                    <Text>
+                      {detail.montant_total}{" "}
+                      <Text style={styles.unit}>MGA</Text>
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+            <View style={styles.totalchamp}>
+              <Text style={styles.totaltext}>Total</Text>
+              <Text style={styles.totalchampamount}>
+                {transaction.montant_transaction}{" "}
+                <Text style={styles.unit}>MGA</Text>
+              </Text>
+            </View>
+            <View style={footer.contain}>
+              <View>
+                <Text>Le client reçu conforme</Text>
+              </View>
+              <View>
+                <Text>Le vendeur</Text>
+              </View>
+            </View>
+            <Text style={styles.hr}></Text>
+            <Text style={logo.nb}>
+              NB: Les marchandises restent la propriété du vendeur jusqu'au
+              paiement intégral de leur prix
+            </Text>
+          </View>
+        </Page>
+      </Document>
+    );
+
+    return pdfDocument;
+  };
+
+  const generateSubmit = async (id: string) => {
+    refetch4pdf();
+    generatePDF(id, details4pdf).then((pdf) => {
+      setPdfData(pdf);
+    });
   };
 
   return (
@@ -200,6 +338,15 @@ const TransactionPage: FunctionComponent = () => {
                       </div>
                       <div className="flex sm:flex-col sm:justify-center sm:pr-0 sm:mt-0 mt-2 justify-end">
                         <Button
+                          variant={"outline"}
+                          className="sm:my-1 flex"
+                          size={"icon"}
+                          onClick={() => showPdfGeneration(transaction?._id)}
+                        >
+                          {" "}
+                          <FilePdfOutlined />{" "}
+                        </Button>
+                        <Button
                           variant={"destructive"}
                           className="sm:my-1 flex"
                           size={"icon"}
@@ -293,6 +440,15 @@ const TransactionPage: FunctionComponent = () => {
                           </div>
                         </div>
                         <div className="flex sm:flex-col sm:justify-center sm:pr-0 sm:mt-0 mt-2 justify-end">
+                          <Button
+                            variant={"outline"}
+                            className="sm:my-1 flex"
+                            size={"icon"}
+                            onClick={() => showPdfGeneration(transaction?._id)}
+                          >
+                            {" "}
+                            <FilePdfOutlined />{" "}
+                          </Button>
                           <Button
                             variant={"destructive"}
                             className="sm:my-1 flex"
@@ -460,6 +616,24 @@ const TransactionPage: FunctionComponent = () => {
                   </div>
                 );
               })}
+          </div>
+        </Modal>
+        <Modal
+          title="Facture"
+          open={isModalFactureOpen}
+          onCancel={() => setIsModaFactureOpen(false)}
+          onOk={() => setIsModaFactureOpen(false)}
+          onClose={() => setIsModaFactureOpen(false)}
+          okText="OK"
+          cancelText="Annuler"
+        >
+          <div className="m-4">
+            {loading4pdf && <LoadingOutlined />}
+            {pdfData && (
+              <PDFViewer width="100%" height="500">
+                {pdfData}
+              </PDFViewer>
+            )}
           </div>
         </Modal>
       </div>

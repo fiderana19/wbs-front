@@ -9,7 +9,7 @@ export const useGetTransactionForFacture = ({ id }: { id: string }) => {
   const { data, isLoading, error, isError } = useQuery({
     queryKey: [QueryCacheKey.TRANSACTIONS, id],
     queryFn: () => getTransactionForFacture(id),
-    enabled: id !== "",
+    enabled: id !== " ",
   });
 
   useEffect(() => {

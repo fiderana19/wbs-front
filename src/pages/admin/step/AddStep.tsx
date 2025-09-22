@@ -130,9 +130,7 @@ const AddForms: FunctionComponent = () => {
               </div>
             }
           >
-            <AddDetailPage
-              handlePrev={handlePreviousPage}
-            />
+            <AddDetailPage handlePrev={handlePreviousPage} />
           </Suspense>
         </div>
       )}

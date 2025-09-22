@@ -9,7 +9,7 @@ export const useGetDetailByTransactionId = (id: string) => {
   const { data, isError, error, isLoading, refetch } = useQuery({
     queryKey: [QueryCacheKey.DETAILS, id],
     queryFn: () => getDetailByTransactionId(id),
-    enabled: id !== "",
+    enabled: id !== " ",
   });
 
   useEffect(() => {

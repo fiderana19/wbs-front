@@ -1,5 +1,5 @@
 import { Select } from "antd";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { CreateDetailInterface } from "../../../interfaces/Detail.interface";
@@ -13,6 +13,10 @@ import { AddDetailValidation } from "@/validation/create-detail.validation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { handleNumberKeyPress } from "@/utils/keypress";
+import { getTransactionForFacture } from "@/api/Transaction";
+import { Document, Page, PDFViewer, Text, View } from "@react-pdf/renderer";
+import { footer, logo, styles } from "@/utils/pdf_generation";
+import { useGetDetailByTransactionId } from "@/hooks/useGetDetailByTransactionId";
 
 interface StepsPropsType {
   handlePrev: () => void;
@@ -20,9 +24,7 @@ interface StepsPropsType {
 
 const { Option } = Select;
 
-const AddDetailPage: FunctionComponent<StepsPropsType> = ({
-  handlePrev,
-}) => {
+const AddDetailPage: FunctionComponent<StepsPropsType> = ({ handlePrev }) => {
   const {
     control,
     handleSubmit: submit,
@@ -36,17 +38,144 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({
       refetchTransaction();
     },
   });
+  const [selectedTransId, setSelectedTransId] = useState("");
+  const { data: details, refetch } = useGetDetailByTransactionId(
+    selectedTransId ? selectedTransId : "",
+  );
+  const [pdfData, setPdfData] = useState<null | any>(null);
   const { data: products } = useGetAllProduct();
-  const { data: transactions , refetch: refetchTransaction } = useGetAllTransaction();
+  const { data: transactions, refetch: refetchTransaction } =
+    useGetAllTransaction();
   const { isDark } = useDark();
 
   const handleSubmit = async (data: CreateDetailInterface) => {
-    mutateAsync(data);
+    setSelectedTransId(data?.transaction);
+    refetch();
+    await mutateAsync(data);
+  };
+
+  const generatePDF = async (selectedTransId: string, details: any) => {
+    refetch();
+    const res = await getTransactionForFacture(selectedTransId);
+    const transaction = res.data[0];
+    //the pdf content
+    const pdfDocument = (
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <View style={styles.section}>
+            <View style={styles.head}>
+              <View>
+                <Text style={logo.logo}>WBS</Text>
+                <Text style={logo.abrev}>World Business Solution</Text>
+                <Text style={logo.abrev}>Tulear 601</Text>
+              </View>
+              <View>
+                <Text style={styles.header}>FACTURE </Text>
+                <Text style={styles.ref}>Ref : {transaction.ref}</Text>
+                <Text style={styles.ref}>
+                  Tulear , le{" "}
+                  {dayjs(transaction.date_transaction).format(
+                    "DD-MM-YYYY HH:mm",
+                  )}
+                </Text>
+              </View>
+            </View>
+
+            <Text style={styles.hr}></Text>
+            <View style={logo.client}>
+              <Text style={styles.header}>Doit : {transaction.nom_client}</Text>
+              <Text style={styles.header}>
+                Adresse : {transaction.adresse_client}
+              </Text>
+              <Text style={styles.header}>
+                Mail : {transaction.mail_client}
+              </Text>
+              <Text style={styles.header}>
+                Telephone : {transaction.telephone_client}
+              </Text>
+            </View>
+            <View style={styles.table}>
+              <View style={styles.rowhead}>
+                <View style={styles.cell}>
+                  <Text>Quantite </Text>
+                </View>
+                <View style={styles.cell}>
+                  <Text>Produit</Text>
+                </View>
+                <View style={styles.cell}>
+                  <Text>Montant brut</Text>
+                </View>
+                <View style={styles.cell}>
+                  <Text>Remise</Text>
+                </View>
+                <View style={styles.cell}>
+                  <Text>Montant total</Text>
+                </View>
+              </View>
+              {details.map((detail: any, index: any) => (
+                <View style={styles.row} key={index}>
+                  <View style={styles.cell}>
+                    <Text>{detail.quantite}</Text>
+                  </View>
+                  <View style={styles.cell}>
+                    <Text>{detail.product}</Text>
+                  </View>
+                  <View style={styles.cell}>
+                    <Text>
+                      {detail.montant_brut} <Text style={styles.unit}>MGA</Text>
+                    </Text>
+                  </View>
+                  <View style={styles.cell}>
+                    <Text>
+                      {detail.remise} <Text style={styles.unit}>%</Text>
+                    </Text>
+                  </View>
+                  <View style={styles.cell}>
+                    <Text>
+                      {detail.montant_total}{" "}
+                      <Text style={styles.unit}>MGA</Text>
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+            <View style={styles.totalchamp}>
+              <Text style={styles.totaltext}>Total</Text>
+              <Text style={styles.totalchampamount}>
+                {transaction.montant_transaction}{" "}
+                <Text style={styles.unit}>MGA</Text>
+              </Text>
+            </View>
+            <View style={footer.contain}>
+              <View>
+                <Text>Le client reçu conforme</Text>
+              </View>
+              <View>
+                <Text>Le vendeur</Text>
+              </View>
+            </View>
+            <Text style={styles.hr}></Text>
+            <Text style={logo.nb}>
+              NB: Les marchandises restent la propriété du vendeur jusqu'au
+              paiement intégral de leur prix
+            </Text>
+          </View>
+        </Page>
+      </Document>
+    );
+
+    return pdfDocument;
+  };
+
+  const finishSubmit = async () => {
+    generatePDF(selectedTransId, details).then((pdf) => {
+      setPdfData(pdf);
+    });
   };
 
   return (
     <div
-      className={`py-16 flex justify-center ${isDark ? "dark-container min-h-screen h-full" : ""}`}
+      className={`py-16 justify-center ${isDark ? "dark-container min-h-screen h-full" : ""}`}
     >
       <button
         onClick={handlePrev}
@@ -165,10 +294,17 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({
           </div>
         </form>
         <div className="">
-          <Button variant={"success"}>
+          <Button variant={"success"} onClick={() => finishSubmit()}>
             Valider la transaction
           </Button>
         </div>
+      </div>
+      <div className="my-10 mx-4 md:mx-auto md:w-1/2">
+        {pdfData && (
+          <PDFViewer width="100%" height="500">
+            {pdfData}
+          </PDFViewer>
+        )}
       </div>
     </div>
   );
