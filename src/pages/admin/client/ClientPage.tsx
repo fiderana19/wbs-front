@@ -17,28 +17,20 @@ import { Input } from '@/components/ui/input';
 import { EditClientValidation } from '@/validation/edit-client.validation';
 
 const ClientPage: FunctionComponent = () => {
-  const { control, formState, handleSubmit: edit, register } = useForm<Client>({
+  const { control, formState: { errors }, handleSubmit: edit, register } = useForm<Client>({
     resolver: yupResolver(EditClientValidation)
   });
-  const { errors } = formState;
   const [isEditClientModalOpen, setIsEditClientModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Client | null>(null);
   const [itemToDelete, setItemToDelete] = useState<Client | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [editedItem, setEditedItem] = useState<Client>({   
-    _id: '',
-    nom_client: '',
-    adresse_client: '',
-    mail_client: '',
-    telephone_client: '',
-  });
   const { data: clients, isLoading, refetch } = useGetAllClient();
-  const { mutateAsync: deleteClient } = useDeleteClient({
+  const { mutateAsync: deleteClient, isPending: deleteLoading } = useDeleteClient({
     action: () => {
       refetch()
     }
   });
-  const { mutateAsync: patchClient } = usePatchClient({
+  const { mutateAsync: patchClient, isPending: editLoading } = usePatchClient({
     action: () => {
       refetch()
     }
@@ -60,19 +52,10 @@ const ClientPage: FunctionComponent = () => {
   function EditClient(item: Client) {
     setSelectedItem(item);
     setIsEditClientModalOpen(true);
- 
-    setEditedItem({
-      _id: item._id,
-      nom_client: item.nom_client,
-      adresse_client: item.adresse_client,
-      mail_client: item.mail_client,
-      telephone_client: item.telephone_client,
-    }); 
   }
 
   const handleSubmitEdit = async (data: Client) => {
-    console.log(data)
-    patchClient(data);
+    await patchClient(data);
     setIsEditClientModalOpen(false);
   }
 
@@ -128,12 +111,12 @@ const ClientPage: FunctionComponent = () => {
             {selectedItem &&     
               <div>
                 <form className='w-2/3 my-7 mx-auto' onSubmit={edit(handleSubmitEdit)}>
-                  <input className='hidden' defaultValue={editedItem._id} {...register('_id')} />
+                  <input className='hidden' defaultValue={selectedItem._id} {...register('_id')} />
                   <label htmlFor='nom_client' >Nom : </label> <br />
                   <Controller 
                     control={control}
                     name='nom_client'
-                    defaultValue={editedItem.nom_client}
+                    defaultValue={selectedItem.nom_client}
                     render={({
                       field: { value, onChange, onBlur }
                     }) => (
@@ -145,7 +128,7 @@ const ClientPage: FunctionComponent = () => {
                   <Controller 
                     control={control}
                     name='adresse_client'
-                    defaultValue={editedItem.adresse_client}
+                    defaultValue={selectedItem.adresse_client}
                     render={({
                       field: { value, onBlur, onChange }
                     }) => (
@@ -157,7 +140,7 @@ const ClientPage: FunctionComponent = () => {
                   <Controller 
                     control={control}
                     name='mail_client'
-                    defaultValue={editedItem.mail_client}
+                    defaultValue={selectedItem.mail_client}
                     render={({
                       field: { value, onBlur, onChange }
                     }) => (
@@ -169,7 +152,7 @@ const ClientPage: FunctionComponent = () => {
                   <Controller 
                     control={control}
                     name='telephone_client'
-                    defaultValue={editedItem.telephone_client}
+                    defaultValue={selectedItem.telephone_client}
                     render={({
                       field: { value, onBlur, onChange }
                     }) => (
@@ -178,7 +161,10 @@ const ClientPage: FunctionComponent = () => {
                   />
                   { errors.telephone_client && <div className='text-xs text-red-500 text-left'>{errors.telephone_client.message}</div> }
                   <div className='flex justify-center my-3'>
-                    <Button type='submit' variant={'primary'}>MODIFIER</Button>
+                    <Button type='submit' variant={'primary'}>
+                      { editLoading && <LoadingOutlined /> }
+                      MODIFIER
+                    </Button>
                   </div>
                 </form>
               </div>
