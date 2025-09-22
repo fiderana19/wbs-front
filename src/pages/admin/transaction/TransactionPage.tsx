@@ -377,9 +377,9 @@ const TransactionPage: FunctionComponent = () => {
           {selectTransaction && (
             <div>
               {selectTransaction &&
-                selectTransaction.map((transaction: any) => {
+                selectTransaction.map((transaction: any, index: any) => {
                   return (
-                    <div className="mb-4">
+                    <div className="mb-4" key={index}>
                       <div
                         className={`w-full border-l-4 border-l-gray-700 relative sm:pr-4 block justify-between mt-1 sm:p-3 p-2 ${isDark ? "bg-gray-600" : "bg-gray-100"}`}
                       >
@@ -424,9 +424,9 @@ const TransactionPage: FunctionComponent = () => {
               </div>
             )}
             {details &&
-              details.map((detail: any) => {
+              details.map((detail: any, index: any) => {
                 return (
-                  <div key={detail._id}>
+                  <div key={index}>
                     <div className="px-5 py-1 border-b-2 border-gray-200">
                       <div className="flex text-xs">
                         <div className=""> Produit :</div>

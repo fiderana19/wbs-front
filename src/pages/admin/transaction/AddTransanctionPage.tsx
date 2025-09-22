@@ -42,7 +42,7 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({
   const { isDark } = useDark();
 
   const handleSubmit = async (data: CreateTransactionInterface) => {
-    mutateAsync(data);
+    await mutateAsync(data);
     if (!isError) {
       handleNext();
     }
@@ -107,10 +107,12 @@ const AddTransanctionPage: FunctionComponent<StepsPropsType> = ({
           <Controller
             control={control}
             name="date_transaction"
+            defaultValue={dayjs(new Date())}
             render={({ field: { value, onBlur, onChange } }) => (
               <DatePicker
                 onChange={(date) => onChange(date ? date.toISOString() : null)}
                 value={value ? dayjs(value) : null}
+                defaultValue={dayjs(new Date())}
                 onBlur={onBlur}
                 className={`w-full ${errors?.date_transaction && " text-red-500 border border-red-500 rounded"}`}
                 showTime

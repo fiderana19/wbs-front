@@ -1,5 +1,5 @@
 import { Select } from "antd";
-import React, { FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { CreateDetailInterface } from "../../../interfaces/Detail.interface";
@@ -12,17 +12,16 @@ import { useDark } from "../../../context/DarkThemeContext";
 import { AddDetailValidation } from "@/validation/create-detail.validation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { handleNumberKeyPress } from "@/utils/keypress";
 
 interface StepsPropsType {
   handlePrev: () => void;
-  handleNext: () => void;
 }
 
 const { Option } = Select;
 
 const AddDetailPage: FunctionComponent<StepsPropsType> = ({
   handlePrev,
-  handleNext,
 }) => {
   const {
     control,
@@ -32,21 +31,17 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({
     resolver: yupResolver(AddDetailValidation),
   });
   const { errors } = formState;
-  const { mutateAsync } = usePostDetail();
+  const { mutateAsync } = usePostDetail({
+    action() {
+      refetchTransaction();
+    },
+  });
   const { data: products } = useGetAllProduct();
-  const { data: transactions } = useGetAllTransaction();
+  const { data: transactions , refetch: refetchTransaction } = useGetAllTransaction();
   const { isDark } = useDark();
 
   const handleSubmit = async (data: CreateDetailInterface) => {
     mutateAsync(data);
-  };
-
-  const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const charCode = e.which || e.keyCode;
-
-    if (charCode < 48 || charCode > 57) {
-      e.preventDefault();
-    }
   };
 
   return (
@@ -132,7 +127,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({
             name="quantite"
             render={({ field: { value, onBlur, onChange } }) => (
               <Input
-                onKeyPress={handleKeyPress}
+                onKeyPress={handleNumberKeyPress}
                 className={`my-1 ${errors?.quantite ? "border border-red-500" : ""}`}
                 onChange={onChange}
                 onBlur={onBlur}
@@ -152,7 +147,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({
             name="remise"
             render={({ field: { value, onBlur, onChange } }) => (
               <Input
-                onKeyPress={handleKeyPress}
+                onKeyPress={handleNumberKeyPress}
                 className="my-1"
                 onChange={onChange}
                 onBlur={onBlur}
@@ -170,7 +165,7 @@ const AddDetailPage: FunctionComponent<StepsPropsType> = ({
           </div>
         </form>
         <div className="">
-          <Button onClick={handleNext} variant={"success"}>
+          <Button variant={"success"}>
             Valider la transaction
           </Button>
         </div>

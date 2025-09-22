@@ -12,8 +12,6 @@ const AddTransanctionPage = lazy(
   () => import("../transaction/AddTransanctionPage"),
 );
 const AddDetailPage = lazy(() => import("./AddDetailPage"));
-const AddFacturePage = lazy(() => import("./AddFacturePage"));
-const AddMailPage = lazy(() => import("./AddMailPage"));
 const ToggleTheme = lazy(() => import("../../../components/ToggleTheme"));
 
 const { Step } = Steps;
@@ -52,7 +50,7 @@ const AddForms: FunctionComponent = () => {
             />
           </button>
         </Link>
-        <div>
+        <div className="absolute bottom-6 w-5/6 left-6">
           <Steps current={currentStep}>
             <Step
               title="Client"
@@ -74,26 +72,6 @@ const AddForms: FunctionComponent = () => {
                 currentStep > 2
                   ? "finish"
                   : currentStep === 2
-                    ? "process"
-                    : "wait"
-              }
-            />
-            <Step
-              title="Facture"
-              status={
-                currentStep > 3
-                  ? "finish"
-                  : currentStep === 3
-                    ? "process"
-                    : "wait"
-              }
-            />
-            <Step
-              title="Mail"
-              status={
-                currentStep > 4
-                  ? "finish"
-                  : currentStep === 4
                     ? "process"
                     : "wait"
               }
@@ -135,7 +113,7 @@ const AddForms: FunctionComponent = () => {
               handleNext={handleNextPage}
             />
             <Button
-              className="mr-10 fixed bottom-20 right-2"
+              className="ml-10 fixed bottom-20 right-2"
               onClick={handleNextPage}
             >
               Ignorer <ArrowRightOutlined />{" "}
@@ -154,51 +132,6 @@ const AddForms: FunctionComponent = () => {
           >
             <AddDetailPage
               handlePrev={handlePreviousPage}
-              handleNext={handleNextPage}
-            />
-            <Button
-              className="mr-10 fixed bottom-20 right-2"
-              onClick={handleNextPage}
-            >
-              Ignorer <ArrowRightOutlined />{" "}
-            </Button>
-          </Suspense>
-        </div>
-      )}
-      {currentStep === 3 && (
-        <div className={isDark ? "h-full" : ""}>
-          <Suspense
-            fallback={
-              <div className="text-center my-10">
-                <LoadingOutlined className="text-5xl" />
-              </div>
-            }
-          >
-            <AddFacturePage
-              handlePrev={handlePreviousPage}
-              handleNext={handleNextPage}
-            />
-            <Button
-              className="mr-10 fixed bottom-20 right-2"
-              onClick={handleNextPage}
-            >
-              Envoyer facture par mail <ArrowRightOutlined />{" "}
-            </Button>
-          </Suspense>
-        </div>
-      )}
-      {currentStep === 4 && (
-        <div className={isDark ? " h-full" : ""}>
-          <Suspense
-            fallback={
-              <div className="text-center my-10">
-                <LoadingOutlined className="text-5xl" />
-              </div>
-            }
-          >
-            <AddMailPage
-              handlePrev={handlePreviousPage}
-              handleNext={handleNextPage}
             />
           </Suspense>
         </div>
