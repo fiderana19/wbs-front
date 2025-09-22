@@ -1,41 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SingupInterface } from '../../interfaces/Auth.interface';
-import { signupUser } from '../../api/Auth';
 import { HttpStatus } from '../../constants/Http_status';
-import { CheckCircleOutlined } from '@ant-design/icons';
-import { Modal } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { SignupValidation } from '@/validation/signup.validation';
-import { showToast } from '@/utils/Toast';
-import { TOAST_TYPE } from '@/constants/ToastType';
+import { useAuth } from '@/context/AuthContext';
+import { useSignup } from '@/hooks/useSignup';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const Signup: React.FC = () => {
-    const { handleSubmit: submit, formState, control } = useForm<SingupInterface>({
+    const { login } = useAuth();
+    const { mutateAsync: signup, isPending: signupLoading } = useSignup();
+    const { handleSubmit: submit, formState: { errors }, control } = useForm<SingupInterface>({
         resolver: yupResolver(SignupValidation)
     });
-    const { errors } = formState;
-    const [usrId, setUsrId] = useState<string>("");
-    const [isSignupSuccessModalOpen, setIsSignupSuccessModalOpen] = useState<boolean>(false);  
 
     const signupSubmit = async (data: SingupInterface) => {
-        const response = await signupUser(data);
+        const response = await signup(data);
         if(response?.status === HttpStatus.CREATED) {
-            setUsrId(response.data)
-            setIsSignupSuccessModalOpen(true);
-        } else {
-            showToast({
-                type: TOAST_TYPE.ERROR,
-                message: "Erreur lors de l'inscription !"
-            })
-        }
-    }
-
-    const handleModalOk = async () => {
-        setIsSignupSuccessModalOpen(false);
+            const usrid = response?.data;
+            await login(usrid, data?.password);
+        } 
     }
 
     return(
@@ -68,23 +56,11 @@ const Signup: React.FC = () => {
                     />
                     {errors.password && <div className='text-xs text-red-500 text-left w-64'>{ errors.password.message }</div>}
                 </div>
-                <Button variant={'success'} size={'lg'} className='w-64' type='submit'>S'INSCRIRE</Button>
+                <Button variant={'success'} size={'lg'} className='w-64' type='submit'>
+                    { signupLoading && <LoadingOutlined /> }
+                    S'INSCRIRE
+                </Button>
             </form>
-            <Modal title="Inscription réussie !" 
-                open={isSignupSuccessModalOpen}
-                onOk={handleModalOk}
-                onCancel={handleModalOk}
-                onClose={handleModalOk}
-            >
-                <div>
-                    <CheckCircleOutlined className='mr-2 text-green-500 text-lg' /> 
-                    Votre identifiant pour se connecter est : 
-                    {
-                        usrId &&
-                        <span> {usrId} </span>
-                    }
-                </div>
-            </Modal>
         </div>
     )
 }

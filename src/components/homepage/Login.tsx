@@ -9,10 +9,9 @@ import { Label } from '../ui/label';
 import { LoginValidation } from '@/validation/login.validation';
 
 const Login: React.FC = () => {  
-    const { handleSubmit: submit, formState, control } = useForm<LoginInterface>({
+    const { handleSubmit: submit, formState: { errors }, control } = useForm<LoginInterface>({
         resolver: yupResolver(LoginValidation)
     });
-    const { errors } = formState;
     const { login } = useAuth();
       
     const loginSubmit = async (data: LoginInterface) => {
