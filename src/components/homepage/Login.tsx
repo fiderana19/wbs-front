@@ -7,7 +7,6 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { LoginValidation } from '@/validation/login.validation';
-import AlertDialogDemo from '../demo/AlertDialogDemo';
 
 const Login: React.FC = () => {  
     const { handleSubmit: submit, formState, control } = useForm<LoginInterface>({
@@ -24,7 +23,6 @@ const Login: React.FC = () => {
         <div>
             <div className='w-max mx-auto'>
                 <div className="mb-10 text-center font-latobold text-2xl">Connexion</div>
-                <AlertDialogDemo />
                 <form onSubmit={submit(loginSubmit)} className="w-full">
                     <div className="mx-auto my-3">
                         <Label htmlFor='usrid' className='mb-1'>Identifiant</Label>

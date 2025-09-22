@@ -5,7 +5,7 @@ import { getDetailByTransactionId } from "../api/Detail";
 import { useEffect } from "react";
 import { QueryCacheKey } from "@/api/queryCacheKey";
 
-export const useGetDetailByTransactionId = ({id} : {id : string}) => {
+export const useGetDetailByTransactionId = (id : string) => {
     const { data, isError, error, isLoading, refetch } = useQuery({
         queryKey: [QueryCacheKey.DETAILS , id],
         queryFn: () => getDetailByTransactionId(id),

@@ -178,3 +178,7 @@
     font-family: 'LatoBlack';
     src: url('./fonts/Lato-Black.ttf') format('truetype');
 }
+
+.grid-cols-customized {
+  grid-template-columns: repeat(auto-fill , minmax(280px,295px));
+}

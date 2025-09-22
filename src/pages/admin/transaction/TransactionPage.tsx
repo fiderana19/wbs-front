@@ -37,7 +37,7 @@ const TransactionPage: FunctionComponent = () => {
       refetch()
     }
   });
-  const { data: details, isLoading: loadingDetails } = useGetDetailByTransactionId({id : transactionToGet || ''});
+  const { data: details, isLoading: loadingDetails, refetch: refetchDet } = useGetDetailByTransactionId((transactionToGet !== '') ? transactionToGet : '');
   const { data: selectTransaction, isLoading: loadingTransactions } = useGetTransactionById({id: transactionToGet || ''});
   const { mutateAsync: patchTransaction } = usePatchTransaction({
     action: () => {
@@ -64,6 +64,7 @@ const TransactionPage: FunctionComponent = () => {
 
   const getDetail = async (itemId: string) => {
     setTransactionToGet(itemId);
+    refetchDet();
     setIsModalDetailOpen(true);
   }
 

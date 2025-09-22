@@ -33,7 +33,7 @@ const TransactionSearchPage: FunctionComponent = () => {
       ref: '',
       montant_transaction: 0,
     });
-  const { data: details, isLoading: loadingDetails } = useGetDetailByTransactionId({ id: transactionToGet || ''});
+  const { data: details, isLoading: loadingDetails } = useGetDetailByTransactionId(transactionToGet || '');
   const { data: selectTransaction, isLoading: loadingTransactions } = useGetTransactionById({id: transactionToGet || ''});
   const { data: searchTransaction } = useGetTransactionBetweenDates({dates: dateToSearch || null});
   const { refetch } = useGetAllTransaction();

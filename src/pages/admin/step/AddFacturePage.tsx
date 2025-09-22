@@ -6,6 +6,7 @@ import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/re
 import { getTransactionForFacture } from '../../../api/Transaction';
 import { useGetAllTransaction } from '../../../hooks/useGetAllTransaction';
 import { useDark } from '../../../context/DarkThemeContext';
+import { useGetDetailByTransactionId } from '@/hooks/useGetDetailByTransactionId';
 
 interface StepsPropsType {
   handlePrev: ()=>void;
@@ -119,15 +120,7 @@ const footer = StyleSheet.create({
 });
 
 //generate pdf function
-const generatePDF = async (selectedTransId: string ) => {
-  //getting all detail of the transaction
-  // const response = await getDetailById(token, selectedTransId);
-  // const data = response.data;
-  // //filling the table blank
-  // while (data.length < 13) {
-  //   data.push({ quantite: '', product: '', montant_brut: '', remise: '', montant_total: '' });
-  // }
-
+const generatePDF = async (selectedTransId: string , details: any) => {
   const res = await getTransactionForFacture(selectedTransId);
   const transaction = res.data[0];
   //the pdf content 
@@ -173,7 +166,7 @@ const generatePDF = async (selectedTransId: string ) => {
                 <Text>Montant total</Text>
               </View>
             </View>
-            {/* {data.map((detail: any, index: any) => (
+            {details.map((detail: any, index: any) => (
               <View style={styles.row} key={index}>
                 <View style={styles.cell}>
                   <Text>{detail.quantite}</Text>
@@ -191,7 +184,7 @@ const generatePDF = async (selectedTransId: string ) => {
                   <Text>{detail.montant_total} <Text style={styles.unit}>MGA</Text></Text>
                 </View>
               </View>
-            ))} */}
+            ))}
           </View>
           <View style={styles.totalchamp}>
             <Text style={styles.totaltext}>Total</Text>
@@ -220,6 +213,7 @@ const { Option } = Select;
 const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
   const [selectedTransId, setSelectedTransId] = useState('');
   const { data: trans } = useGetAllTransaction();
+  const { data: details, refetch } = useGetDetailByTransactionId(selectedTransId ? selectedTransId  : '');
   const [pdfData, setPdfData] =  useState<null | any>(null);
   const { isDark } = useDark();
   //handling the form submit
@@ -227,7 +221,8 @@ const AddFacturePage: FunctionComponent<StepsPropsType> = ({handlePrev}) => {
     e.preventDefault()
 
     if (selectedTransId) {
-      generatePDF(selectedTransId).then((pdf) => {
+      refetch();
+      generatePDF(selectedTransId, details).then((pdf) => {
         setPdfData(pdf);
       })
     } else {

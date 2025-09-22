@@ -94,7 +94,7 @@ const ProductPage: FunctionComponent = () => {
               products && products.map((product: any) =>{
                 return(
                   <Card key={product._id} className={isDark ? ' bg-gray-600 border-gray-800' : ''}>
-                    <div className='w-48'>
+                    <div className='w-48 m-auto'>
                       <CardHeader>
                         <ShoppingCartOutlined className='text-7xl mx-auto' />
                       </CardHeader>
