@@ -8,7 +8,6 @@ const ProtectedRoute = lazy(() => import('./routes/ProtectedRoute'));
 const Unauthorized = lazy(() => import('./pages/Unauthorized'));
 const ProductPage = lazy(() => import('./pages/admin/product/ProductPage'));
 const TransactionPage = lazy(() => import('./pages/admin/transaction/TransactionPage'));
-const DashboardPage = lazy(() => import('./pages/admin/dashboard/DashboardPage'));
 const ClientPage = lazy(() => import('./pages/admin/client/ClientPage'));
 const HomePage = lazy(() => import('./pages/admin/HomePage'));
 const MainPage = lazy(() => import('./pages/MainPage'));
@@ -59,11 +58,6 @@ function App() {
                 <Route path='transaction' element={
                   <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
                     <TransactionPage/>
-                  </Suspense>
-                  }/>
-                <Route path='dashboard' element={
-                  <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-                    <DashboardPage/>
                   </Suspense>
                   }/>
                 <Route path='client' element={

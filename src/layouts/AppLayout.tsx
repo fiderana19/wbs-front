@@ -2,7 +2,7 @@ import { Dropdown, MenuProps, Space } from "antd";
 import { FunctionComponent, lazy, Suspense } from "react";
 import { Outlet, useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import { ShoppingCartOutlined , HomeOutlined, BarChartOutlined , MoneyCollectOutlined, MenuOutlined , UserOutlined, LoadingOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined , HomeOutlined, MoneyCollectOutlined, MenuOutlined , UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useAuth } from "../context/AuthContext";
 import WbsLogo from '../assets/image/wbs-logo.png';
 const ToggleTheme = lazy(() => import('../components/ToggleTheme'))
@@ -19,14 +19,6 @@ const AppLayout: FunctionComponent = () => {
                         </div>
                     </Link>,
             key: '01'
-        },
-        {
-            label: <Link to='/admin/page/dashboard'>
-                    <div className={location.pathname === '/admin/page/dashboard' ? 'text-second' : ''}>
-                        <BarChartOutlined /> DASHBOARD
-                    </div>
-                </Link>,
-            key: '1'
         },
         {
             label: <Link to='/admin/page/transaction'>
@@ -65,11 +57,6 @@ const AppLayout: FunctionComponent = () => {
                     <Link to='/admin/page' className="mx-1 p-1 hover:scale-105 hover:text-opacity-100  transition duration-300">
                         <div  className={location.pathname === '/admin/page' ? 'text-second' : ''}>
                             <HomeOutlined /> Accueil
-                        </div>
-                    </Link>
-                    <Link to='/admin/page/dashboard' className="mx-1 p-1 hover:scale-105 hover:text-second hover:text-opacity-100  transition duration-300">
-                        <div className={location.pathname === '/admin/page/dashboard' ? 'text-second' : ''}>
-                            <BarChartOutlined /> Dashboard
                         </div>
                     </Link>
                     <Link to='/admin/page/transaction' className="mx-1 p-1 hover:scale-105 hover:text-second hover:text-opacity-100  transition duration-300">
